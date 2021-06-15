@@ -27,7 +27,14 @@ namespace animalAid_server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.Name = "animalAid";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             services.AddControllers();
             services.AddDbContext<AnimalAidDbContext>();
             services.AddSwaggerGen(c =>
@@ -47,7 +54,7 @@ namespace animalAid_server
             }
 
             app.UseHttpsRedirection();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();
