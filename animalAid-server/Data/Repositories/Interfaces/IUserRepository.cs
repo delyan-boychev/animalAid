@@ -10,5 +10,6 @@ namespace animalAid_server.Data.Repositories.Interfaces
     {
         public Task<bool> RegisterUser(RegisterUser user);
         public Task<bool> LoginUser(LoginUser user);
+        public Task<bool> RegisterVet(RegisterUser user);
     }
 }

@@ -30,8 +30,33 @@ namespace animalAid_server.Data.Repositories
                 u.City = user.City;
                 u.PhoneNumber = user.PhoneNumber;
                 u.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 10);
-                u.CreatedOn = new DateTime();
+                u.CreatedOn = DateTime.Now;
                 u.Confirmed = false;
+                u.Role = Role.User;
+                await db.Users.AddAsync(u);
+                await db.SaveChangesAsync();
+                return true;
+            }
+
+        }
+        public async Task<bool> RegisterVet(RegisterUser user)
+        {
+            if(await db.Users.AnyAsync(u=> u.Email == user.Email))
+            {
+                return false;
+            }
+            else
+            {
+                User u = new User();
+                u.FirstName = user.FirstName;
+                u.LastName = user.LastName;
+                u.Email = user.Email;
+                u.City = user.City;
+                u.PhoneNumber = user.PhoneNumber;
+                u.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 10);
+                u.CreatedOn = DateTime.Now;
+                u.Confirmed = false;
+                u.Role = Role.Vet;
                 await db.Users.AddAsync(u);
                 await db.SaveChangesAsync();
                 return true;

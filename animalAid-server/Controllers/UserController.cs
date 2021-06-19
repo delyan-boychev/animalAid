@@ -34,6 +34,20 @@ namespace animalAid_server.Controllers
             }
             return new ResultRequest(200){Message = message};
         }
+        [HttpPost("RegisterVet")]
+        public async Task<ResultRequest> RegisterVet([FromForm]RegisterUser user)
+        {
+            string message = "";
+            if(await userRepository.RegisterVet(user))
+            {
+                message = Status.RegisterSuccess();
+            }
+            else
+            {
+                message = Status.AlreadyExists("Vet");
+            }
+            return new ResultRequest(200){Message = message};
+        }
         [HttpPost("LoginUser")]
         public async Task<ResultRequest> LoginUser([FromForm]LoginUser user)
         {
