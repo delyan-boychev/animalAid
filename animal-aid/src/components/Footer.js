@@ -1,14 +1,7 @@
-import { Grid, Box, Typography, Container } from "@material-ui/core";
-
-export default function Footer()
-{
-    return (
-    <footer>
-        <Box bgcolor="primary.main" color="primary.contrastText" maxHeight="40px" minHeight="40px">
-            <Container maxWidth="lg">
-                <Typography>Animal Aid</Typography>
-            </Container>
-        </Box>
-    </footer>
-    );
+export default function Footer() {
+  return (
+    <div className="footer text-center text-secondary bg-primary py-3">
+      © {new Date().getFullYear()} Всички права запазени: Animal Aid
+    </div>
+  )
 }
