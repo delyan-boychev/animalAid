@@ -7,7 +7,7 @@ namespace animalAid_server.Models
 
         public static string AlreadyExists(string name) => $"{name} вече съществува!";
 
-        public static string SuccessCreated(string name) => $"{name} създад!";
+        public static string SuccessCreated(string name) => $"{name} е създаден!";
 
         public static string RegisterSuccess() => "Регистрирахте се успешно!";
         public static string LoginSuccess() => "Влязохте успешно в профила си!";

@@ -30,7 +30,7 @@ namespace animalAid_server.Controllers
             }
             else
             {
-                message = Status.AlreadyExists("User");
+                message = Status.AlreadyExists("Потребителят");
             }
             return new ResultRequest(200){Message = message};
         }
@@ -44,7 +44,7 @@ namespace animalAid_server.Controllers
             }
             else
             {
-                message = Status.AlreadyExists("Vet");
+                message = Status.AlreadyExists("Ветеринарят");
             }
             return new ResultRequest(200){Message = message};
         }
