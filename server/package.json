@@ -1,7 +1,6 @@
 {
   "name": "animal-aid-server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -10,6 +9,11 @@
   "author": "Delyan Boychev",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
-  }
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.0"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
 }
