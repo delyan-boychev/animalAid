@@ -33,6 +33,11 @@ router.post("/log", async (req, res)=>
         res.sendStatus(400);
     }
 });
+router.post("/refreshToken", async (req, res)=>
+{
+    const token = req.headers.authorization.replace("animalAidAuthorization ", "");
+    res.send(userService.refreshToken(token));
+});
 router.get("/test", authenticateJWT, (req, res)=>
 {
     res.send(req.user);
