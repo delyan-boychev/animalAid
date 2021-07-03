@@ -16,6 +16,7 @@ class UserRepository
             const salt = bcrypt.genSaltSync(10);
             const hash = bcrypt.hashSync(user.password, salt);
             user.password = hash;
+            user.createdOn =  new Date().getTime().toString();
             let u = new User(user);
             u.save();
             return true;
