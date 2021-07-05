@@ -1,6 +1,11 @@
 import React from 'react';
 import {Form, Col, Button } from 'react-bootstrap';
-export default class RegisterUser extends React.Component
+import CustomModal from '../components/CustomModal';
+import config from "../config.json";
+import { getCookie } from '../cookies';
+import { Redirect } from 'react-router-dom';
+const axios = require("axios");
+export default class Register extends React.Component
 {
   constructor(props)
   {
@@ -12,6 +17,7 @@ export default class RegisterUser extends React.Component
         lastName: "",
         email: "",
         city: "",
+        role: "User",
         phoneNumber: "",
         password: "",
         confirmPassword: ""
@@ -25,6 +31,12 @@ export default class RegisterUser extends React.Component
         password: "",
         confirmPassword: "",
         isValid: false
+      },
+      modal:
+      {
+        show: false,
+        title: "Съобщение",
+        body: ""
       }
 
     };
@@ -32,12 +44,48 @@ export default class RegisterUser extends React.Component
   }
   submitForm = (event)=>
   {
+    
     event.preventDefault();
     this.validate();
     if(this.state.errors.isValid)
     {
-      console.log(this.state);
+      const user = this.state.fields;
+      axios.post(`${config.API_URL}/user/reg`, 
+      {
+        name:{
+          first: user.firstName,
+          last: user.lastName
+        },
+        role: user.role,
+        email: user.email,
+        city: user.city,
+        phoneNumber: user.phoneNumber,
+        password: user.password
+      }).then((response)=>{
+        if(response.data === true)
+        {
+          this.openModal("Вие се регистрирахте успешно!");
+        }
+        else if(response.data ===false)
+        {
+          this.openModal("Вече същсетвува профил с този имейл адрес!");
+        }
+      });
+      this.setState({fields:{ firstName: "", lastName: "", email: "", city: "", phoneNumber: "", role: "User", password: "", confirmPassword: "" }, errors:{ firstName: "", lastName: "", email: "", city: "", phoneNumber: "", password: "", confirmPassword: "", isValid: false }, modal: { show: false, title: "Съобщение", body: "" }});
     }
+  }
+  openModal = (body) =>
+  { 
+    let modal = this.state.modal;
+    modal.show = true;
+    modal.body = body;
+    this.setState({modal});
+  }
+  closeModal = () =>
+  { 
+    let modal = this.state.modal;
+    modal.show = false;
+    this.setState({modal});
   }
   validate()
   {
@@ -52,9 +100,9 @@ export default class RegisterUser extends React.Component
       isValid: true
     };
     let fields = this.state.fields;
-    const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
-    const checkPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)” + “(?=.*[-+_!@#$%^&*., ?]).+$/;
+    const checkPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     
     if(fields["firstName"].length < 2)
     {
@@ -81,12 +129,12 @@ export default class RegisterUser extends React.Component
       errors["phoneNumber"] = "Невалиден телефонен номер!";
       errors["isValid"] = false;
     }
-    if(!checkPass.test(fields["password"]) && fields["password"].length < 8)
+    if(!checkPass.test(fields["password"]) || fields["password"].length < 8)
     {
       errors["password"] = "Паролата трябва да съдържа поне една малка буква, главна буква, една цифра, един специален символ и да е поне 8 символа!";
       errors["isValid"] = false;
     }
-    if(fields["password"] != fields["confirmPassword"])
+    if(fields["password"] !== fields["confirmPassword"])
     {
       errors["confirmPassword"] = "Двете пароли не съвпадат!";
       errors["isValid"] = false;
@@ -102,7 +150,12 @@ export default class RegisterUser extends React.Component
   }
   render()
   {
-    return (<div><h3 className="text-center">Регистрация като потребител</h3>
+    if(getCookie("authorization") !="" && getCookie("authorization") !=null)
+    {
+      return <Redirect to="/"></Redirect>
+    }
+    return (<div><h3 className="text-center">Регистрация</h3>
+    <CustomModal show={this.state.modal.show} title={this.state.modal.title} body={this.state.modal.body} closeModal={this.closeModal}></CustomModal>
     <Form onSubmit={this.submitForm}>
     <Form.Row>
       <Form.Group as={Col} controlId="firstName">
@@ -135,6 +188,13 @@ export default class RegisterUser extends React.Component
         <Form.Label>Телефонен номер</Form.Label>
         <Form.Control type="text" value={this.state.fields.phoneNumber} onChange={this.handleOnChangeValue}/>
         <span className="text-danger">{this.state.errors.phoneNumber}</span>
+      </Form.Group>
+      <Form.Group as={Col} controlId="role">
+        <Form.Label>Тип на профила</Form.Label>
+        <Form.Control value={this.state.fields.role} as="select" onChange={this.handleOnChangeValue}>
+          <option value="User">Потребител</option>
+          <option value="Vet">Ветеринар</option>
+        </Form.Control>
       </Form.Group>
     </Form.Row>
     <Form.Row>

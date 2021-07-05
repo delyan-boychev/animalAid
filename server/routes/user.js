@@ -38,8 +38,8 @@ router.post("/refreshToken", async (req, res)=>
     const token = req.headers.authorization.replace("animalAidAuthorization ", "");
     res.send(userService.refreshToken(token));
 });
-router.get("/test", authenticateJWT, (req, res)=>
+router.get("/getProfile", authenticateJWT, async (req, res)=>
 {
-    res.send(req.user);
+    res.send(await userService.getProfile(req.user["emailAnimalAid"]));
 });
 module.exports = router;

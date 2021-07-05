@@ -1,6 +1,7 @@
-import { Container, Navbar, NavDropdown, Nav} from "react-bootstrap";
+import { Container, Navbar, Nav} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import logo from '../logo.png'
+import LoginAndRegPartial from "./LoginAndRegPartial";
 export default function Header()
 {
   return (
@@ -8,14 +9,12 @@ export default function Header()
   <Container>
     <Navbar.Brand as={Link} to="/" className="text-secondary"><img src={logo} alt="logo"></img></Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Navbar.Collapse  id="basic-navbar-nav">
-      <Nav className="me-auto text-secondary">
+    <Navbar.Collapse  id="basic-navbar-nav" className="justify-content-between">
+      <Nav className="me-auto text-secondary" style={{fontSize: "20px"}}>
         <Nav.Link as={Link} to="/" className="text-secondary">Начална страница</Nav.Link>
-        <NavDropdown active="true" title="Регистрация" id="basic-nav-dropdown">
-          <NavDropdown.Item as={Link} to="/registerUser" >Регистрация като потребител</NavDropdown.Item>
-          <NavDropdown.Item as={Link} to="/registerVet">Регистрация като ветеринар</NavDropdown.Item>
-        </NavDropdown>
+        <Nav.Link as={Link} to="/" className="text-secondary">За нас</Nav.Link>
       </Nav>
+      <LoginAndRegPartial></LoginAndRegPartial>
     </Navbar.Collapse>
   </Container>
 </Navbar>

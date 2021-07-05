@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
-require('dotenv').config();
+const config =  require("../config.json");
 const User = require("../models/user");
-mongoose.connect(process.env.CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true});
+const roles = require("../models/roles");
+const e = require('express');
+mongoose.connect(config.CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true});
 class UserRepository
 {
     async registerUser(user)
@@ -17,9 +19,23 @@ class UserRepository
             const hash = bcrypt.hashSync(user.password, salt);
             user.password = hash;
             user.createdOn =  new Date().getTime().toString();
+            user.role = roles[user.role];
             let u = new User(user);
             u.save();
             return true;
+        }
+    }
+    async getProfile(email)
+    {
+        let user = await User.findOne({email: email}).exec();
+        if(user==null)
+        {
+            return {};
+        }
+        else
+        {
+            user.password = undefined;
+            return user;
         }
     }
     async loginUser(user)

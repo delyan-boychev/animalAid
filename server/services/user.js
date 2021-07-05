@@ -1,6 +1,6 @@
 const UserRepository = require("../repositories/user")
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const config =  require("../config.json");
 class UserService
 {
     userRepository = new UserRepository();
@@ -13,13 +13,17 @@ class UserService
         const loggedIn = await this.userRepository.loginUser(user);
         if(loggedIn)
         {
-            const accessToken = jwt.sign({ emailAnimalAid: user.email }, process.env.JWT_SECRET, {expiresIn: "30m"});
+            const accessToken = jwt.sign({ emailAnimalAid: user.email }, config.JWT_SECRET, {expiresIn: "30m"});
             return accessToken;
         }
         else
         {
             return false;
         }
+    }
+    async getProfile(email)
+    {
+        return await this.userRepository.getProfile(email);
     }
     refreshToken(token)
     {
@@ -37,7 +41,7 @@ class UserService
             if (Date.now() < decoded.payload.exp * 1000) {
                 return false;
             }
-            const accessToken = jwt.sign({ email: decoded.payload.emailAnimalAid }, process.env.JWT_SECRET, {expiresIn: "30m"});
+            const accessToken = jwt.sign({ email: decoded.payload.emailAnimalAid }, config.JWT_SECRET, {expiresIn: "30m"});
             return accessToken;
         }   
     }
