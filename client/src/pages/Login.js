@@ -109,7 +109,7 @@ export default class Login extends React.Component
     }
     render()
     {
-        if(getCookie("authorization") !="" && getCookie("authorization") !=null)
+        if(getCookie("authorization") !== "" && getCookie("authorization") !== null)
         {
             return <Redirect to="/"></Redirect>
         }
