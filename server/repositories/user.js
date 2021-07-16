@@ -7,7 +7,7 @@ const e = require('express');
 mongoose.connect(config.CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true});
 class UserRepository
 {
-    async registerUser(user)
+    async register(user)
     {
         if(await User.exists({email: user.email}))
         {
@@ -46,7 +46,7 @@ class UserRepository
             const checkPass = bcrypt.compareSync(user.password, u.password);
             if(checkPass)
             {
-                return true;
+                return u.role;
             }
             else
             {

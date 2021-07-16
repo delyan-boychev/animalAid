@@ -2,12 +2,16 @@
 const express = require("express");
 const Validator = require("jsonschema").Validator;
 const userRegisterSchema = require("../models/validation/userRegister");
+const vetRegisterSchema = require("../models/validation/vetRegister");
 const userLoginSchema = require("../models/validation/userLogin");
 const authenticateJWT = require("../authenticateJWT");
+const fs = require('fs');
+const path = require("path");
+const API_URL = require("../config.json").API_URL;
 let router = express.Router();
 const UserService = require("../services/user");
 const userService = new UserService();
-router.post("/reg", async (req, res)=>
+router.post("/regUser", async (req, res)=>
 {
     let v = new Validator();
     const valRes = v.validate(req.body, userRegisterSchema);
@@ -19,6 +23,30 @@ router.post("/reg", async (req, res)=>
     {
         res.sendStatus(400);
     }
+});
+router.post("/regVet", async (req, res)=>
+{
+    let v = new Validator();
+    const valRes = v.validate(req.body, vetRegisterSchema);
+    if(valRes.valid)
+    {
+        const filePath = path.join(__dirname, '../' , "diplomas", req.body.urlDiploma.replace(`${API_URL}/diplomas/`, ""));
+        if(!fs.existsSync(filePath))
+        {
+            res.send("NOT_VALID_DIPLOMA");
+        }
+        else
+        {
+            res.send(await userService.registerVet(req.body));
+        }
+    }
+    else
+    {
+        res.sendStatus(400);
+    }
+});
+router.post("/uploadDiploma", async (req, res) => {
+
 });
 router.post("/log", async (req, res)=>
 {

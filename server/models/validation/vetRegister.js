@@ -1,6 +1,7 @@
-const userRegisterSchema =
+const API_URL = require("../../config.json").API_URL;
+const vetRegisterSchema =
 {
-    "id": "/userRegister",
+    "id": "/vetRegister",
     "type": "object",
     "properties": {
         "name": {
@@ -8,6 +9,8 @@ const userRegisterSchema =
             "last": {"type": "string", "minLength": 2},
             "required": ["first", "last"]
         },
+        "diplomaFile": {"type": "string", "pattern": `^diploma-[0-9]{13}(.pdf)$`},
+        "address": {"type": "string", "minLength": 2},
         "city": {"type": "string", "minLength": 2},
         "password": {"type": "string", "minLength": 8, "maxLength": 98},
         "email": {"type":"string", "format":"email"},
@@ -15,4 +18,4 @@ const userRegisterSchema =
     },
     "required": [ "name", "city", "password", "email", "phoneNumber"]
 }
-module.exports = userRegisterSchema;
+module.exports = vetRegisterSchema;

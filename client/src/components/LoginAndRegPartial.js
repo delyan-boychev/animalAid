@@ -1,6 +1,6 @@
 import { getCookie, eraseCookie } from '../cookies';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlusCircle, faSignInAlt, faUser, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle, faSignInAlt, faUser, faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 import { Nav} from "react-bootstrap";
 import { Link } from "react-router-dom";
 export default function LoginAndRegPartial()

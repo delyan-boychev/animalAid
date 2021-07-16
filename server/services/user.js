@@ -6,14 +6,20 @@ class UserService
     userRepository = new UserRepository();
     async registerUser(user)
     {
-        return this.userRepository.registerUser(user);
+        user.role = "User";
+        return this.userRepository.register(user);
+    }
+    async registerVet(user)
+    {
+        user.role = "Vet";
+        return this.userRepository.register(user);
     }
     async loginUser(user)
     {
         const loggedIn = await this.userRepository.loginUser(user);
-        if(loggedIn)
+        if(loggedIn != "false")
         {
-            const accessToken = jwt.sign({ emailAnimalAid: user.email }, config.JWT_SECRET, {expiresIn: "30m"});
+            const accessToken = jwt.sign({ emailAnimalAid: user.email, role: loggedIn }, config.JWT_SECRET, {expiresIn: "30m"});
             return accessToken;
         }
         else
@@ -41,7 +47,7 @@ class UserService
             if (Date.now() < decoded.payload.exp * 1000) {
                 return false;
             }
-            const accessToken = jwt.sign({ email: decoded.payload.emailAnimalAid }, config.JWT_SECRET, {expiresIn: "30m"});
+            const accessToken = jwt.sign({ emailAnimalAid: decoded.payload.emailAnimalAid, role: decoded.payload.role }, config.JWT_SECRET, {expiresIn: "30m"});
             return accessToken;
         }   
     }
