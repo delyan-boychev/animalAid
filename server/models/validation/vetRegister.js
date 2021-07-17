@@ -16,6 +16,7 @@ const vetRegisterSchema =
         "email": {"type":"string", "format":"email"},
         "phoneNumber": {"type": "string", "pattern": "^\\+(?:[0-9]●?){6,14}[0-9]$"},
     },
+    "additionalProperties": false,
     "required": [ "name", "city", "password", "email", "phoneNumber"]
 }
 module.exports = vetRegisterSchema;

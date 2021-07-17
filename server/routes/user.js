@@ -30,7 +30,7 @@ router.post("/regVet", async (req, res)=>
     const valRes = v.validate(req.body, vetRegisterSchema);
     if(valRes.valid)
     {
-        const filePath = path.join(__dirname, '../' , "diplomas", req.body.urlDiploma.replace(`${API_URL}/diplomas/`, ""));
+        const filePath = path.join(__dirname, '../' , "diplomas", req.body.diplomaFile);
         if(!fs.existsSync(filePath))
         {
             res.send("NOT_VALID_DIPLOMA");
@@ -44,9 +44,6 @@ router.post("/regVet", async (req, res)=>
     {
         res.sendStatus(400);
     }
-});
-router.post("/uploadDiploma", async (req, res) => {
-
 });
 router.post("/log", async (req, res)=>
 {

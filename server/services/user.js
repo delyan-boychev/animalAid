@@ -1,5 +1,7 @@
 const UserRepository = require("../repositories/user")
 const jwt = require('jsonwebtoken');
+const path = require("path");
+const fs = require("fs");
 const config =  require("../config.json");
 class UserService
 {
@@ -12,12 +14,18 @@ class UserService
     async registerVet(user)
     {
         user.role = "Vet";
-        return this.userRepository.register(user);
+        const isReg = await this.userRepository.register(user);
+        let filePath = path.join(__dirname, '../' , "diplomas", user.diplomaFile);
+        if(!isReg)
+        {
+            fs.unlinkSync(filePath);
+        }
+        return isReg;
     }
     async loginUser(user)
     {
         const loggedIn = await this.userRepository.loginUser(user);
-        if(loggedIn != "false")
+        if(loggedIn !== false)
         {
             const accessToken = jwt.sign({ emailAnimalAid: user.email, role: loggedIn }, config.JWT_SECRET, {expiresIn: "30m"});
             return accessToken;
@@ -26,6 +34,10 @@ class UserService
         {
             return false;
         }
+    }
+    async getDiploma(email)
+    {
+        return await this.userRepository.getDiploma(email);
     }
     async getProfile(email)
     {

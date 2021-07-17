@@ -58,5 +58,17 @@ class UserRepository
             return false;
         }
     }
+    async getDiploma(email)
+    {
+        const u = await User.findOne({email: email}).exec();
+        if(u != null)
+        {
+            return u.diplomaFile;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 module.exports = UserRepository;

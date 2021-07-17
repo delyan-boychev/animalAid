@@ -59,8 +59,8 @@ export default class RegisterVet extends React.Component
       diploma.append("diploma", user.diploma, user.diploma.name);
       axios.post(`${config.API_URL}/diplomas/upload`, diploma, {headers:{'Content-Type': `multipart/form-data; boundary=${diploma.getBoundary}`}}).then(res=>
         {
-            if(res.status == 200){
-                axios.post(`${config.API_URL}/user/regUser`, 
+            if(res.status === 200){
+                axios.post(`${config.API_URL}/user/regVet`, 
                 {
                     name:{
                         first: user.firstName,
@@ -178,7 +178,7 @@ export default class RegisterVet extends React.Component
   handleOnChangeValue = (event) =>
   {
     let fields = this.state.fields;
-    if(event.target.id == "diploma")
+    if(event.target.id === "diploma")
     {
         fields[event.target.id] = event.target.files[0];
     }
