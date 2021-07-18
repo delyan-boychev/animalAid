@@ -1,4 +1,3 @@
-const API_URL = require("../../config.json").API_URL;
 const vetRegisterSchema =
 {
     "id": "/vetRegister",

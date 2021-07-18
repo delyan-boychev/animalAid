@@ -145,9 +145,9 @@ export default class RegisterVet extends React.Component
       errors["address"] = "Адресът трябва да е поне 2 символа!";
       errors["isValid"] = false;
     }
-    if(fields["diploma"] == null)
+    if(fields["diploma"] === null)
     {
-      errors["diploma"] = "Нужно е да качите диплома за висше образование!";
+      errors["diploma"] = "Нужно е да качите диплома за висше образование със завършена специалност Ветеринарна медицина!";
       errors["isValid"] = false;
     }
     else
@@ -237,7 +237,7 @@ export default class RegisterVet extends React.Component
     </Form.Row>
     <Form.Row>
         <Form.Group as={Col} controlId="diploma">
-            <Form.Label>Диплома за висше образование</Form.Label>
+            <Form.Label>Диплома за висше образование със завършена специалност Ветеринарна медицина</Form.Label>
             <Form.Control type="file" onChange={this.handleOnChangeValue} accept=".pdf"/>
             <span className="text-danger">{this.state.errors.diploma}</span>
         </Form.Group>

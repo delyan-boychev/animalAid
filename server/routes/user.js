@@ -6,8 +6,9 @@ const vetRegisterSchema = require("../models/validation/vetRegister");
 const userLoginSchema = require("../models/validation/userLogin");
 const authenticateJWT = require("../authenticateJWT");
 const fs = require('fs');
+const editProfileSchema = require("../models/validation/editProfile");
 const path = require("path");
-const API_URL = require("../config.json").API_URL;
+const roles = require("../models/roles");
 let router = express.Router();
 const UserService = require("../services/user");
 const userService = new UserService();
@@ -60,10 +61,46 @@ router.post("/log", async (req, res)=>
 });
 router.post("/refreshToken", async (req, res)=>
 {
-    const token = req.headers.authorization.replace("animalAidAuthorization ", "");
-    res.send(userService.refreshToken(token));
+    if(req.headers.authorization)
+    {
+        const token = req.headers.authorization.replace("animalAidAuthorization ", "");
+        res.send(userService.refreshToken(token));
+    }
+    else
+    {
+        res.sendStatus(400);
+    }
 });
-router.get("/getProfile", authenticateJWT, async (req, res)=>
+router.post("/edit/:property", authenticateJWT, async (req, res)=>
+{
+    const prop = req.params.property;
+    if( prop == "fName" || prop == "lName" || prop == "city" || prop == "phoneNumber" || (prop == "address" && req.user.role == roles.Vet))
+    {
+        if(req.body[prop] != undefined && req.body[prop] != "")
+        {
+            let v = new Validator();
+            const valRes = v.validate(req.body, editProfileSchema.getSchema(prop));
+            if(valRes.valid)
+            {
+                res.send(await userService.edit(prop, req.body[prop], req.user.emailAnimalAid));
+            }
+            else
+            {
+                res.sendStatus(400);
+            }
+        }
+        else
+        {
+            res.sendStatus(400);
+        }
+    }
+    else
+    {
+        res.sendStatus(400);
+    }
+    
+});
+router.get("/profile", authenticateJWT, async (req, res)=>
 {
     res.send(await userService.getProfile(req.user["emailAnimalAid"]));
 });

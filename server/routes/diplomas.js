@@ -42,7 +42,7 @@ router.post("/upload", upload.single("diploma"), (req, res)=>
 });
 router.get("/:filename", authenticateJWT, async (req, res) =>
 {
-    if(req.user.role == roles.Admin || req.user.role == roles.Moderator)
+    if(req.user.role === roles.Admin || req.user.role === roles.Moderator)
     {
         const checkFileName = /^diploma-[0-9]{13}.pdf$/;
         if(checkFileName.test(req.params.filename))
@@ -65,7 +65,7 @@ router.get("/:filename", authenticateJWT, async (req, res) =>
             res.sendStatus(400);
         }
     }
-    else if(req.user.role == roles.Vet)
+    else if(req.user.role === roles.Vet)
     {
         const checkFileName = /^diploma-[0-9]{13}.pdf$/;
         if(checkFileName.test(req.params.filename))

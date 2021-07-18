@@ -17,7 +17,7 @@ export default function Register()
                 <Card.Header as="h4" className="text-primary"><FontAwesomeIcon icon={faUser} size="lg"></FontAwesomeIcon> Регистрация като потребител</Card.Header>
                 <Card.Body>
                     <Card.Text>
-                    При регистрация като потребител ще имате възможност да си комуникирате с ветеринари и да запазвате часове при тях, за да помогнете на Вашията домашен любимец!
+                    При регистрация като потребител ще имате възможност да се консуктирате с ветеринари и да запазвате часове при тях, за да помогнете на Вашият домашен любимец!
                     </Card.Text>
                     <Button variant="primary" as={Link} to="/registerUser">Регистрация</Button>
                 </Card.Body>

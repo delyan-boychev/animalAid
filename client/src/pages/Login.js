@@ -52,7 +52,7 @@ export default class Login extends React.Component
               else
               {
                   this.openModal("Вие влязохте успешно в профила си!");
-                  setCookie("authorization", response.data,  0.0208333333333);
+                  setCookie("authorization", response.data,  4444444);
                   this.loginComplete = true;
               }
           });

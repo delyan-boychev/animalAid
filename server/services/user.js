@@ -46,7 +46,7 @@ class UserService
     refreshToken(token)
     {
         const decoded = jwt.decode(token, {complete: true});
-        if(decoded == null)
+        if(decoded === null)
         {
             return false;
         }
@@ -61,7 +61,11 @@ class UserService
             }
             const accessToken = jwt.sign({ emailAnimalAid: decoded.payload.emailAnimalAid, role: decoded.payload.role }, config.JWT_SECRET, {expiresIn: "30m"});
             return accessToken;
-        }   
+        }
+    }
+    async edit(prop, value, email)
+    {
+        return await this.userRepository.edit(prop, value, email);
     }
 }
 module.exports = UserService;

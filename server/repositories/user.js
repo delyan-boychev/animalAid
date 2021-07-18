@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const config =  require("../config.json");
 const User = require("../models/user");
 const roles = require("../models/roles");
-const e = require('express');
+const path = require("path");
 mongoose.connect(config.CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true});
 class UserRepository
 {
@@ -41,7 +41,7 @@ class UserRepository
     async loginUser(user)
     {
         const u = await User.findOne({email: user.email}).exec();
-        if(u != null)
+        if(u !== null)
         {
             const checkPass = bcrypt.compareSync(user.password, u.password);
             if(checkPass)
@@ -61,7 +61,7 @@ class UserRepository
     async getDiploma(email)
     {
         const u = await User.findOne({email: email}).exec();
-        if(u != null)
+        if(u !== null)
         {
             return u.diplomaFile;
         }
@@ -69,6 +69,40 @@ class UserRepository
         {
             return false;
         }
+    }
+    async edit(prop, value, email)
+    {
+        const u = await User.findOne({email: email}).exec();
+        if(u !== null)
+        {
+            switch(prop)
+            {
+                case "fName":
+                    u.name.first = value;
+                    break;
+                case "lName":
+                    u.name.last = value;
+                    break;
+                case "city":
+                    u.city = value;
+                    break;
+                case "phoneNumber":
+                    u.phoneNumber = value;
+                    break;
+                case "address":
+                    u.address = value;
+                    break;
+                default:
+                    return false;
+            }
+            u.save();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 }
 module.exports = UserRepository;
