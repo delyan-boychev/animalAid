@@ -20,6 +20,11 @@ class UserRepository
             user.password = hash;
             user.createdOn =  new Date().getTime().toString();
             user.role = roles[user.role];
+            if(user.role == roles.Vet)
+            {
+                user.moderationVerified = false;
+            }
+            user.verified = false;
             let u = new User(user);
             u.save();
             return true;
@@ -64,6 +69,55 @@ class UserRepository
         if(u !== null)
         {
             return u.diplomaFile;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    async verify(email)
+    {
+        const u = await User.findOne({email: email}).exec();
+        if(u!=null)
+        {
+            if(!u.verified)
+            {
+                u.verified = true;
+                u.save();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    async moderationVerify(email)
+    {
+        const u = await User.findOne({email: email}).exec();
+        if(u!=null)
+        {
+            if(u.role === roles.Vet)
+            {
+                if(!u.moderationVerified)
+                {
+                    u.moderationVerified = true;
+                    u.save();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {

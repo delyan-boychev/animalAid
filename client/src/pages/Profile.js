@@ -27,6 +27,16 @@ export default class Profile extends React.Component
                 createdOn: 0,
                 role: "",
                 phoneNumber: ""
+            },
+            editInfo:
+            {
+                name: {
+                    first: "",
+                    last: ""
+                },
+                city: "",
+                address: "",
+                phoneNumber: ""
             }
         };
         this.getInfo();
@@ -35,7 +45,10 @@ export default class Profile extends React.Component
     async getInfo()
     {
         const res = await client.getRequestToken("/user/profile");
-        res.diplomaFile = `${API_URL}/diplomas/${res.diplomaFile}?token=${this.token}`;
+        if(res.role === roles.Vet)
+        {
+            res.diplomaFile = `${API_URL}/diplomas/${res.diplomaFile}?token=${this.token}`;
+        }
         this.setState({profile:res});
     }
     render()
@@ -130,13 +143,55 @@ export default class Profile extends React.Component
             <Tabs defaultActiveKey="profileInfo" className="mb-3" id="uncontrolled-tab-example">
             <Tab eventKey="profileInfo" title={<p style={{fontSize: 17, fontWeight: "bold",}}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon> Информация за профила</p>}>
                 <ListGroup>
-                    <ListGroup.Item><span className="font-weight-bold">Име: <span className="font-weight-normal">{this.state.profile.name.first}</span></span></ListGroup.Item>
-                    <ListGroup.Item><span className="font-weight-bold">Фамилия: <span className="font-weight-normal">{this.state.profile.name.last}</span></span></ListGroup.Item>
-                    <ListGroup.Item><span className="font-weight-bold"><FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Град: <span className="font-weight-normal">{this.state.profile.city}</span></span></ListGroup.Item>
-                    <ListGroup.Item><span className="font-weight-bold"><FontAwesomeIcon icon={faAt}></FontAwesomeIcon> Имейл адрес: <span className="font-weight-normal">{this.state.profile.email}</span></span></ListGroup.Item>
-                    <ListGroup.Item><span className="font-weight-bold"><FontAwesomeIcon icon={faPhoneSquareAlt}></FontAwesomeIcon> Телефонен номер: <span className="font-weight-normal">{this.state.profile.phoneNumber}</span></span></ListGroup.Item>
-                    <ListGroup.Item><span className="font-weight-bold"><FontAwesomeIcon icon={faUserTag}></FontAwesomeIcon> Роля: <span className="font-weight-normal">{rolesTranslate[this.state.profile.role]}</span></span></ListGroup.Item>
-                    <ListGroup.Item><span className="font-weight-bold"><FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon> Профилът е създаден на: <span className="font-weight-normal">{createdOn}</span></span></ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row>
+                            <Col>
+                                <span className="font-weight-bold">Име: <span className="font-weight-normal">{this.state.profile.name.first}</span></span>
+                            </Col>
+                            <Col>
+                                <Button variant="primary" className="float-right"><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row>
+                            <Col>
+                                <span className="font-weight-bold">Фамилия: <span className="font-weight-normal">{this.state.profile.name.last}</span></span>
+                                </Col>
+                            <Col>
+                                <Button variant="primary" className="float-right"><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row>
+                            <Col>
+                                <span className="font-weight-bold"><FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Град: <span className="font-weight-normal">{this.state.profile.city}</span></span>
+                            </Col>
+                            <Col>
+                                <Button variant="primary" className="float-right"><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <span className="font-weight-bold"><FontAwesomeIcon icon={faAt}></FontAwesomeIcon> Имейл адрес: <span className="font-weight-normal">{this.state.profile.email}</span></span>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Row>
+                            <Col>
+                                <span className="font-weight-bold"><FontAwesomeIcon icon={faPhoneSquareAlt}></FontAwesomeIcon> Телефонен номер: <span className="font-weight-normal">{this.state.profile.phoneNumber}</span></span>
+                                </Col>
+                            <Col>
+                                <Button variant="primary" className="float-right"><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <span className="font-weight-bold"><FontAwesomeIcon icon={faUserTag}></FontAwesomeIcon> Роля: <span className="font-weight-normal">{rolesTranslate[this.state.profile.role]}</span></span>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <span className="font-weight-bold"><FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon> Профилът е създаден на: <span className="font-weight-normal">{createdOn}</span></span>
+                    </ListGroup.Item>
                 </ListGroup>
             </Tab>
             <Tab eventKey="profile" title="Profile">
