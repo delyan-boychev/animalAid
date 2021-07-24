@@ -1,5 +1,7 @@
 {
     "CONNECTION_STRING": "mongodb://animalAid:8R%404E-kLpV7G%24rgV2_VcPqkp%5EVK%2B%3DpvheGx%257LNh@localhost:27017/animalAid",
     "JWT_SECRET": "372c3ceb5866cbecebddfcf43681498d4de41eb31380d8f8effb70bb5e5e1c6d9e97f6d43114ad348db8e3e94ac01b078bf72977fd12c6366d965a0fb5691aa6",
-    "API_URL": "http://localhost:4000"
+    "ENCRYPTION_KEY": "9EJb5MuYmffLEUrUbMKphDFvCTsDwdEY?&!_MzGXV4yEn9b$hCC3X^Q*w+PFz4yCUc&?R*b3zDymkWv8=wK9FQCc-MRuFK4V#zCp5kjAYLh=xG7husgrU#TphU3VsTQr",
+    "API_URL": "http://localhost:4000",
+    "BASE_URL": "http://localhost:3000"
 }

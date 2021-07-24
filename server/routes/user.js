@@ -59,6 +59,17 @@ router.post("/log", async (req, res)=>
         res.sendStatus(400);
     }
 });
+router.post("/verifyProfile", async (req, res)=>
+{
+    if(req.body.key && req.body.key != "")
+    {
+        res.send(await userService.verifyProfile(req.body.key));
+    }
+    else
+    {
+        res.sendStatus(400);
+    }
+});
 router.post("/refreshToken", async (req, res)=>
 {
     if(req.headers.authorization)

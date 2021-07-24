@@ -51,7 +51,8 @@ class UserRepository
             const checkPass = bcrypt.compareSync(user.password, u.password);
             if(checkPass)
             {
-                return u.role;
+                u.password = undefined;
+                return u;
             }
             else
             {

@@ -49,6 +49,10 @@ export default class Login extends React.Component
               {
                   this.openModal("Неправилен имейл адрес или парола!");
               }
+              else if(response.data === "PROFILE_NOT_VERIFIED")
+              {
+                  this.openModal("Моля проверете имейл адреса си и потвърдете профила си!");
+              }
               else
               {
                   this.openModal("Вие влязохте успешно в профила си!");

@@ -3,13 +3,36 @@ const jwt = require('jsonwebtoken');
 const path = require("path");
 const fs = require("fs");
 const config =  require("../config.json");
+const nodemailer = require("nodemailer");
+const verifyTemplates = require("../models/emailTemplates/verifyProfile");
+const transportMail = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "bganimalaid@gmail.com",
+      pass: "kcyatskxnwbxtfhx"
+    }
+  });
+const Cryptr = require("cryptr");
+const fromSender = "Animal Aid <bganimalaid@gmail.com>";
 class UserService
 {
     userRepository = new UserRepository();
     async registerUser(user)
     {
         user.role = "User";
-        return this.userRepository.register(user);
+        const isReg = await this.userRepository.register(user);
+        if(isReg)
+        {
+            const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+            const key = cryptr.encrypt(user.email);
+            transportMail.sendMail({
+                from: fromSender,
+                to: user.email,
+                subject: "Успешна регистрация в Animal Aid",
+                html: verifyTemplates.verifyProfileUser(user.name.first, key),
+            });
+        }
+        return isReg;
     }
     async registerVet(user)
     {
@@ -20,15 +43,46 @@ class UserService
         {
             fs.unlinkSync(filePath);
         }
+        else
+        {
+            const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+            const key = cryptr.encrypt(user.email);
+            transportMail.sendMail({
+                from: fromSender,
+                to: user.email,
+                subject: "Успешна регистрация в Animal Aid",
+                html: verifyTemplates.verifyProfileVet(user.name.first, key),
+            });
+        }
         return isReg;
+    }
+    async verifyProfile(key)
+    {
+        const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+        try
+        {
+            const email = cryptr.decrypt(key);
+            return await this.userRepository.verify(email);
+        }
+        catch
+        {
+            return false;
+        }
     }
     async loginUser(user)
     {
-        const loggedIn = await this.userRepository.loginUser(user);
-        if(loggedIn !== false)
+        const u = await this.userRepository.loginUser(user);
+        if(u !== false)
         {
-            const accessToken = jwt.sign({ emailAnimalAid: user.email, role: loggedIn }, config.JWT_SECRET, {expiresIn: "30m"});
-            return accessToken;
+            if(u.verified)
+            {
+                const accessToken = jwt.sign({ emailAnimalAid: user.email, role: u.role }, config.JWT_SECRET, {expiresIn: "30m"});
+                return accessToken;
+            }
+            else
+            {
+                return "PROFILE_NOT_VERIFIED";
+            }
         }
         else
         {

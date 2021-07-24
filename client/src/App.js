@@ -13,6 +13,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import VerifyProfile from './pages/VerifyProfile';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
                   <Route exact path="/register" component={Register}></Route>
                   <Route exact path="/login" component={Login}></Route>
                   <Route exact path="/profile" component={Profile}></Route>
+                  <Route exact path="/verifyProfile" component={VerifyProfile}></Route>
                   <Route component={NotFound} />
               </Switch>
             </div>
