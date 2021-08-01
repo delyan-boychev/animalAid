@@ -76,7 +76,9 @@ class UserService
         {
             if(u.verified)
             {
-                const accessToken = jwt.sign({ emailAnimalAid: user.email, role: u.role }, config.JWT_SECRET, {expiresIn: "30m"});
+                const cryptr = new Cryptr(config.JWT_ENCRYPTION_KEY);
+                const data = cryptr.encrypt(JSON.stringify({ email: user.email, role: u.role }));
+                const accessToken = jwt.sign({ data: data }, config.JWT_SECRET, {expiresIn: "30m"});
                 return accessToken;
             }
             else
@@ -113,7 +115,7 @@ class UserService
             if (Date.now() < decoded.payload.exp * 1000) {
                 return false;
             }
-            const accessToken = jwt.sign({ emailAnimalAid: decoded.payload.emailAnimalAid, role: decoded.payload.role }, config.JWT_SECRET, {expiresIn: "30m"});
+            const accessToken = jwt.sign({ data: decoded.payload.data }, config.JWT_SECRET, {expiresIn: "30m"});
             return accessToken;
         }
     }

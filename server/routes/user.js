@@ -93,7 +93,7 @@ router.post("/edit/:property", authenticateJWT, async (req, res)=>
             const valRes = v.validate(req.body, editProfileSchema.getSchema(prop));
             if(valRes.valid)
             {
-                res.send(await userService.edit(prop, req.body[prop], req.user.emailAnimalAid));
+                res.send(await userService.edit(prop, req.body[prop], req.user.email));
             }
             else
             {
@@ -113,6 +113,6 @@ router.post("/edit/:property", authenticateJWT, async (req, res)=>
 });
 router.get("/profile", authenticateJWT, async (req, res)=>
 {
-    res.send(await userService.getProfile(req.user["emailAnimalAid"]));
+    res.send(await userService.getProfile(req.user["email"]));
 });
 module.exports = router;

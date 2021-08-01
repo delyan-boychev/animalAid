@@ -73,7 +73,7 @@ router.get("/:filename", authenticateJWT, async (req, res) =>
             let filePath = path.join(__dirname, '../' , "diplomas", req.params.filename);
             if(fs.existsSync(filePath))
             {
-                const diploma = await userService.getDiploma(req.user.emailAnimalAid);
+                const diploma = await userService.getDiploma(req.user.email);
                 if(diploma !== false)
                 {
                     if(diploma === req.params.filename)
