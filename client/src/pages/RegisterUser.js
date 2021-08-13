@@ -100,7 +100,7 @@ export default class RegisterUser extends React.Component
     let fields = this.state.fields;
     const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
-    const checkPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
     
     if(fields["firstName"].length < 2)
     {
@@ -129,7 +129,7 @@ export default class RegisterUser extends React.Component
     }
     if(!checkPass.test(fields["password"]) || fields["password"].length < 8)
     {
-      errors["password"] = "Паролата трябва да съдържа поне една малка буква, главна буква, една цифра, един специален символ и да е поне 8 символа!";
+      errors["password"] = "Паролата трябва да съдържа поне една малка латинска буква, една главна латинска буква, една цифра и да е поне 8 символа!";
       errors["isValid"] = false;
     }
     if(fields["password"] !== fields["confirmPassword"])

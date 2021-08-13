@@ -73,7 +73,7 @@ export default class Login extends React.Component
 
         };
         const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-        const checkPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
         if(!isEmail.test(fields["email"]))
         {
             errors["email"] = "Имейлът е невалиден!";
