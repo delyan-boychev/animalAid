@@ -78,7 +78,7 @@ class UserService
             {
                 const cryptr = new Cryptr(config.JWT_ENCRYPTION_KEY);
                 const data = cryptr.encrypt(JSON.stringify({ email: user.email, role: u.role }));
-                const accessToken = jwt.sign({ data: data }, config.JWT_SECRET, {expiresIn: "30m"});
+                const accessToken = jwt.sign({ data: data }, config.JWT_SECRET, {expiresIn: "5m"});
                 return accessToken;
             }
             else
@@ -108,15 +108,21 @@ class UserService
         }
         else
         {
-            if(!decoded.payload.emailAnimalAid)
-            {
-                return false;
-            }
             if (Date.now() < decoded.payload.exp * 1000) {
                 return false;
             }
-            const accessToken = jwt.sign({ data: decoded.payload.data }, config.JWT_SECRET, {expiresIn: "30m"});
-            return accessToken;
+            try
+            {
+                const cryptr = new Cryptr(config.JWT_ENCRYPTION_KEY);
+                cryptr.decrypt(decoded.payload.data);
+                const accessToken = jwt.sign({ data: decoded.payload.data }, config.JWT_SECRET, {expiresIn: "5m"});
+                return accessToken;
+
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
     async edit(prop, value, email)
