@@ -66,7 +66,9 @@ async function getRequestToken(url, headers)
     if(token !== "" && token !== null)
     {
         headers["Authorization"] = `animalAidAuthorization ${token}`;
-        const res = await axios.get(API_URL+url, {headers:headers});
+        let URL = API_URL + url;
+        if(url.includes(API_URL)) URL = url;
+        const res = await axios.get(URL, {headers:headers});
         return res.data;
     }
     else
@@ -79,6 +81,7 @@ const responseSuccessHandler = response => {
   };
   
   const responseErrorHandler = async error => {
+    console.log(error);
     if (error.response.status === 401) {
         await refreshToken();
         window.location.reload();

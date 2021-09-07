@@ -1,0 +1,4 @@
+const Cryptr = require("cryptr");
+const config = require("./config.json");
+const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
+console.log(cryptr.decrypt("73d7b1995d1e17be669b3dc1e61879130ee6f30b00a0ca239082280135d4bc92e8f4ac66230875474dae9538e9c702727315debe3249f5a067bf50d481ac5bcd245a5c8001ef25814c5abaeafd28d6d77ef289d4f9290afc31f21ab5f8eef32049e056657de4ac6fd3be937abbbb21ac045eca893cfefddacecd695e990345500499522ec121ea920f451ace29a1cb933349a23724987da86791c56d52e01aa813b7912068360bad4b4e5d7d53"));

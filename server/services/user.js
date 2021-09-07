@@ -1,5 +1,4 @@
 const UserRepository = require("../repositories/user")
-const jwt = require('jsonwebtoken');
 const path = require("path");
 const fs = require("fs");
 const config =  require("../config.json");
@@ -76,10 +75,9 @@ class UserService
         {
             if(u.verified)
             {
-                const cryptr = new Cryptr(config.JWT_ENCRYPTION_KEY);
-                const data = cryptr.encrypt(JSON.stringify({ email: user.email, role: u.role }));
-                const accessToken = jwt.sign({ data: data }, config.JWT_SECRET, {expiresIn: "5m"});
-                return accessToken;
+                const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
+                const token = cryptr.encrypt(JSON.stringify({ user: {email: user.email, role: u.role}, exp: parseInt(new Date().getTime()/1000)+1800}));
+                return token;
             }
             else
             {
@@ -101,28 +99,22 @@ class UserService
     }
     refreshToken(token)
     {
-        const decoded = jwt.decode(token, {complete: true});
-        if(decoded === null)
+        const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
+        try
+        {
+            const decoded = JSON.parse(cryptr.decrypt(token));
+            if (decoded["exp"] > parseInt(new Date().getTime()/1000)) {
+                return false;
+            }
+            else
+            {
+                const refreshToken = cryptr.encrypt(JSON.stringify({user:decoded["user"], exp: parseInt(new Date().getTime()/1000)+1800}));
+                return refreshToken;
+            }
+        }
+        catch
         {
             return false;
-        }
-        else
-        {
-            if (Date.now() < decoded.payload.exp * 1000) {
-                return false;
-            }
-            try
-            {
-                const cryptr = new Cryptr(config.JWT_ENCRYPTION_KEY);
-                cryptr.decrypt(decoded.payload.data);
-                const accessToken = jwt.sign({ data: decoded.payload.data }, config.JWT_SECRET, {expiresIn: "5m"});
-                return accessToken;
-
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
     async edit(prop, value, email)

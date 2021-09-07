@@ -44,6 +44,11 @@ export default class Profile extends React.Component
                 show: false,
                 title: "Съобщение",
                 body: ""
+            },
+            pdf:
+            {
+                numPages: null,
+                pageNumber: 1,
             }
         };
         this.getInfo();
@@ -51,7 +56,6 @@ export default class Profile extends React.Component
     openModal = (body) =>
     { 
         let modal = this.state.modal;
-        console.log(body);
         modal.show = true;
         modal.body = body;
         this.setState({modal});
@@ -90,6 +94,14 @@ export default class Profile extends React.Component
         }
         this.setState({profile:profile});
         this.validate();
+    }
+    checkOpenDiploma = async () =>
+    {
+        let result = await client.getRequestToken(this.state.profile.diplomaFile);
+        if(result !== "Unauthorized")
+        {
+            window.open(this.state.profile.diplomaFile, "_blank")
+        }
     }
     validate = () =>
     {
@@ -186,17 +198,17 @@ export default class Profile extends React.Component
                 return;
         }
         let res = await client.postRequestToken(`/user/edit/${button}`, body);
-        console.log(res);
         if(res === true)
         {
-            console.log('working');
             this.openModal("Редакцията е успешна!");
         }
         else
         {
-            console.log('working2');
             this.openModal("Възникна грешка при редакция! Извиняваме се за неудобството!");
         }
+    }
+    onDocumentLoadSuccess({ numPages }) {
+        this.setState({pdf:{numPages: numPages}});
     }
     render()
     {
@@ -209,10 +221,11 @@ export default class Profile extends React.Component
         if(this.state.profile.role === roles.Vet)
         {
             return (<div><h3 className="text-center">Моят профил</h3> 
+            <hr className="solid"></hr>
             <CustomModal show={this.state.modal.show} title={this.state.modal.title} body={this.state.modal.body} closeModal={this.closeModal}></CustomModal>
             <Tabs defaultActiveKey="profileInfo" className="mb-3" id="uncontrolled-tab-example">
             <Tab eventKey="profileInfo" title={<p style={{fontSize: 17, fontWeight: "bold",}}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon> Информация за профила</p>}>
-                <ListGroup>
+                <ListGroup className="shadow">
                     <ListGroup.Item>
                         <Form.Group controlId="fName">
                                     <Row>
@@ -300,7 +313,7 @@ export default class Profile extends React.Component
                         <span className="font-weight-bold"><FontAwesomeIcon icon={faUserTag}></FontAwesomeIcon> Роля: <span className="font-weight-normal">{rolesTranslate[this.state.profile.role]}</span></span>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                        <span className="font-weight-bold"><FontAwesomeIcon icon={faUniversity}></FontAwesomeIcon> Диплома за висше образование: <span className="font-weight-normal ml-1"><Button variant="primary" target="_blank" href={this.state.profile.diplomaFile}>Виж</Button></span></span>
+                        <span className="font-weight-bold"><FontAwesomeIcon icon={faUniversity}></FontAwesomeIcon> Диплома за висше образование: <span className="font-weight-normal ml-1"><Button variant="primary" onClick={this.checkOpenDiploma}>Виж</Button></span></span>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <span className="font-weight-bold"><FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon> Профилът е създаден на: <span className="font-weight-normal">{createdOn}</span></span>
@@ -317,11 +330,11 @@ export default class Profile extends React.Component
         }
         else
         {
-            return (<div><h3 className="text-center">Моят профил</h3> 
+            return (<div><h3 className="text-center text-shadow">Моят профил</h3>
             <CustomModal show={this.state.modal.show} title={this.state.modal.title} body={this.state.modal.body} closeModal={this.closeModal}></CustomModal>
             <Tabs defaultActiveKey="profileInfo" className="mb-3" id="uncontrolled-tab-example">
             <Tab eventKey="profileInfo" title={<p style={{fontSize: 17, fontWeight: "bold",}}><FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon> Информация за профила</p>}>
-                <ListGroup>
+                <ListGroup className="shadow">
                     <ListGroup.Item>
                         <Form.Group controlId="fName">
                                     <Row>
