@@ -57,9 +57,17 @@ a.text-secondary:hover, a.text-secondary:focus {
 {
   font-weight: bold;
 }
+.underline
+{
+  border-bottom: 4px solid #ffffff;
+}
 .text-shadow
 {
   filter: drop-shadow(1px 1px 10px #000000);
+}
+.text-shadow-big
+{
+  filter: drop-shadow(4px 4px 10px #000000);
 }
 .activeNav span
 {

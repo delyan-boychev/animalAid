@@ -21,23 +21,23 @@ import "./animations.css"
 import VerifyProfile from './pages/VerifyProfile';
 import About from './pages/About';
 const routes = [
-  { path: '/', Component: Home },
-  { path: '/about', Component: About },
-  { path: '/register', Component: Register },
-  { path: '/registerUser', Component: RegisterUser },
-  { path: '/registerVet', Component: RegisterVet },
-  { path: '/login', Component: Login },
-  { path: '/profile', Component: Profile },
-  { path: '/verifyProfile', Component: VerifyProfile },
+  { path: '/', Component: Home, className: "" },
+  { path: '/about', Component: About, className: "container mt-3"},
+  { path: '/register', Component: Register, className: "container mt-3"},
+  { path: '/registerUser', Component: RegisterUser, className: "container mt-3"},
+  { path: '/registerVet', Component: RegisterVet, className: "container mt-3"},
+  { path: '/login', Component: Login, className: "container mt-3"},
+  { path: '/profile', Component: Profile, className: "container mt-3"},
+  { path: '/verifyProfile', Component: VerifyProfile, className: "container mt-3"},
 ]
 
 function App() {
   return (
       <Router>
           <Header></Header>
-            <div className="container mt-3">
+            <div>
       
-                {routes.map(({ path, Component }) => (
+                {routes.map(({ path, Component, className }) => (
                   <Route key={path} exact={path!=="*"} path={path}>
                     {({ match }) => (
                       <CSSTransition
@@ -46,7 +46,7 @@ function App() {
                         classNames="page"
                         unmountOnExit
                       >
-                        <div className="page">
+                        <div className={className}>
                           <Component></Component>
                         </div>
                       </CSSTransition>
