@@ -4,7 +4,8 @@ const Validator = require("jsonschema").Validator;
 const userRegisterSchema = require("../models/validation/userRegister");
 const vetRegisterSchema = require("../models/validation/vetRegister");
 const userLoginSchema = require("../models/validation/userLogin");
-const authenticateJWT = require("../authenticate");
+const changeEmailSchema = require("../models/validation/changeEmail");
+const authenticate = require("../authenticate");
 const fs = require('fs');
 const editProfileSchema = require("../models/validation/editProfile");
 const path = require("path");
@@ -82,7 +83,7 @@ router.post("/refreshToken", async (req, res)=>
         res.sendStatus(400);
     }
 });
-router.post("/edit/:property", authenticateJWT, async (req, res)=>
+router.post("/edit/:property", authenticate, async (req, res)=>
 {
     const prop = req.params.property;
     if( prop == "fName" || prop == "lName" || prop == "city" || prop == "phoneNumber" || (prop == "address" && req.user.role == roles.Vet))
@@ -111,8 +112,21 @@ router.post("/edit/:property", authenticateJWT, async (req, res)=>
     }
     
 });
-router.get("/profile", authenticateJWT, async (req, res)=>
+router.get("/profile", authenticate, async (req, res)=>
 {
     res.send(await userService.getProfile(req.user["email"]));
+});
+router.post("/changeEmail", authenticate, async (req, res)=>
+{
+    let v = new Validator();
+    const valRes = v.validate(req.body, changeEmailSchema);
+    if(valRes.valid)
+    {
+        res.send(await userService.changeEmail(req.body["newEmail"], req.body["password"], req.user.email));
+    }
+    else
+    {
+        res.sendStatus(400);
+    }
 });
 module.exports = router;

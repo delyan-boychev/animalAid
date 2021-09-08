@@ -125,6 +125,29 @@ class UserRepository
             return false;
         }
     }
+    async changeEmail(user, newEmail)
+    {
+        const u = await User.findOne({email: user.email}).exec();
+        if(u !== null)
+        {
+            const checkPass = bcrypt.compareSync(user.password, u.password);
+            if(checkPass)
+            {
+                u.email = newEmail;
+                u.verified = false;
+                u.save();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
     async edit(prop, value, email)
     {
         const u = await User.findOne({email: email}).exec();

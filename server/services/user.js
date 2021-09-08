@@ -121,5 +121,25 @@ class UserService
     {
         return await this.userRepository.edit(prop, value, email);
     }
+    async changeEmail(newEmail, password, oldEmail)
+    {
+        const changeEmailRes = await this.userRepository.changeEmail({email: oldEmail, password: password}, newEmail);
+        if(changeEmailRes)
+        {
+            const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+            const key = cryptr.encrypt(newEmail);
+            transportMail.sendMail({
+                from: fromSender,
+                to: newEmail,
+                subject: "Смяна на имейл в Animal Aid",
+                html: verifyTemplates.verifyProfileChangeEmail(key),
+            });
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 module.exports = UserService;
