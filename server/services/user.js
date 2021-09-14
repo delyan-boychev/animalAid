@@ -1,9 +1,10 @@
-const UserRepository = require("../repositories/user")
+const userRepository = require("../repositories/user")
 const path = require("path");
 const fs = require("fs");
 const config =  require("../config.json");
 const nodemailer = require("nodemailer");
 const verifyTemplates = require("../models/emailTemplates/verifyProfile");
+const forgotPasswordTemplates = require("../models/emailTemplates/forgotPassword");
 const transportMail = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -15,11 +16,11 @@ const Cryptr = require("cryptr");
 const fromSender = "Animal Aid <bganimalaid@gmail.com>";
 class UserService
 {
-    userRepository = new UserRepository();
+    #userRepository = new userRepository();
     async registerUser(user)
     {
         user.role = "User";
-        const isReg = await this.userRepository.register(user);
+        const isReg = await this.#userRepository.register(user);
         if(isReg)
         {
             const cryptr = new Cryptr(config.ENCRYPTION_KEY);
@@ -36,7 +37,7 @@ class UserService
     async registerVet(user)
     {
         user.role = "Vet";
-        const isReg = await this.userRepository.register(user);
+        const isReg = await this.#userRepository.register(user);
         let filePath = path.join(__dirname, '../' , "diplomas", user.diplomaFile);
         if(!isReg)
         {
@@ -61,7 +62,7 @@ class UserService
         try
         {
             const email = cryptr.decrypt(key);
-            return await this.userRepository.verify(email);
+            return await this.#userRepository.verify(email);
         }
         catch
         {
@@ -70,7 +71,7 @@ class UserService
     }
     async loginUser(user)
     {
-        const u = await this.userRepository.loginUser(user);
+        const u = await this.#userRepository.loginUser(user);
         if(u !== false)
         {
             if(u.verified)
@@ -91,11 +92,11 @@ class UserService
     }
     async getDiploma(email)
     {
-        return await this.userRepository.getDiploma(email);
+        return await this.#userRepository.getDiploma(email);
     }
     async getProfile(email)
     {
-        return await this.userRepository.getProfile(email);
+        return await this.#userRepository.getProfile(email);
     }
     refreshToken(token)
     {
@@ -119,12 +120,88 @@ class UserService
     }
     async edit(prop, value, email)
     {
-        return await this.userRepository.edit(prop, value, email);
+        return await this.#userRepository.edit(prop, value, email);
+    }
+    async validateForgotPasswordToken(token)
+    {
+        const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+        try
+        {
+            const decoded  = JSON.parse(cryptr.decrypt(token));
+            if(decoded["exp"] != undefined && decoded["email"] != undefined)
+            {
+                if (decoded["exp"] < parseInt(new Date().getTime()/1000)) {
+                    return {isValid:false, email: ""};
+                }
+                else
+                {
+                    const res =  await this.#userRepository.checkUserExistsAndLastForgotPassword(decoded["email"]);
+                    if(res === "TOO_EARLY")
+                    {
+                        return {isValid:false, email: ""};
+                    }
+                    else
+                    {
+                        return {isValid:res, email: decoded["email"]};
+                    }
+                }
+            }
+            else
+            {
+                return {isValid:false, email: ""};
+            }
+        }
+        catch
+        {
+            return {isValid:false, email: ""};
+        }
+    }
+    async forgotPasswordChange(token, newPassword)
+    {
+        const isValid = await this.validateForgotPasswordToken(token);
+        if(isValid["isValid"])
+        {
+            const res = await this.#userRepository.changeForgotPassword(isValid["email"], newPassword);
+            return res;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    async requestForgotPassword(email)
+    {
+        const userExists = await this.#userRepository.checkUserExistsAndLastRequestForgotPassword(email);
+        if(userExists===true)
+        {   
+            const isSet = await this.#userRepository.setLastRequestForgotPassword(email);
+            if(isSet)
+            {
+                const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+                const token = cryptr.encrypt(JSON.stringify({email: email, exp: parseInt(new Date().getTime()/1000)+900}));
+                transportMail.sendMail({
+                    from: fromSender,
+                    to: email,
+                    subject: "Забравена парола в Animal Aid",
+                    html: forgotPasswordTemplates.forgotPasswordEmail(token),
+                });
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return userExists;
+        }
     }
     async changeEmail(newEmail, password, oldEmail)
     {
-        const changeEmailRes = await this.userRepository.changeEmail({email: oldEmail, password: password}, newEmail);
-        if(changeEmailRes)
+        const changeEmailRes = await this.#userRepository.changeEmail({email: oldEmail, password: password}, newEmail);
+        if(changeEmailRes === true)
         {
             const cryptr = new Cryptr(config.ENCRYPTION_KEY);
             const key = cryptr.encrypt(newEmail);
@@ -136,10 +213,18 @@ class UserService
             });
             return true;
         }
+        else if(changeEmailRes === "EXISTS")
+        {
+            return "EXISTS";
+        }
         else
         {
             return false;
         }
+    }
+    async changePassword(email, oldPassword, newPassword)
+    {
+        return await this.#userRepository.changePassword(email, oldPassword, newPassword);
     }
 }
 module.exports = UserService;

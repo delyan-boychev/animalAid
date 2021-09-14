@@ -2,7 +2,6 @@ import React from 'react';
 import {Form, Col, Button } from 'react-bootstrap';
 import CustomModal from '../components/CustomModal';
 import config from "../config.json";
-import { getCookie } from '../cookies';
 import { Redirect } from 'react-router-dom';
 const axios = require("axios");
 const FormData = require("form-data");
@@ -42,11 +41,13 @@ export default class RegisterVet extends React.Component
         show: false,
         title: "Съобщение",
         body: ""
-      }
+      },
+      redirect: false
 
     };
 
   }
+  registrationComplete = false;
   submitForm = (event)=>
   {
     
@@ -75,11 +76,12 @@ export default class RegisterVet extends React.Component
                 }).then((response)=>{
                     if(response.data === true)
                     {
-                    this.openModal("Вие се регистрирахте успешно!");
+                      this.openModal("Вие се регистрирахте успешно!");
+                      this.registrationComplete = true;
                     }
                     else if(response.data ===false)
                     {
-                    this.openModal("Вече същсетвува профил с този имейл адрес!");
+                      this.openModal("Вече същсетвува профил с този имейл адрес!");
                     }
                 });
             }
@@ -93,7 +95,7 @@ export default class RegisterVet extends React.Component
     let modal = this.state.modal;
     modal.show = true;
     modal.body = body;
-    this.setState({modal});
+    this.setState({modal, redirect: this.registrationComplete});
   }
   closeModal = () =>
   { 
@@ -160,7 +162,7 @@ export default class RegisterVet extends React.Component
     }
     if(!isPhoneNumber.test(fields["phoneNumber"]))
     {
-      errors["phoneNumber"] = "Невалиден телефонен номер!";
+      errors["phoneNumber"] = "Невалиден телефонен номер! Пример за валиден: +359123456789";
       errors["isValid"] = false;
     }
     if(!checkPass.test(fields["password"]) || fields["password"].length < 8)
@@ -191,9 +193,9 @@ export default class RegisterVet extends React.Component
   }
   render()
   {
-    if(getCookie("authorization") !== "" && getCookie("authorization") !== null)
+    if(this.state.redirect === true)
     {
-      return <Redirect to="/"></Redirect>
+      return <Redirect to="/login"></Redirect>
     }
     return (<div><h3 className="text-center">Регистрация на ветеринар</h3>
     <CustomModal show={this.state.modal.show} title={this.state.modal.title} body={this.state.modal.body} closeModal={this.closeModal}></CustomModal>

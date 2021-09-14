@@ -83,6 +83,7 @@ const responseSuccessHandler = response => {
   const responseErrorHandler = async error => {
     console.log(error);
     if (error.response.status === 401) {
+        setCookie("authorization", "", 1);
         await refreshToken();
         window.location.reload();
     }

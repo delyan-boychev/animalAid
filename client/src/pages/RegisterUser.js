@@ -2,7 +2,6 @@ import React from 'react';
 import {Form, Col, Button } from 'react-bootstrap';
 import CustomModal from '../components/CustomModal';
 import config from "../config.json";
-import { getCookie } from '../cookies';
 import { Redirect } from 'react-router-dom';
 const axios = require("axios");
 export default class RegisterUser extends React.Component
@@ -36,11 +35,13 @@ export default class RegisterUser extends React.Component
         show: false,
         title: "Съобщение",
         body: ""
-      }
+      },
+      redirect: false
 
     };
 
   }
+  registerComplete = false;
   submitForm = (event)=>
   {
     
@@ -63,6 +64,7 @@ export default class RegisterUser extends React.Component
         if(response.data === true)
         {
           this.openModal("Вие се регистрирахте успешно!");
+          this.registerComplete = true;
         }
         else if(response.data ===false)
         {
@@ -83,7 +85,7 @@ export default class RegisterUser extends React.Component
   { 
     let modal = this.state.modal;
     modal.show = false;
-    this.setState({modal});
+    this.setState({modal, redirect:this.registerComplete});
   }
   validate()
   {
@@ -124,7 +126,7 @@ export default class RegisterUser extends React.Component
     }
     if(!isPhoneNumber.test(fields["phoneNumber"]))
     {
-      errors["phoneNumber"] = "Невалиден телефонен номер!";
+      errors["phoneNumber"] = "Невалиден телефонен номер! Пример за валиден: +359123456789";
       errors["isValid"] = false;
     }
     if(!checkPass.test(fields["password"]) || fields["password"].length < 8)
@@ -148,9 +150,9 @@ export default class RegisterUser extends React.Component
   }
   render()
   {
-    if(getCookie("authorization") !== "" && getCookie("authorization") !== null)
+    if(this.state.redirect === true)
     {
-      return <Redirect to="/"></Redirect>
+      return <Redirect to="/login"></Redirect>
     }
     return (<div><h3 className="text-center">Регистрация на потребител</h3>
     <CustomModal show={this.state.modal.show} title={this.state.modal.title} body={this.state.modal.body} closeModal={this.closeModal}></CustomModal>
@@ -202,7 +204,7 @@ export default class RegisterUser extends React.Component
         <span className="text-danger">{this.state.errors.confirmPassword}</span>
       </Form.Group>
     </Form.Row>
-    <Button variant="primary" type="submit">
+    <Button variant="primary" type="submit" disabled={!this.state.errors.isValid}>
       Регистрация
     </Button>
   </Form>

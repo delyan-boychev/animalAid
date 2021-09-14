@@ -1,7 +1,7 @@
 import { getCookie, setCookie } from '../cookies';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {getRequestToken} from '../clientRequests';
-import { faPlusCircle, faSignInAlt, faUser, faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
+import {faSignInAlt, faUser, faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 import { Nav, Dropdown, DropdownButton} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useState, useEffect} from 'react';
@@ -28,8 +28,6 @@ export default function LoginAndRegPartial()
     if(getCookie("authorization") ==="" || getCookie("authorization") ===null)
     {
     return (<div style={{fontSize: "20px"}} className="d-xl-inline-flex justify-content-center">
-    <Nav.Link as={Link} to="/register" className="text-secondary"><FontAwesomeIcon icon={faPlusCircle}></FontAwesomeIcon> Регистрация</Nav.Link>
-
     <Nav.Link as={Link} to="/login" className="text-secondary"><FontAwesomeIcon icon={faSignInAlt}></FontAwesomeIcon> Влизане</Nav.Link>
     </div>);
     }

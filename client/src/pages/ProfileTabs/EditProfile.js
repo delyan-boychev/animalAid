@@ -28,6 +28,16 @@ export default class EditProfile extends React.Component
                 role: "",
                 phoneNumber: ""
             },
+            lastProfile:
+            {
+                name: {
+                    first: "",
+                    last: ""
+                },
+                city: "",
+                address: "",
+                phoneNumber: ""
+            },
             errors:
             {
                 name: {
@@ -75,6 +85,7 @@ export default class EditProfile extends React.Component
             res.diplomaFile = `${API_URL}/diplomas/${res.diplomaFile}?token=${this.token}`;
         }
         this.setState({profile:res});
+        this.setState({lastProfile:{name: {first: res.name.first, last: res.name.last}, city: res.city, address: res.address, phoneNumber: res.phoneNumber}});
     }
     onChangeValue = (event) =>
     {
@@ -225,7 +236,7 @@ export default class EditProfile extends React.Component
                                             <span className="text-danger">{this.state.errors.name.first}</span>
                                         </Col>
                                         <Col xs={2}>
-                                            <Button variant="primary" className="float-right" id="fName_button" onClick={this.onEditButtonClick}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
+                                            <Button variant="primary" className="float-right" id="fName_button" onClick={this.onEditButtonClick} disabled={this.state.errors.name.first !== "" || this.state.lastProfile.name.first === this.state.profile.name.first}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
                                         </Col>
                                     </Row>
                          </Form.Group>
@@ -241,7 +252,7 @@ export default class EditProfile extends React.Component
                                             <span className="text-danger">{this.state.errors.name.last}</span>
                                         </Col>
                                         <Col xs={2}>
-                                            <Button variant="primary" className="float-right" id="lName_button" onClick={this.onEditButtonClick}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
+                                            <Button variant="primary" className="float-right" id="lName_button" onClick={this.onEditButtonClick} disabled={this.state.errors.name.last !== "" || this.state.lastProfile.name.last === this.state.profile.name.last}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
                                         </Col>
                                     </Row>
                          </Form.Group>
@@ -260,7 +271,7 @@ export default class EditProfile extends React.Component
                                             <span className="text-danger">{this.state.errors.phoneNumber}</span>
                                         </Col>
                                         <Col xs={2}>
-                                            <Button variant="primary" className="float-right" id="phoneNumber_button" onClick={this.onEditButtonClick}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
+                                            <Button variant="primary" className="float-right" id="phoneNumber_button" onClick={this.onEditButtonClick} disabled={this.state.errors.phoneNumber !== "" || this.state.lastProfile.phoneNumber === this.state.profile.phoneNumber}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
                                         </Col>
                                     </Row>
                          </Form.Group>
@@ -276,7 +287,7 @@ export default class EditProfile extends React.Component
                                             <span className="text-danger">{this.state.errors.city}</span>
                                         </Col>
                                         <Col xs={2}>
-                                            <Button variant="primary" className="float-right" id="city_button" onClick={this.onEditButtonClick}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
+                                            <Button variant="primary" className="float-right" id="city_button" onClick={this.onEditButtonClick} disabled={this.state.errors.city !== "" || this.state.lastProfile.city === this.state.profile.city}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
                                         </Col>
                                     </Row>
                          </Form.Group>
@@ -293,7 +304,7 @@ export default class EditProfile extends React.Component
                                             <span className="text-danger">{this.state.errors.address}</span>
                                         </Col>
                                         <Col xs={2}>
-                                            <Button variant="primary" className="float-right" id="address_button" onClick={this.onEditButtonClick}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
+                                            <Button variant="primary" className="float-right" id="address_button" onClick={this.onEditButtonClick} disabled={this.state.errors.address !== "" || this.state.lastProfile.address === this.state.profile.address}><FontAwesomeIcon icon={faPen}></FontAwesomeIcon></Button>
                                         </Col>
                                     </Row>
                          </Form.Group>

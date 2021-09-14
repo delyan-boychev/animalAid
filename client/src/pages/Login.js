@@ -3,8 +3,10 @@ import React from "react";
 import config from "../config.json";
 import {Form, Button, Col} from "react-bootstrap";
 import CustomModal from "../components/CustomModal";
-import {getCookie, setCookie} from "../cookies";
-import  { Redirect } from 'react-router-dom';
+import {setCookie} from "../cookies";
+import  { Link} from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 export default class Login extends React.Component
 {
     loginComplete = false;
@@ -101,7 +103,7 @@ export default class Login extends React.Component
         this.setState({modal});
         if(this.loginComplete)
         {
-            window.location.href = "/profile";
+            window.location.href = "/#redirectToProfile";
         }
     }
     handleOnChangeValue = (event) =>
@@ -113,10 +115,6 @@ export default class Login extends React.Component
     }
     render()
     {
-        if(getCookie("authorization") !== "" && getCookie("authorization") !== null)
-        {
-            return <Redirect to="/"></Redirect>
-        }
         return (<div><h3 className="text-center">Влизане</h3>
         <CustomModal show={this.state.modal.show} title={this.state.modal.title} body={this.state.modal.body} closeModal={this.closeModal}></CustomModal>
         <Form onSubmit={this.submitForm}>
@@ -138,6 +136,9 @@ export default class Login extends React.Component
                 Влизане
             </Button>
         </Form>
+        <hr/>
+        <p><Link to="/requestForgotPassword" className="btn btn-outline-primary"><FontAwesomeIcon icon={faQuestionCircle}></FontAwesomeIcon> Забравена парола</Link></p>
+        <p><Link to="/register" className="btn btn-outline-primary"><FontAwesomeIcon icon={faPlusCircle}></FontAwesomeIcon> Регистрация</Link></p>
         </div>);
     }
 }

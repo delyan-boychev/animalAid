@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const config =  require("../config.json");
 const User = require("../models/user");
 const roles = require("../models/roles");
-const path = require("path");
 mongoose.connect(config.CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true});
 class UserRepository
 {
@@ -28,6 +27,73 @@ class UserRepository
             let u = new User(user);
             u.save();
             return true;
+        }
+    }
+    async checkUserExistsAndLastRequestForgotPassword(email)
+    {
+        let user = await User.findOne({email: email}).exec();
+        if(user!=null)
+        {
+            if(user.lastRequestForgotPassword)
+            {
+                if(user.lastRequestForgotPassword+86400<parseInt(new Date().getTime()/1000))
+                {
+                    console.log(true);
+                    return true;
+                }
+                else
+                {
+                    return "TOO_EARLY";
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    async checkUserExistsAndLastForgotPassword(email)
+    {
+        let user = await User.findOne({email: email}).exec();
+        if(user!=null)
+        {
+            if(user.lastForgotPassword)
+            {
+                if(user.lastForgotPassword+86400<parseInt(new Date().getTime()/1000))
+                {
+                    return true;
+                }
+                else
+                {
+                    return "TOO_EARLY";
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    async setLastRequestForgotPassword(email)
+    {
+        let user = await User.findOne({email: email}).exec();
+        if(user!==null)
+        { 
+            user.lastRequestForgotPassword = parseInt(new Date().getTime()/1000);
+            user.save();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     async getProfile(email)
@@ -133,8 +199,58 @@ class UserRepository
             const checkPass = bcrypt.compareSync(user.password, u.password);
             if(checkPass)
             {
-                u.email = newEmail;
-                u.verified = false;
+                const u2 = await User.findOne({email: newEmail}).exec();
+                if(u2 === null)
+                {
+                    u.email = newEmail;
+                    u.verified = false;
+                    u.save();
+                    return true;
+                }
+                else
+                {
+                    return "EXISTS";
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    async changeForgotPassword(email, newPassword)
+    {
+        const u = await User.findOne({email: email}).exec();
+        if(u !== null)
+        {
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(newPassword, salt);
+            u.password = hash;
+            u.lastForgotPassword = parseInt(new Date().getTime()/1000);
+            u.lastRequestForgotPassword = u.lastForgotPassword;
+            u.save();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    async changePassword(email, oldPassword, newPassword)
+    {
+        const u = await User.findOne({email: email}).exec();
+        if(u !== null)
+        {
+            const checkPass = bcrypt.compareSync(oldPassword, u.password);
+            if(checkPass)
+            {
+                const salt = bcrypt.genSaltSync(10);
+                const hash = bcrypt.hashSync(newPassword, salt);
+                u.password = hash;
                 u.save();
                 return true;
             }

@@ -5,6 +5,9 @@ const userRegisterSchema = require("../models/validation/userRegister");
 const vetRegisterSchema = require("../models/validation/vetRegister");
 const userLoginSchema = require("../models/validation/userLogin");
 const changeEmailSchema = require("../models/validation/changeEmail");
+const changePasswordSchema = require("../models/validation/changePassword");
+const forgotPasswordSchema = require("../models/validation/forgotPassword");
+const forgotPasswordChangeSchema = require("../models/validation/forgotPasswordChange");
 const authenticate = require("../authenticate");
 const fs = require('fs');
 const editProfileSchema = require("../models/validation/editProfile");
@@ -123,6 +126,50 @@ router.post("/changeEmail", authenticate, async (req, res)=>
     if(valRes.valid)
     {
         res.send(await userService.changeEmail(req.body["newEmail"], req.body["password"], req.user.email));
+    }
+    else
+    {
+        res.sendStatus(400);
+    }
+});
+router.post("/changePassword", authenticate, async (req, res)=>
+{
+    let v = new Validator();
+    const valRes = v.validate(req.body, changePasswordSchema);
+    if(valRes.valid)
+    {
+        res.send(await userService.changePassword(req.user["email"], req.body["oldPassword"], req.body["newPassword"]));
+    }
+    else
+    {
+        res.sendStatus(400);
+    }
+});
+router.get("/validateForgetPasswordToken/:token", async (req, res) =>
+{
+    const validation = await userService.validateForgotPasswordToken(req.params.token);
+    res.send(validation["isValid"]);
+});
+router.post("/requestForgotPassword", async (req, res) =>
+{
+    let v = new Validator();
+    const valRes = v.validate(req.body, forgotPasswordSchema);
+    if(valRes.valid)
+    {
+        res.send(await userService.requestForgotPassword(req.body["email"]));
+    }
+    else
+    {
+        res.sendStatus(400);
+    }
+});
+router.post("/forgotPasswordChange", async (req, res)=>
+{
+    let v = new Validator();
+    const valRes = v.validate(req.body, forgotPasswordChangeSchema);
+    if(valRes.valid)
+    {
+        res.send(await userService.forgotPasswordChange(req.body["token"], req.body["newPassword"]));
     }
     else
     {

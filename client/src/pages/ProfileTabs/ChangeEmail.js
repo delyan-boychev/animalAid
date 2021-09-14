@@ -29,6 +29,7 @@ export default class ChangeEmail extends React.Component
                 title: "Съобщение",
                 body: ""
             },
+            redirect: false,
         }
     }
     submitForm = async (event) =>
@@ -42,9 +43,13 @@ export default class ChangeEmail extends React.Component
           let res = await client.postRequestToken("/user/changeEmail", fields);
           if(res === true)
           {
-            this.openModal("Имейл адресът е сменен успешно! Моля проверете новата си поща и след това влезте в профила с новия имейл адрес!");
+            this.openModal("Имейл адресът е променен успешно! Моля проверете новата си поща и след това влезте в профила с новия имейл адрес!");
             setCookie("authorization", "", 1);
             this.changeEmailComplete = true;
+          }
+          else if(res === "EXISTS")
+          {
+            this.openModal("Вече съществува профил с този имейл адрес!");
           }
           else
           {
@@ -88,11 +93,7 @@ export default class ChangeEmail extends React.Component
     { 
         let modal = this.state.modal;
         modal.show = false;
-        this.setState({modal});
-        if(this.changeEmailComplete)
-        {
-            window.location.href = "/login";
-        }
+        this.setState({modal, redirect: this.changeEmailComplete});
     }
     handleOnChangeValue = (event) =>
     {
@@ -103,6 +104,10 @@ export default class ChangeEmail extends React.Component
     }
     render()
     {
+        if(this.state.redirect === true)
+        {
+            window.location.href="/login";
+        }
         return(
             <div>
                 <CustomModal show={this.state.modal.show} title={this.state.modal.title} body={this.state.modal.body} closeModal={this.closeModal}></CustomModal>
@@ -122,8 +127,8 @@ export default class ChangeEmail extends React.Component
                                 <span className="text-danger">{this.state.errors.password}</span>
                             </Form.Group>
                         </Form.Row>
-                        <Button variant="primary" type="submit">
-                            Влизане
+                        <Button variant="primary" type="submit" disabled={!this.state.errors.isValid}>
+                            Промяна на имейл адрес
                         </Button>
                     </Form>
                 </Card>
