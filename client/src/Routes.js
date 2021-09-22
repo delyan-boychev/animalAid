@@ -34,7 +34,7 @@ function authorizationCheck(Component, loggedIn)
   }
   else if(loggedIn===true)
   {
-    if(token!=="")
+    if(token!=="" && token!==null)
     {
       return <Component></Component>;
     }
@@ -45,14 +45,7 @@ function authorizationCheck(Component, loggedIn)
   }
   else
   {
-    if(token!=="")
-    {
-      return <Redirect to="/"></Redirect>;
-    }
-    else
-    {
       return <Component></Component>;
-    }
   }
 }
 export default function Routes()

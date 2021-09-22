@@ -21,8 +21,29 @@ async function postRequestToken(url, data, headers)
     if(token !== "" && token !== null)
     {
         headers["Authorization"] = `animalAidAuthorization ${token}`;
-        const res = await axios.post(API_URL+url, data, {headers:headers});
-        return res.data;
+        console.log(headers);
+        let URL = API_URL + url;
+        if(url.includes(API_URL)) URL = url;
+        try{
+            const res = await axios.post(URL, data, {headers:headers});
+            return res.data;
+        }
+        catch(error)
+        {
+            console.clear();
+            if(error.response.status === 401)
+            {
+                await refreshToken();
+                token = getCookie("authorization");
+                headers["Authorization"] = `animalAidAuthorization ${token}`;
+                const res2 = await axios.post(URL, data, {headers:headers});
+                return res2.data;
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
     else
     {
@@ -35,6 +56,7 @@ async function refreshToken()
     const token = getCookie("authorization");
     if(token !== "" && token !== null)
     {
+        setCookie("authorization", "", 1);
         let headers = {"Authorization": `animalAidAuthorization ${token}`};
         const res = await axios.post(`${API_URL}/user/refreshToken`, {}, {headers:headers});
         if(res.data!==false)
@@ -68,20 +90,41 @@ async function getRequestToken(url, headers)
         headers["Authorization"] = `animalAidAuthorization ${token}`;
         let URL = API_URL + url;
         if(url.includes(API_URL)) URL = url;
-        const res = await axios.get(URL, {headers:headers});
-        return res.data;
+        try{
+            const res = await axios.get(URL, {headers:headers});
+            return res.data;
+        }
+        catch(error)
+        {
+            console.clear();
+            if(error.response.status === 401)
+            {
+                await refreshToken();
+                token = getCookie("authorization");
+                headers["Authorization"] = `animalAidAuthorization ${token}`;
+                const res2 = await axios.get(URL, {headers:headers});
+                return res2.data;
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
     else
     {
         return "redirectToLogin";
     }
 }
+/*
 const responseSuccessHandler = response => {
     return response;
   };
   
   const responseErrorHandler = async error => {
-    console.log(error);
+    console.log(error.response);
+    setCookie("authorization", "", 1);
+    await refreshToken();
     if (error.response.status === 401) {
         setCookie("authorization", "", 1);
         await refreshToken();
@@ -95,4 +138,5 @@ axios.interceptors.response.use(
     response => responseSuccessHandler(response),
     error => responseErrorHandler(error)
   );
+*/
 export {getRequestToken, postRequestToken, postRequest, getRequest}
