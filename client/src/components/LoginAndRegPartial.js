@@ -19,7 +19,7 @@ export default function LoginAndRegPartial()
         {
             getProfile();
         }
-    })
+    });
     let logout = ()=>
     {
         setCookie("authorization", "", 1);
@@ -27,9 +27,9 @@ export default function LoginAndRegPartial()
     };
     if(getCookie("authorization") ==="" || getCookie("authorization") ===null)
     {
-    return (<div style={{fontSize: "20px"}} className="d-xl-inline-flex justify-content-center">
-    <Nav.Link as={Link} to="/login" className="text-secondary"><FontAwesomeIcon icon={faSignInAlt}></FontAwesomeIcon> Влизане</Nav.Link>
-    </div>);
+        return (<div style={{fontSize: "20px"}} className="d-xl-inline-flex justify-content-center">
+        <Nav.Link as={Link} to="/login" className="text-secondary"><FontAwesomeIcon icon={faSignInAlt}></FontAwesomeIcon> Влизане</Nav.Link>
+        </div>);
     }
     else
     {

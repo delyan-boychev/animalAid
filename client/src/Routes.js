@@ -45,7 +45,14 @@ function authorizationCheck(Component, loggedIn)
   }
   else
   {
+    if(token!=="" && token!==null)
+    {
+      return <Redirect to="/"></Redirect>;
+    }
+    else
+    {
       return <Component></Component>;
+    }
   }
 }
 export default function Routes()
