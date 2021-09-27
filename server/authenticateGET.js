@@ -1,6 +1,8 @@
 const config = require("./config.json");
 const Cryptr = require("cryptr");
-const authenticate = (req, res, next) => {
+const UserService = require("./services/user");
+const userService = new UserService();
+const authenticate = async function(req, res, next) {
     const token = req.query.token;
     if (token) {
         const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
@@ -13,8 +15,17 @@ const authenticate = (req, res, next) => {
             }
             else
             {
-                req.user = data["user"];
-                next();
+                const role = await userService.getRole(data["user"]["email"]);
+                data["user"]["role"] = role;
+                if(role===false)
+                {
+                    res.sendStatus(401);
+                }
+                else
+                {
+                    req.user = data["user"];
+                    next();
+                }
             }
         }
         catch
