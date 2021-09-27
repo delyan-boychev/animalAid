@@ -34,6 +34,10 @@ class UserService
         }
         return isReg;
     }
+    async getRole(email)
+    {
+        return await this.#userRepository.getRole(email);
+    }
     async registerVet(user)
     {
         user.role = "Vet";
@@ -77,7 +81,7 @@ class UserService
             if(u.verified)
             {
                 const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
-                const token = cryptr.encrypt(JSON.stringify({ user: {email: user.email, role: u.role}, exp: parseInt(new Date().getTime()/1000)+1800}));
+                const token = cryptr.encrypt(JSON.stringify({ user: {email: user.email}, exp: parseInt(new Date().getTime()/1000)+1800}));
                 return token;
             }
             else

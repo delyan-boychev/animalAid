@@ -264,6 +264,18 @@ class UserRepository
             return false;
         }
     }
+    async getRole(email)
+    {
+        const u = await User.findOne({email: email}).exec();
+        if(u!==null)
+        {
+            return u.role;
+        }
+        else
+        {
+            return false;
+        }
+    }
     async edit(prop, value, email)
     {
         const u = await User.findOne({email: email}).exec();
