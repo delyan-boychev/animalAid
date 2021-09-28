@@ -1,16 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400&display=swap");
 body {
   margin: 0;
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
 }
@@ -20,7 +21,8 @@ html, body {
   grid-template-rows: auto 1fr auto;
 }
 
-a.text-secondary:hover, a.text-secondary:focus {
+a.text-secondary:hover,
+a.text-secondary:focus {
   color: #ffffff !important;
 }
 .nav-link-effect {
@@ -28,13 +30,12 @@ a.text-secondary:hover, a.text-secondary:focus {
   position: relative;
   color: #ffffff;
 }
-.nav-link-effect
-{
+.nav-link-effect {
   filter: drop-shadow(1px 1px 5px #000000);
 }
 @media (hover: hover) and (pointer: fine) {
   .nav-link-effect:after {
-    content: '';
+    content: "";
     position: absolute;
     width: 100%;
     transform: scaleX(0);
@@ -46,44 +47,38 @@ a.text-secondary:hover, a.text-secondary:focus {
     transform-origin: bottom right;
     transition: transform 0.25s ease-out;
   }
-  
+
   .nav-link-effect:hover:after {
     color: #ffffff;
     transform: scaleX(1);
     transform-origin: bottom left;
   }
 }
-.activeNav
-{
+.activeNav {
   font-weight: bold;
 }
-.underline
-{
+.underline {
   border-bottom: 4px solid #ffffff;
 }
-.text-shadow
-{
+.text-shadow {
   filter: drop-shadow(1px 1px 10px #000000);
 }
-.text-shadow-big
-{
+.text-shadow-big {
   filter: drop-shadow(4px 4px 10px #000000);
 }
-.activeNav span
-{
+.activeNav span {
   filter: drop-shadow(2px 2px 5px #000000);
 }
 @keyframes fadeInAnimation {
   0% {
-      opacity: 0;
+    opacity: 0;
   }
   100% {
-      opacity: 1;
-   }
+    opacity: 1;
+  }
 }
-.activeNav span::after
-{
-  content: '';
+.activeNav span::after {
+  content: "";
   position: absolute;
   width: 100%;
   transform: scaleX(1);
@@ -96,15 +91,15 @@ a.text-secondary:hover, a.text-secondary:focus {
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
-.navigation-link{
-  padding-left:40px;
-  padding-right:40px;
+.navigation-link {
+  padding-left: 40px;
+  padding-right: 40px;
 }
 .show > .dropdown-menu {
   max-height: 800px;
   visibility: visible;
 }
-  
+
 .dropdown-menu {
   display: block;
   max-height: 0;
