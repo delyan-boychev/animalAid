@@ -1,7 +1,28 @@
-import { getCookie, setCookie, eraseCookie } from "./cookies";
+//*Functions for making post or get requests to api application
+import { getCookie, setCookie } from "./cookies";
 const API_URL = require("./config.json").API_URL;
 const axios = require("axios");
-
+//*Refresh token after expiration
+async function refreshToken() {
+  const token = getCookie("authorization");
+  if (token !== "" && token !== null) {
+    setCookie("authorization", "", 1);
+    let headers = { Authorization: `animalAidAuthorization ${token}` };
+    const res = await axios.post(
+      `${API_URL}/user/refreshToken`,
+      {},
+      { headers: headers }
+    );
+    if (res.data !== false) {
+      setCookie("authorization", res.data, 4444444);
+      return true;
+    } else {
+      setCookie("authorization", "", 1);
+      return false;
+    }
+  }
+}
+//*Function for making post request
 async function postRequest(url, data, headers) {
   if (!headers) {
     headers = {};
@@ -9,6 +30,7 @@ async function postRequest(url, data, headers) {
   const res = await axios.post(API_URL + url, data, { headers: headers });
   return res.data;
 }
+//*Function for making post request when user is logged in his profile
 async function postRequestToken(url, data, headers) {
   if (!headers) {
     headers = {};
@@ -25,11 +47,16 @@ async function postRequestToken(url, data, headers) {
     } catch (error) {
       console.clear();
       if (error.response.status === 401) {
-        await refreshToken();
-        token = getCookie("authorization");
-        headers["Authorization"] = `animalAidAuthorization ${token}`;
-        const res2 = await axios.post(URL, data, { headers: headers });
-        return res2.data;
+        const refreshedToken = await refreshToken();
+        if (refreshedToken) {
+          token = getCookie("authorization");
+          headers["Authorization"] = `animalAidAuthorization ${token}`;
+          const res2 = await axios.post(URL, data, { headers: headers });
+          return res2.data;
+        } else {
+          window.location.href = "/";
+          return "";
+        }
       } else {
         return "";
       }
@@ -38,23 +65,7 @@ async function postRequestToken(url, data, headers) {
     window.location.href = "/login";
   }
 }
-async function refreshToken() {
-  const token = getCookie("authorization");
-  if (token !== "" && token !== null) {
-    setCookie("authorization", "", 1);
-    let headers = { Authorization: `animalAidAuthorization ${token}` };
-    const res = await axios.post(
-      `${API_URL}/user/refreshToken`,
-      {},
-      { headers: headers }
-    );
-    if (res.data !== false) {
-      setCookie("authorization", res.data, 4444444);
-    } else {
-      eraseCookie("authorization");
-    }
-  }
-}
+//*Function for making get request
 async function getRequest(url, headers) {
   if (!headers) {
     headers = {};
@@ -62,6 +73,7 @@ async function getRequest(url, headers) {
   const res = await axios.get(API_URL + url, { headers: headers });
   return res.data;
 }
+//*Function for making get request when user is logged in his profile
 async function getRequestToken(url, headers) {
   if (!headers) {
     headers = {};
@@ -77,11 +89,16 @@ async function getRequestToken(url, headers) {
     } catch (error) {
       console.clear();
       if (error.response.status === 401) {
-        await refreshToken();
-        token = getCookie("authorization");
-        headers["Authorization"] = `animalAidAuthorization ${token}`;
-        const res2 = await axios.get(URL, { headers: headers });
-        return res2.data;
+        const refreshedToken = await refreshToken();
+        if (refreshedToken) {
+          token = getCookie("authorization");
+          headers["Authorization"] = `animalAidAuthorization ${token}`;
+          const res2 = await axios.get(URL, { headers: headers });
+          return res2.data;
+        } else {
+          window.location.href = "/";
+          return "";
+        }
       } else {
         return "";
       }
@@ -90,27 +107,4 @@ async function getRequestToken(url, headers) {
     return "redirectToLogin";
   }
 }
-/*
-const responseSuccessHandler = response => {
-    return response;
-  };
-  
-  const responseErrorHandler = async error => {
-    console.log(error.response);
-    setCookie("authorization", "", 1);
-    await refreshToken();
-    if (error.response.status === 401) {
-        setCookie("authorization", "", 1);
-        await refreshToken();
-        window.location.reload();
-    }
-  
-    return Promise.reject(error);
-  }
-  
-axios.interceptors.response.use(
-    response => responseSuccessHandler(response),
-    error => responseErrorHandler(error)
-  );
-*/
 export { getRequestToken, postRequestToken, postRequest, getRequest };
