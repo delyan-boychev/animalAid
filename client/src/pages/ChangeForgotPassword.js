@@ -33,7 +33,6 @@ export default class ChangeForgotPassword extends React.Component {
         window.location.search
       ).get("token")}`
     );
-    console.log(res);
     this.setState({ tokenValid: res });
   };
   submitForm = async (event) => {

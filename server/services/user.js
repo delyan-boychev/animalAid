@@ -31,8 +31,8 @@ class UserService {
     }
     return isReg;
   }
-  async getRole(email) {
-    return await this.#userRepository.getRole(email);
+  async getRole(id) {
+    return await this.#userRepository.getRole(id);
   }
   async registerVet(user) {
     user.role = "Vet";
@@ -68,8 +68,8 @@ class UserService {
         const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
         const token = cryptr.encrypt(
           JSON.stringify({
-            user: { email: user.email },
-            exp: parseInt(new Date().getTime() / 1000) + 1800,
+            user: { id: u._id },
+            exp: parseInt(new Date().getTime() / 1000) + 60,
           })
         );
         return token;
@@ -80,11 +80,11 @@ class UserService {
       return false;
     }
   }
-  async getDiploma(email) {
-    return await this.#userRepository.getDiploma(email);
+  async getDiploma(id) {
+    return await this.#userRepository.getDiploma(id);
   }
-  async getProfile(email) {
-    return await this.#userRepository.getProfile(email);
+  async getProfile(id) {
+    return await this.#userRepository.getProfile(id);
   }
   refreshToken(token) {
     const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
@@ -96,7 +96,7 @@ class UserService {
         const refreshToken = cryptr.encrypt(
           JSON.stringify({
             user: decoded["user"],
-            exp: parseInt(new Date().getTime() / 1000) + 1800,
+            exp: parseInt(new Date().getTime() / 1000) + 60,
           })
         );
         return refreshToken;
@@ -105,8 +105,8 @@ class UserService {
       return false;
     }
   }
-  async edit(prop, value, email) {
-    return await this.#userRepository.edit(prop, value, email);
+  async edit(prop, value, id) {
+    return await this.#userRepository.edit(prop, value, id);
   }
   async validateForgotPasswordToken(token) {
     const cryptr = new Cryptr(config.ENCRYPTION_KEY);
@@ -176,9 +176,9 @@ class UserService {
       return userExists;
     }
   }
-  async changeEmail(newEmail, password, oldEmail) {
+  async changeEmail(newEmail, password, id) {
     const changeEmailRes = await this.#userRepository.changeEmail(
-      { email: oldEmail, password: password },
+      { id: id, password: password },
       newEmail
     );
     if (changeEmailRes === true) {
@@ -197,9 +197,9 @@ class UserService {
       return false;
     }
   }
-  async changePassword(email, oldPassword, newPassword) {
+  async changePassword(id, oldPassword, newPassword) {
     return await this.#userRepository.changePassword(
-      email,
+      id,
       oldPassword,
       newPassword
     );

@@ -84,7 +84,7 @@ router.post("/edit/:property", authenticate, async (req, res) => {
       let v = new Validator();
       const valRes = v.validate(req.body, editProfileSchema.getSchema(prop));
       if (valRes.valid) {
-        res.send(await userService.edit(prop, req.body[prop], req.user.email));
+        res.send(await userService.edit(prop, req.body[prop], req.user.id));
       } else {
         res.sendStatus(400);
       }
@@ -96,7 +96,7 @@ router.post("/edit/:property", authenticate, async (req, res) => {
   }
 });
 router.get("/profile", authenticate, async (req, res) => {
-  res.send(await userService.getProfile(req.user["email"]));
+  res.send(await userService.getProfile(req.user["id"]));
 });
 router.post("/changeEmail", authenticate, async (req, res) => {
   let v = new Validator();
@@ -106,7 +106,7 @@ router.post("/changeEmail", authenticate, async (req, res) => {
       await userService.changeEmail(
         req.body["newEmail"],
         req.body["password"],
-        req.user.email
+        req.user.id
       )
     );
   } else {
@@ -119,7 +119,7 @@ router.post("/changePassword", authenticate, async (req, res) => {
   if (valRes.valid) {
     res.send(
       await userService.changePassword(
-        req.user["email"],
+        req.user["id"],
         req.body["oldPassword"],
         req.body["newPassword"]
       )

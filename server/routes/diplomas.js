@@ -68,7 +68,7 @@ router.get("/:filename", authenticateJWT, async (req, res) => {
         req.params.filename
       );
       if (fs.existsSync(filePath)) {
-        const diploma = await userService.getDiploma(req.user.email);
+        const diploma = await userService.getDiploma(req.user.id);
         if (diploma !== false) {
           if (diploma === req.params.filename) {
             fs.readFile(filePath, function (err, data) {

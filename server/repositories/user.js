@@ -75,8 +75,8 @@ class UserRepository {
       return false;
     }
   }
-  async getProfile(email) {
-    let user = await User.findOne({ email: email }).exec();
+  async getProfile(id) {
+    let user = await User.findById(id).exec();
     if (user == null) {
       return {};
     } else {
@@ -98,8 +98,8 @@ class UserRepository {
       return false;
     }
   }
-  async getDiploma(email) {
-    const u = await User.findOne({ email: email }).exec();
+  async getDiploma(id) {
+    const u = await User.findById(id).exec();
     if (u !== null) {
       return u.diplomaFile;
     } else {
@@ -139,7 +139,7 @@ class UserRepository {
     }
   }
   async changeEmail(user, newEmail) {
-    const u = await User.findOne({ email: user.email }).exec();
+    const u = await User.findById(user.id).exec();
     if (u !== null) {
       const checkPass = bcrypt.compareSync(user.password, u.password);
       if (checkPass) {
@@ -173,8 +173,8 @@ class UserRepository {
       return false;
     }
   }
-  async changePassword(email, oldPassword, newPassword) {
-    const u = await User.findOne({ email: email }).exec();
+  async changePassword(id, oldPassword, newPassword) {
+    const u = await User.findById(id).exec();
     if (u !== null) {
       const checkPass = bcrypt.compareSync(oldPassword, u.password);
       if (checkPass) {
@@ -190,16 +190,16 @@ class UserRepository {
       return false;
     }
   }
-  async getRole(email) {
-    const u = await User.findOne({ email: email }).exec();
+  async getRole(id) {
+    const u = await User.findById(id).exec();
     if (u !== null) {
       return u.role;
     } else {
       return false;
     }
   }
-  async edit(prop, value, email) {
-    const u = await User.findOne({ email: email }).exec();
+  async edit(prop, value, id) {
+    const u = await User.findById(id).exec();
     if (u !== null) {
       switch (prop) {
         case "fName":

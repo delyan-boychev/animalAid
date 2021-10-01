@@ -11,7 +11,7 @@ const authenticate = async function (req, res, next) {
       if (data["exp"] < parseInt(new Date().getTime() / 1000)) {
         res.sendStatus(401);
       } else {
-        const role = await userService.getRole(data["user"]["email"]);
+        const role = await userService.getRole(data["user"]["id"]);
         data["user"]["role"] = role;
         if (role === false) {
           res.sendStatus(401);
