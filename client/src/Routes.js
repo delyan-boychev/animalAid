@@ -13,6 +13,7 @@ import "./animations.css";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import { getCookie } from "./cookies";
+import Chats from "./pages/Chats";
 const routes = [
   { path: "/", Component: Home, className: "" },
   { path: "/about", Component: About, className: "container mt-3" },
@@ -43,6 +44,12 @@ const routes = [
   {
     path: "/profile",
     Component: Profile,
+    className: "container mt-3",
+    loggedIn: true,
+  },
+  {
+    path: "/chats",
+    Component: Chats,
     className: "container mt-3",
     loggedIn: true,
   },

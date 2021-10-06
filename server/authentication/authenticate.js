@@ -1,6 +1,6 @@
-const config = require("./config.json");
+const config = require("../config.json");
 const Cryptr = require("cryptr");
-const UserService = require("./services/user");
+const UserService = require("../services/user");
 const userService = new UserService();
 const authenticate = async function (req, res, next) {
   const authHeader = req.headers.authorization;
