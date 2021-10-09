@@ -37,19 +37,14 @@ class UserService {
   async registerVet(user) {
     user.role = "Vet";
     const isReg = await this.#userRepository.register(user);
-    let filePath = path.join(__dirname, "../", "diplomas", user.diplomaFile);
-    if (!isReg) {
-      fs.unlinkSync(filePath);
-    } else {
-      const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-      const key = cryptr.encrypt(user.email);
-      transportMail.sendMail({
-        from: fromSender,
-        to: user.email,
-        subject: "Успешна регистрация в Animal Aid",
-        html: verifyTemplates.verifyProfileVet(user.name.first, key),
-      });
-    }
+    const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+    const key = cryptr.encrypt(user.email);
+    transportMail.sendMail({
+      from: fromSender,
+      to: user.email,
+      subject: "Успешна регистрация в Animal Aid",
+      html: verifyTemplates.verifyProfileVet(user.name.first, key),
+    });
     return isReg;
   }
   async verifyProfile(key) {
@@ -79,9 +74,6 @@ class UserService {
     } else {
       return false;
     }
-  }
-  async getDiploma(id) {
-    return await this.#userRepository.getDiploma(id);
   }
   async getProfile(id) {
     return await this.#userRepository.getProfile(id);

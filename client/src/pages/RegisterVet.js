@@ -1,12 +1,9 @@
 import React from "react";
 import { Form, Col, Button } from "react-bootstrap";
 import CustomModal from "../components/CustomModal";
-import config from "../config.json";
-import { Redirect } from "react-router-dom";
-const axios = require("axios");
-const FormData = require("form-data");
-const path = require("path");
-export default class RegisterVet extends React.Component {
+import { withRouter } from "react-router-dom";
+const client = require("../clientRequests");
+class RegisterVet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +13,7 @@ export default class RegisterVet extends React.Component {
         email: "",
         city: "",
         address: "",
-        diploma: null,
+        URN: "",
         phoneNumber: "",
         password: "",
         confirmPassword: "",
@@ -27,7 +24,7 @@ export default class RegisterVet extends React.Component {
         email: "",
         city: "",
         address: "",
-        diploma: "",
+        URN: "",
         phoneNumber: "",
         password: "",
         confirmPassword: "",
@@ -38,85 +35,47 @@ export default class RegisterVet extends React.Component {
         title: "Съобщение",
         body: "",
       },
-      redirect: false,
     };
   }
   registrationComplete = false;
-  submitForm = (event) => {
+  submitForm = async (event) => {
     event.preventDefault();
     this.validate();
     if (this.state.errors.isValid) {
       const user = this.state.fields;
-      let diploma = new FormData();
-      diploma.append("diploma", user.diploma, user.diploma.name);
-      axios
-        .post(`${config.API_URL}/diplomas/upload`, diploma, {
-          headers: {
-            "Content-Type": `multipart/form-data; boundary=${diploma.getBoundary}`,
-          },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            axios
-              .post(`${config.API_URL}/user/regVet`, {
-                name: {
-                  first: user.firstName,
-                  last: user.lastName,
-                },
-                diplomaFile: res.data.filename,
-                email: user.email,
-                city: user.city,
-                address: user.address,
-                phoneNumber: user.phoneNumber,
-                password: user.password,
-              })
-              .then((response) => {
-                if (response.data === true) {
-                  this.openModal("Вие се регистрирахте успешно!");
-                  this.registrationComplete = true;
-                } else if (response.data === false) {
-                  this.openModal("Вече същсетвува профил с този имейл адрес!");
-                }
-              });
-          }
-        });
-
-      this.setState({
-        fields: {
-          firstName: "",
-          lastName: "",
-          email: "",
-          city: "",
-          address: "",
-          diploma: null,
-          phoneNumber: "",
-          password: "",
-          confirmPassword: "",
+      const response = await client.postRequest("/user/regVet", {
+        name: {
+          first: user.firstName,
+          last: user.lastName,
         },
-        errors: {
-          firstName: "",
-          lastName: "",
-          email: "",
-          city: "",
-          phoneNumber: "",
-          password: "",
-          confirmPassword: "",
-          isValid: false,
-        },
-        modal: { show: false, title: "Съобщение", body: "" },
+        URN: user.URN,
+        email: user.email,
+        city: user.city,
+        address: user.address,
+        phoneNumber: user.phoneNumber,
+        password: user.password,
       });
+      if (response === true) {
+        this.openModal("Вие се регистрирахте успешно!");
+        this.registrationComplete = true;
+      } else {
+        this.openModal("Вече същсетвува профил с този имейл адрес!");
+      }
     }
   };
   openModal = (body) => {
     let modal = this.state.modal;
     modal.show = true;
     modal.body = body;
-    this.setState({ modal, redirect: this.registrationComplete });
+    this.setState({ modal });
   };
   closeModal = () => {
     let modal = this.state.modal;
     modal.show = false;
     this.setState({ modal });
+    if (this.registrationComplete) {
+      this.props.history.push("/login");
+    }
   };
   validate() {
     let errors = {
@@ -125,7 +84,7 @@ export default class RegisterVet extends React.Component {
       email: "",
       city: "",
       address: "",
-      diploma: "",
+      URN: "",
       phoneNumber: "",
       password: "",
       confirmPassword: "",
@@ -135,6 +94,7 @@ export default class RegisterVet extends React.Component {
     const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
     const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    const checkURN = /^([А-Я,а-я,\-,0-9]{2,20})\/([0-9]{4})$/;
 
     if (fields["firstName"].length < 2) {
       errors["firstName"] = "Името трябва да е поне 2 символа!";
@@ -156,15 +116,9 @@ export default class RegisterVet extends React.Component {
       errors["address"] = "Адресът трябва да е поне 2 символа!";
       errors["isValid"] = false;
     }
-    if (fields["diploma"] === null) {
-      errors["diploma"] =
-        "Нужно е да качите диплома за висше образование със завършена специалност Ветеринарна медицина!";
+    if (!checkURN.test(fields["URN"])) {
+      errors["URN"] = "Навалиден УРН!";
       errors["isValid"] = false;
-    } else {
-      if (path.extname(fields["diploma"].name) !== ".pdf") {
-        errors["diploma"] = "Дипломата трябва да бъде в pdf формат!";
-        errors["isValid"] = false;
-      }
     }
     if (!isPhoneNumber.test(fields["phoneNumber"])) {
       errors["phoneNumber"] =
@@ -184,18 +138,11 @@ export default class RegisterVet extends React.Component {
   }
   handleOnChangeValue = (event) => {
     let fields = this.state.fields;
-    if (event.target.id === "diploma") {
-      fields[event.target.id] = event.target.files[0];
-    } else {
-      fields[event.target.id] = event.target.value;
-    }
+    fields[event.target.id] = event.target.value;
     this.setState({ fields });
     this.validate();
   };
   render() {
-    if (this.state.redirect === true) {
-      return <Redirect to="/login"></Redirect>;
-    }
     return (
       <div>
         <h3 className="text-center">Регистрация на ветеринар</h3>
@@ -270,17 +217,10 @@ export default class RegisterVet extends React.Component {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group as={Col} controlId="diploma">
-              <Form.Label>
-                Диплома за висше образование със завършена специалност
-                Ветеринарна медицина
-              </Form.Label>
-              <Form.Control
-                type="file"
-                onChange={this.handleOnChangeValue}
-                accept=".pdf"
-              />
-              <span className="text-danger">{this.state.errors.diploma}</span>
+            <Form.Group as={Col} controlId="URN">
+              <Form.Label>УРН на ветеринарен лекар</Form.Label>
+              <Form.Control type="text" onChange={this.handleOnChangeValue} />
+              <span className="text-danger">{this.state.errors.URN}</span>
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -315,3 +255,4 @@ export default class RegisterVet extends React.Component {
     );
   }
 }
+export default withRouter(RegisterVet);

@@ -98,14 +98,6 @@ class UserRepository {
       return false;
     }
   }
-  async getDiploma(id) {
-    const u = await User.findById(id).exec();
-    if (u !== null) {
-      return u.diplomaFile;
-    } else {
-      return false;
-    }
-  }
   async verify(email) {
     const u = await User.findOne({ email: email }).exec();
     if (u != null) {

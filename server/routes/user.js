@@ -9,9 +9,7 @@ const changePasswordSchema = require("../models/validation/changePassword");
 const forgotPasswordSchema = require("../models/validation/forgotPassword");
 const forgotPasswordChangeSchema = require("../models/validation/forgotPasswordChange");
 const authenticate = require("../authentication/authenticate");
-const fs = require("fs");
 const editProfileSchema = require("../models/validation/editProfile");
-const path = require("path");
 const roles = require("../models/roles");
 let router = express.Router();
 const UserService = require("../services/user");
@@ -29,17 +27,7 @@ router.post("/regVet", async (req, res) => {
   let v = new Validator();
   const valRes = v.validate(req.body, vetRegisterSchema);
   if (valRes.valid) {
-    const filePath = path.join(
-      __dirname,
-      "../",
-      "diplomas",
-      req.body.diplomaFile
-    );
-    if (!fs.existsSync(filePath)) {
-      res.send("NOT_VALID_DIPLOMA");
-    } else {
-      res.send(await userService.registerVet(req.body));
-    }
+    res.send(await userService.registerVet(req.body));
   } else {
     res.sendStatus(400);
   }

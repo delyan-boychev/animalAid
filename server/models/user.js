@@ -7,7 +7,7 @@ const schema = new mongoose.Schema({
   password: String,
   createdOn: Number,
   role: String,
-  diplomaFile: String,
+  URN: String,
   address: String,
   verified: Boolean,
   moderationVerified: Boolean,

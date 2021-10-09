@@ -14,6 +14,7 @@ import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import { getCookie } from "./cookies";
 import Chats from "./pages/Chats";
+import Chat from "./pages/Chat";
 const routes = [
   { path: "/", Component: Home, className: "" },
   { path: "/about", Component: About, className: "container mt-3" },
@@ -50,6 +51,12 @@ const routes = [
   {
     path: "/chats",
     Component: Chats,
+    className: "container mt-3",
+    loggedIn: true,
+  },
+  {
+    path: "/chat",
+    Component: Chat,
     className: "container mt-3",
     loggedIn: true,
   },

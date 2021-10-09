@@ -1,10 +1,9 @@
 import React from "react";
 import { Form, Col, Button } from "react-bootstrap";
 import CustomModal from "../components/CustomModal";
-import config from "../config.json";
-import { Redirect } from "react-router-dom";
-const axios = require("axios");
-export default class RegisterUser extends React.Component {
+import { withRouter } from "react-router";
+const client = require("../clientRequests");
+class RegisterUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,56 +31,30 @@ export default class RegisterUser extends React.Component {
         title: "Съобщение",
         body: "",
       },
-      redirect: false,
     };
   }
   registerComplete = false;
-  submitForm = (event) => {
+  submitForm = async (event) => {
     event.preventDefault();
     this.validate();
     if (this.state.errors.isValid) {
       const user = this.state.fields;
-      axios
-        .post(`${config.API_URL}/user/regUser`, {
-          name: {
-            first: user.firstName,
-            last: user.lastName,
-          },
-          email: user.email,
-          city: user.city,
-          phoneNumber: user.phoneNumber,
-          password: user.password,
-        })
-        .then((response) => {
-          if (response.data === true) {
-            this.openModal("Вие се регистрирахте успешно!");
-            this.registerComplete = true;
-          } else if (response.data === false) {
-            this.openModal("Вече същсетвува профил с този имейл адрес!");
-          }
-        });
-      this.setState({
-        fields: {
-          firstName: "",
-          lastName: "",
-          email: "",
-          city: "",
-          phoneNumber: "",
-          password: "",
-          confirmPassword: "",
+      const response = await client.postRequest("/user/regUser", {
+        name: {
+          first: user.firstName,
+          last: user.lastName,
         },
-        errors: {
-          firstName: "",
-          lastName: "",
-          email: "",
-          city: "",
-          phoneNumber: "",
-          password: "",
-          confirmPassword: "",
-          isValid: false,
-        },
-        modal: { show: false, title: "Съобщение", body: "" },
+        email: user.email,
+        city: user.city,
+        phoneNumber: user.phoneNumber,
+        password: user.password,
       });
+      if (response === true) {
+        this.openModal("Вие се регистрирахте успешно!");
+        this.registerComplete = true;
+      } else if (response === false) {
+        this.openModal("Вече същсетвува профил с този имейл адрес!");
+      }
     }
   };
   openModal = (body) => {
@@ -93,7 +66,9 @@ export default class RegisterUser extends React.Component {
   closeModal = () => {
     let modal = this.state.modal;
     modal.show = false;
-    this.setState({ modal, redirect: this.registerComplete });
+    if (this.registerComplete) {
+      this.props.history.push("/login");
+    }
   };
   validate() {
     let errors = {
@@ -150,9 +125,6 @@ export default class RegisterUser extends React.Component {
     this.validate();
   };
   render() {
-    if (this.state.redirect === true) {
-      return <Redirect to="/login"></Redirect>;
-    }
     return (
       <div>
         <h3 className="text-center">Регистрация на потребител</h3>
@@ -254,3 +226,4 @@ export default class RegisterUser extends React.Component {
     );
   }
 }
+export default withRouter(RegisterUser);
