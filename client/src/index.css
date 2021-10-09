@@ -107,3 +107,7 @@ a.text-secondary:focus {
   transition: all 0.4s ease-in-out;
   overflow: hidden;
 }
+.chat-box {
+  height: 300px;
+  overflow-y: scroll;
+}

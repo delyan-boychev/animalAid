@@ -39,7 +39,7 @@ module.exports = (io) => {
     if (res !== false) {
       console.log("connected");
       const users = await chatService.getUsersChats(res.id);
-      socket.emit("allChatUsers", users);
+      socket.emit("allChatUsers", { users: users, id: res.id });
       activeUsers[res.id] = socket.id;
       console.log(activeUsers);
       socket.on("newMessage", onNewMessage);
