@@ -21,6 +21,9 @@ class ChatService {
   async getMessages(userOne, userTwo) {
     return await this.#chatRepository.getMessages(userOne, userTwo);
   }
+  async seenMessages(userOne, userTwo) {
+    return await this.#chatRepository.seenMessages(userOne, userTwo);
+  }
   async getUsersChats(userId) {
     return await this.#chatRepository.getUsersChats(userId);
   }

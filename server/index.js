@@ -4,7 +4,7 @@ var cors = require("cors");
 const httpServer = require("http").Server(app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: ["http://192.168.1.102:3000", "http://localhost:3000"],
   },
 });
 const onConnection = require("./chatSockets")(io);

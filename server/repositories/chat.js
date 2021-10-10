@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 const config = require("../config.json");
 const Chat = require("../models/chat");
-const roles = require("../models/roles");
+const extMethods = require("../extensionMethods");
 mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -14,6 +13,7 @@ class ChatRepository {
     chat.userTwo = userTwo;
     chat.messages.push({
       date: date,
+      seen: false,
       message: message,
       sender: userOne,
     });
@@ -31,6 +31,7 @@ class ChatRepository {
     }
     chat.messages.push({
       date: date,
+      seen: false,
       message: message,
       sender: senderId,
     });
@@ -54,29 +55,59 @@ class ChatRepository {
     }
     return chat.messages;
   }
+  async seenMessages(userOne, userTwo) {
+    let chat = await Chat.findOne({ userOne: userOne, userTwo: userTwo });
+    if (chat === null) {
+      chat = await Chat.findOne({ userOne: userTwo, userTwo: userOne });
+      if (chat === null) {
+        return false;
+      }
+    }
+    let indexes = extMethods.getAllIndexes(chat.messages, "seen", false);
+    indexes.forEach((i) => {
+      if (chat.messages[i]["sender"] != userOne) {
+        chat.messages[i]["seen"] = true;
+      }
+    });
+    chat.save();
+    return true;
+  }
   async getUsersChats(userId) {
     let chats = await Chat.find({ userOne: userId })
       .populate("userTwo")
       .populate("userOne")
+      .lean()
       .exec();
     chats = chats.concat(
       await Chat.find({ userTwo: userId })
         .populate("userOne")
         .populate("userTwo")
+        .lean()
         .exec()
     );
     let users = [];
     chats.forEach((chat) => {
+      chat.userOne.password = undefined;
+      chat.userTwo.password = undefined;
       if (chat.userOne._id == userId) {
-        delete chat.userTwo.password;
-        users.push(chat.userTwo);
+        const u = chat.userTwo;
+        u.lastMessageDate = chat.messages[chat.messages.length - 1]["date"];
+        u["seenMessages"] =
+          chat.messages[chat.messages.length - 1]["sender"] != userId
+            ? chat.messages[chat.messages.length - 1]["seen"]
+            : true;
+        users.push(u);
       } else {
-        delete chat.userOne.password;
-        users.push(chat.userOne);
+        const u2 = chat.userOne;
+        u2.lastMessageDate = chat.messages[chat.messages.length - 1]["date"];
+        u2["seenMessages"] =
+          chat.messages[chat.messages.length - 1]["sender"] != userId
+            ? chat.messages[chat.messages.length - 1]["seen"]
+            : true;
+        users.push(u2);
       }
     });
-    console.log(users);
-    return users;
+    return users.sort((a, b) => b.lastMessageDate - a.lastMessageDate);
   }
 }
 module.exports = ChatRepository;

@@ -24,9 +24,10 @@ class Chats extends React.Component {
       messages: [],
       id: "",
       currentChatId: "",
+      connected: false,
     };
     this.socket.on("connect", () => {
-      console.log(this.socket.connected); // true
+      console.log(this.socket.connected);
       this.socket.on("allChatUsers", this.setAllUsers);
       this.socket.on("newMessage", this.onNewMessage);
       this.socket.on("getMessages", this.setMessages);
@@ -41,6 +42,8 @@ class Chats extends React.Component {
     this.openChat = this.openChat.bind(this);
     this.setMessages = this.setMessages.bind(this);
     this.onNewMessage = this.onNewMessage.bind(this);
+    this.seenMessages = this.seenMessages.bind(this);
+    this.startChat = this.startChat.bind(this);
   }
   onNewMessage(data) {
     if (data.senderId === this.state.currentChatId) {
@@ -52,15 +55,31 @@ class Chats extends React.Component {
       this.setState({ messages: [...this.state.messages, message] });
       let chat = document.getElementById("chat-box");
       chat.scrollTop = chat.scrollHeight;
+      this.seenMessages();
+    } else {
+      this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
     }
   }
   setAllUsers(data) {
     this.setState({ chatUsers: data.users, id: data.id });
   }
+  seenMessages() {
+    this.socket.emit("seenMessages", {
+      id: this.socket.id,
+      recieveId: this.state.currentChatId,
+    });
+  }
   setMessages(data) {
+    this.seenMessages();
     this.setState({ messages: data.messages });
     let chat = document.getElementById("chat-box");
     chat.scrollTop = chat.scrollHeight;
+    setTimeout(
+      function () {
+        this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
+      }.bind(this),
+      100
+    );
   }
   sendMsg() {
     let message = {
@@ -74,6 +93,32 @@ class Chats extends React.Component {
       msg: message.message,
       id: this.socket.id,
       recieveId: this.state.currentChatId,
+      date: message.date,
+    });
+    setTimeout(
+      function () {
+        let chat = document.getElementById("chat-box");
+        chat.scrollTop = chat.scrollHeight;
+        this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
+      }.bind(this),
+      100
+    );
+  }
+  startChat() {
+    let message = {
+      sender: this.state.id,
+      date: parseInt(new Date().getTime() / 1000),
+      message: document.getElementById("message").value,
+    };
+    document.getElementById("message").value = "";
+    this.setState({
+      messages: [...this.state.messages, message],
+      currentChatId: document.getElementById("recid").value,
+    });
+    this.socket.emit("newMessage", {
+      msg: message.message,
+      id: this.socket.id,
+      recieveId: document.getElementById("recid").value,
       date: message.date,
     });
     setTimeout(function () {
@@ -96,12 +141,20 @@ class Chats extends React.Component {
       <div>
         <Row>
           <Col>
+            <p>{this.state.connected}</p>
+            <FormControl id="recid"></FormControl>
+            <Button onClick={this.startChat}>Започни</Button>
             <ListGroup>
               {this.state.chatUsers.map((user) => (
                 <ListGroup.Item
                   key={user._id}
                   id={user._id}
                   onClick={this.getMsg}
+                  className={
+                    user.seenMessages === false
+                      ? "bg-primary text-secondary"
+                      : ""
+                  }
                 >
                   {user.name.first} {user.name.last}-{user.email}
                 </ListGroup.Item>
