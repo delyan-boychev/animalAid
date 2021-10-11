@@ -7,6 +7,7 @@ import {
   ListGroup,
   Row,
   FormControl,
+  Badge,
 } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 const io = require("socket.io-client");
@@ -126,12 +127,13 @@ class Chats extends React.Component {
       chat.scrollTop = chat.scrollHeight;
     }, 100);
   }
-  getMsg(event) {
+  getMsg(id) {
+    console.log(id);
     this.socket.emit("requestGetMessages", {
       id: this.socket.id,
-      getId: event.target.id,
+      getId: id,
     });
-    this.setState({ currentChatId: event.target.id });
+    this.setState({ currentChatId: id });
   }
   openChat(event) {
     this.props.history.push(`/chat?id=${event.target.id}`);
@@ -149,14 +151,26 @@ class Chats extends React.Component {
                 <ListGroup.Item
                   key={user._id}
                   id={user._id}
-                  onClick={this.getMsg}
-                  className={
-                    user.seenMessages === false
-                      ? "bg-primary text-secondary"
-                      : ""
-                  }
+                  onClick={() => {
+                    this.getMsg(user._id);
+                  }}
                 >
-                  {user.name.first} {user.name.last}-{user.email}
+                  <Row>
+                    <Col>
+                      {user.name.first} {user.name.last}
+                      <br />
+                      <small className="text-muted">{user.email}</small>
+                    </Col>
+                    <Col>
+                      {user.seenMessages === false ? (
+                        <Badge pill variant="primary">
+                          Ново съобщение
+                        </Badge>
+                      ) : (
+                        ""
+                      )}
+                    </Col>
+                  </Row>
                 </ListGroup.Item>
               ))}
             </ListGroup>

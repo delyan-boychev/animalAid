@@ -26,6 +26,13 @@ class UserRepository {
       return true;
     }
   }
+  async checkUserExists(userId) {
+    try {
+      return await User.exists({ _id: userId });
+    } catch {
+      return false;
+    }
+  }
   async checkUserExistsAndLastRequestForgotPassword(email) {
     let user = await User.findOne({ email: email }).exec();
     if (user != null) {
