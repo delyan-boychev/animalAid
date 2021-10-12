@@ -28,7 +28,6 @@ class Chats extends React.Component {
       connected: false,
     };
     this.socket.on("connect", () => {
-      console.log(this.socket.connected);
       this.socket.on("allChatUsers", this.setAllUsers);
       this.socket.on("newMessage", this.onNewMessage);
       this.socket.on("getMessages", this.setMessages);
@@ -128,7 +127,6 @@ class Chats extends React.Component {
     }, 100);
   }
   getMsg(id) {
-    console.log(id);
     this.socket.emit("requestGetMessages", {
       id: this.socket.id,
       getId: id,
@@ -156,6 +154,17 @@ class Chats extends React.Component {
                   }}
                 >
                   <Row>
+                    <Col xs={3}>
+                      <img
+                        style={{
+                          borderRadius: "50%",
+                        }}
+                        src={`${API_URL}/user/img/${user.imgFileName}`}
+                        height="60px"
+                        weight="60px"
+                        alt="avatar"
+                      />
+                    </Col>
                     <Col>
                       {user.name.first} {user.name.last}
                       <br />

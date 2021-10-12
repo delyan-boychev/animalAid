@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Col, Button } from "react-bootstrap";
 import CustomModal from "../components/CustomModal";
 import { withRouter } from "react-router-dom";
+import ImageUploading from "react-images-uploading";
 const client = require("../clientRequests");
 class RegisterVet extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class RegisterVet extends React.Component {
         lastName: "",
         email: "",
         city: "",
+        image: null,
         address: "",
         URN: "",
         phoneNumber: "",
@@ -23,6 +25,7 @@ class RegisterVet extends React.Component {
         lastName: "",
         email: "",
         city: "",
+        image: "",
         address: "",
         URN: "",
         phoneNumber: "",
@@ -51,6 +54,7 @@ class RegisterVet extends React.Component {
         URN: user.URN,
         email: user.email,
         city: user.city,
+        imgDataURL: user.image.data_url,
         address: user.address,
         phoneNumber: user.phoneNumber,
         password: user.password,
@@ -62,6 +66,20 @@ class RegisterVet extends React.Component {
         this.openModal("Вече същсетвува профил с този имейл адрес!");
       }
     }
+  };
+  onImageChange = (image) => {
+    if (image[0] !== undefined) {
+      let fields = this.state.fields;
+      fields["image"] = image[0];
+      let errors = this.state.errors;
+      errors["image"] = "";
+      this.setState({ fields, errors });
+    } else {
+      let fields = this.state.fields;
+      fields["image"] = null;
+      this.setState({ fields });
+    }
+    this.validate();
   };
   openModal = (body) => {
     let modal = this.state.modal;
@@ -83,6 +101,7 @@ class RegisterVet extends React.Component {
       lastName: "",
       email: "",
       city: "",
+      image: this.state.errors.image,
       address: "",
       URN: "",
       phoneNumber: "",
@@ -120,6 +139,12 @@ class RegisterVet extends React.Component {
       errors["URN"] = "Навалиден УРН!";
       errors["isValid"] = false;
     }
+    if (errors["image"] !== "") {
+      errors["isValid"] = false;
+    } else if (fields["image"] === null || fields["image"] === undefined) {
+      errors["image"] = "Не сте прикачили изображение!";
+      errors["isValid"] = false;
+    }
     if (!isPhoneNumber.test(fields["phoneNumber"])) {
       errors["phoneNumber"] =
         "Невалиден телефонен номер! Пример за валиден: +359123456789";
@@ -140,6 +165,23 @@ class RegisterVet extends React.Component {
     let fields = this.state.fields;
     fields[event.target.id] = event.target.value;
     this.setState({ fields });
+    this.validate();
+  };
+  onError = (error) => {
+    console.log(error);
+    if (error["acceptType"]) {
+      let errors = this.state.errors;
+      errors["image"] = "Неподдържан файлов формат!";
+      this.setState({ errors });
+    } else if (error["maxFileSize"]) {
+      let errors = this.state.errors;
+      errors["image"] = "Файлът трябва да е по-малък от 1MB!";
+      this.setState({ errors });
+    } else if (error["resolution"]) {
+      let errors = this.state.errors;
+      errors["image"] = "Изображението трябва да бъде квадратно!";
+      this.setState({ errors });
+    }
     this.validate();
   };
   render() {
@@ -247,7 +289,53 @@ class RegisterVet extends React.Component {
               </span>
             </Form.Group>
           </Form.Row>
-          <Button variant="primary" type="submit">
+          <Form.Row>
+            <Form.Group as={Col} controlId="image">
+              <Form.Label>Профилна снимка</Form.Label>
+              <br />
+              <ImageUploading
+                className="mt-3"
+                maxNumber={1}
+                maxFileSize={1048576}
+                onError={this.onError}
+                acceptType={["png", "jpg", "jpeg"]}
+                resolutionType="ratio"
+                resolutionHeight="1"
+                resolutionWidth="1"
+                onChange={this.onImageChange}
+                dataURLKey="data_url"
+              >
+                {({
+                  onImageUpload,
+                  onImageRemoveAll,
+                  isDragging,
+                  dragProps,
+                }) => (
+                  <div className="upload__image-wrapper">
+                    <Button
+                      style={
+                        isDragging ? { backgroundColor: "red" } : undefined
+                      }
+                      onClick={onImageUpload}
+                      {...dragProps}
+                    >
+                      Качване на снимка
+                    </Button>
+                    <br />
+                    <Button className="mt-3" onClick={onImageRemoveAll}>
+                      Премахване на снимка
+                    </Button>
+                  </div>
+                )}
+              </ImageUploading>
+              <span className="text-danger">{this.state.errors.image}</span>
+            </Form.Group>
+          </Form.Row>
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={!this.state.errors.isValid}
+          >
             Регистрация
           </Button>
         </Form>

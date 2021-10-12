@@ -1,5 +1,6 @@
 "use strict";
 const express = require("express");
+const path = require("path");
 const Validator = require("jsonschema").Validator;
 const userRegisterSchema = require("../models/validation/userRegister");
 const vetRegisterSchema = require("../models/validation/vetRegister");
@@ -31,6 +32,13 @@ router.post("/regVet", async (req, res) => {
   } else {
     res.sendStatus(400);
   }
+});
+router.get("/img/:filename", async (req, res) => {
+  const fileName = req.params.filename;
+  let dir = `${path.dirname(
+    require.main.filename || process.mainModule.filename
+  )}\\img`;
+  res.sendFile(`${dir}\\${fileName}`);
 });
 router.post("/log", async (req, res) => {
   let v = new Validator();

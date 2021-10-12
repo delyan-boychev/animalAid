@@ -9,6 +9,7 @@ const schema = new mongoose.Schema({
   role: String,
   URN: String,
   address: String,
+  imgFileName: String,
   verified: Boolean,
   moderationVerified: Boolean,
   lastForgotPassword: Number,

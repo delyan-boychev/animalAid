@@ -1,6 +1,7 @@
 const userRepository = require("../repositories/user");
 const path = require("path");
 const fs = require("fs");
+const extenstionMethods = require("../extensionMethods");
 const config = require("../config.json");
 const nodemailer = require("nodemailer");
 const verifyTemplates = require("../models/emailTemplates/verifyProfile");
@@ -17,6 +18,12 @@ const fromSender = "Animal Aid <bganimalaid@gmail.com>";
 class UserService {
   #userRepository = new userRepository();
   async registerUser(user) {
+    let regexImageUrl = /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
+    const match = regexImageUrl.exec(user.imgDataURL);
+    const imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+      8
+    )}.${match.groups["mime"].replace("image/", "")}`;
+    user.imgFileName = imgFileName;
     user.role = "User";
     const isReg = await this.#userRepository.register(user);
     if (isReg) {
@@ -28,6 +35,17 @@ class UserService {
         subject: "Успешна регистрация в Animal Aid",
         html: verifyTemplates.verifyProfileUser(user.name.first, key),
       });
+      let base64Data = user.imgDataURL.replace(
+        `data:${match.groups["mime"]};base64,`,
+        ""
+      );
+      let dir = `${path.dirname(
+        require.main.filename || process.mainModule.filename
+      )}\\img`;
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+      }
+      fs.writeFileSync(`${dir}\\${imgFileName}`, base64Data, "base64");
     }
     return isReg;
   }
@@ -35,16 +53,35 @@ class UserService {
     return await this.#userRepository.getRole(id);
   }
   async registerVet(user) {
+    let regexImageUrl = /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
+    const match = regexImageUrl.exec(user.imgDataURL);
+    const imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+      8
+    )}.${match.groups["mime"].replace("image/", "")}`;
+    user.imgFileName = imgFileName;
     user.role = "Vet";
     const isReg = await this.#userRepository.register(user);
-    const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-    const key = cryptr.encrypt(user.email);
-    transportMail.sendMail({
-      from: fromSender,
-      to: user.email,
-      subject: "Успешна регистрация в Animal Aid",
-      html: verifyTemplates.verifyProfileVet(user.name.first, key),
-    });
+    if (isReg) {
+      const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+      const key = cryptr.encrypt(user.email);
+      transportMail.sendMail({
+        from: fromSender,
+        to: user.email,
+        subject: "Успешна регистрация в Animal Aid",
+        html: verifyTemplates.verifyProfileVet(user.name.first, key),
+      });
+      let base64Data = user.imgDataURL.replace(
+        `data:${match.groups["mime"]};base64,`,
+        ""
+      );
+      let dir = `${path.dirname(
+        require.main.filename || process.mainModule.filename
+      )}\\img`;
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+      }
+      fs.writeFileSync(`${dir}\\${imgFileName}`, base64Data, "base64");
+    }
     return isReg;
   }
   async verifyProfile(key) {
