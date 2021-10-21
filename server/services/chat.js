@@ -55,5 +55,11 @@ class ChatService {
       return false;
     }
   }
+  async getProfile(userId) {
+    const user = await this.#userRepository.getProfile(userId);
+    if (user !== {}) {
+      return user;
+    }
+  }
 }
 module.exports = ChatService;

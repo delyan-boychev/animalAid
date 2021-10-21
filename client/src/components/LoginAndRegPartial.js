@@ -5,6 +5,7 @@ import {
   faSignInAlt,
   faUser,
   faSignOutAlt,
+  faComments,
 } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Dropdown, DropdownButton } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -67,6 +68,15 @@ export default function LoginAndRegPartial() {
               className="text-primary"
             >
               <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Моят профил
+            </Dropdown.Item>
+            <Dropdown.Item
+              style={{ fontSize: "19px" }}
+              eventKey="1"
+              as={Link}
+              to="/chats"
+              className="text-primary"
+            >
+              <FontAwesomeIcon icon={faComments}></FontAwesomeIcon> Чатове
             </Dropdown.Item>
             <Dropdown.Item
               style={{ fontSize: "19px" }}

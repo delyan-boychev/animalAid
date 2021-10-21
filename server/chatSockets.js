@@ -20,10 +20,15 @@ module.exports = (io) => {
     const senderId = Object.keys(activeUsers).find(
       (key) => activeUsers[key] === socket.id
     );
-    let messages = await chatService.getMessages(senderId, socket.getId);
+    const messages = await chatService.getMessages(senderId, socket.getId);
+    const user = await chatService.getProfile(socket.getId);
+    user["activeStatus"] = false;
+    if (activeUsers[socket.getId]) {
+      user["activeStatus"] = true;
+    }
     io.to(activeUsers[senderId]).emit("getMessages", {
       id: socket.id,
-      getId: socket.getId,
+      user: user,
       messages: messages,
     });
   };
@@ -63,6 +68,7 @@ module.exports = (io) => {
         delete activeUsers[socketId];
       });
     } else {
+      socket.emit("invalidToken", "");
       socket.disconnect();
     }
   };

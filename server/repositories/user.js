@@ -83,7 +83,7 @@ class UserRepository {
     }
   }
   async getProfile(id) {
-    let user = await User.findById(id).exec();
+    let user = await User.findById(id).lean().exec();
     if (user == null) {
       return {};
     } else {

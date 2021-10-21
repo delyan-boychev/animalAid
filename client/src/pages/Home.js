@@ -21,7 +21,7 @@ export default function Home() {
             Добре дошли в <span className="underline">Animal Aid</span>!
           </h1>
           <h2 className="text-shadow-big mt-3">
-            Платформата, което обединява всички ветеринари в България!
+            Платформата, която обединява всички ветеринари в България!
           </h2>
           <NavLink to="/register">
             <div

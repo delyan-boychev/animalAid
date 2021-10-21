@@ -2,50 +2,73 @@ import React from "react";
 import { getCookie } from "../cookies";
 import {
   Button,
-  Card,
   Col,
   ListGroup,
   Row,
   FormControl,
   Badge,
+  Form,
+  OverlayTrigger,
+  Tooltip,
 } from "react-bootstrap";
+import { formatString } from "../extensionMethods/formatString";
 import { withRouter } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShare } from "@fortawesome/free-solid-svg-icons";
+import { refreshToken } from "../clientRequests";
 const io = require("socket.io-client");
 const API_URL = require("../config.json").API_URL;
 class Chats extends React.Component {
+  leavePage = false;
   constructor(props) {
     super(props);
-    this.socket = io(API_URL, {
-      auth: {
-        token: getCookie("authorization"),
-      },
-    });
     this.state = {
+      token: getCookie("authorization"),
       chatUsers: [],
       messages: [],
       id: "",
+      message: "",
       currentChatId: "",
       connected: false,
+      chatUserInfo: {},
     };
+    this.startSocket(this.state.token);
+  }
+  startSocket = (token) => {
+    this.socket = io(API_URL, {
+      auth: {
+        token: token,
+      },
+    });
     this.socket.on("connect", () => {
+      console.log("true");
       this.socket.on("allChatUsers", this.setAllUsers);
       this.socket.on("newMessage", this.onNewMessage);
       this.socket.on("getMessages", this.setMessages);
-      this.socket.on("disconnect", () => {
-        document.location.reload();
-        this.socket.connect();
+      this.socket.on("invalidToken", this.onInvalidToken);
+      this.socket.on("disconnect", async () => {
+        if (!this.leavePage) {
+        }
       });
     });
-    this.sendMsg = this.sendMsg.bind(this);
-    this.getMsg = this.getMsg.bind(this);
-    this.setAllUsers = this.setAllUsers.bind(this);
-    this.openChat = this.openChat.bind(this);
-    this.setMessages = this.setMessages.bind(this);
-    this.onNewMessage = this.onNewMessage.bind(this);
-    this.seenMessages = this.seenMessages.bind(this);
-    this.startChat = this.startChat.bind(this);
-  }
-  onNewMessage(data) {
+  };
+  onInvalidToken = async () => {
+    console.clear();
+    const token = await refreshToken();
+    if (token !== false) {
+      this.setState({ token: token });
+      this.startSocket(token);
+    }
+  };
+  componentWillUnmount = () => {
+    this.leavePage = true;
+    this.socket.disconnect();
+  };
+  onChangeText = () => {
+    let message = document.getElementById("message").value;
+    this.setState({ message });
+  };
+  onNewMessage = (data) => {
     if (data.senderId === this.state.currentChatId) {
       let message = {
         sender: data.senderId,
@@ -59,19 +82,19 @@ class Chats extends React.Component {
     } else {
       this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
     }
-  }
-  setAllUsers(data) {
+  };
+  setAllUsers = (data) => {
     this.setState({ chatUsers: data.users, id: data.id });
-  }
-  seenMessages() {
+  };
+  seenMessages = () => {
     this.socket.emit("seenMessages", {
       id: this.socket.id,
       recieveId: this.state.currentChatId,
     });
-  }
-  setMessages(data) {
+  };
+  setMessages = (data) => {
     this.seenMessages();
-    this.setState({ messages: data.messages });
+    this.setState({ messages: data.messages, chatUserInfo: data.user });
     let chat = document.getElementById("chat-box");
     chat.scrollTop = chat.scrollHeight;
     setTimeout(
@@ -80,15 +103,15 @@ class Chats extends React.Component {
       }.bind(this),
       100
     );
-  }
-  sendMsg() {
+  };
+  sendMsg = (event) => {
+    event.preventDefault();
     let message = {
       sender: this.state.id,
       date: parseInt(new Date().getTime() / 1000),
-      message: document.getElementById("message").value,
+      message: this.state.message.trim(),
     };
-    document.getElementById("message").value = "";
-    this.setState({ messages: [...this.state.messages, message] });
+    this.setState({ message: "", messages: [...this.state.messages, message] });
     this.socket.emit("newMessage", {
       msg: message.message,
       id: this.socket.id,
@@ -103,15 +126,15 @@ class Chats extends React.Component {
       }.bind(this),
       100
     );
-  }
-  startChat() {
+  };
+  startChat = () => {
     let message = {
       sender: this.state.id,
       date: parseInt(new Date().getTime() / 1000),
       message: document.getElementById("message").value,
     };
-    document.getElementById("message").value = "";
     this.setState({
+      message: "",
       messages: [...this.state.messages, message],
       currentChatId: document.getElementById("recid").value,
     });
@@ -125,17 +148,24 @@ class Chats extends React.Component {
       let chat = document.getElementById("chat-box");
       chat.scrollTop = chat.scrollHeight;
     }, 100);
-  }
-  getMsg(id) {
+  };
+  getMsg = (id) => {
     this.socket.emit("requestGetMessages", {
       id: this.socket.id,
       getId: id,
     });
     this.setState({ currentChatId: id });
-  }
-  openChat(event) {
+  };
+  formatString = (date) => {
+    return `${date.getDate().pad()}-${(
+      date.getMonth() + 1
+    ).pad()}-${date.getFullYear()} ${date.getHours().pad()}:${date
+      .getMinutes()
+      .pad()}:${date.getSeconds().pad()}ч.`;
+  };
+  openChat = (event) => {
     this.props.history.push(`/chat?id=${event.target.id}`);
-  }
+  };
   render() {
     return (
       <div>
@@ -144,62 +174,172 @@ class Chats extends React.Component {
             <p>{this.state.connected}</p>
             <FormControl id="recid"></FormControl>
             <Button onClick={this.startChat}>Започни</Button>
-            <ListGroup>
-              {this.state.chatUsers.map((user) => (
-                <ListGroup.Item
-                  key={user._id}
-                  id={user._id}
-                  onClick={() => {
-                    this.getMsg(user._id);
-                  }}
-                >
-                  <Row>
-                    <Col xs={3}>
-                      <img
-                        style={{
-                          borderRadius: "50%",
-                        }}
-                        src={`${API_URL}/user/img/${user.imgFileName}`}
-                        height="60px"
-                        weight="60px"
-                        alt="avatar"
-                      />
-                    </Col>
-                    <Col>
-                      {user.name.first} {user.name.last}
-                      <br />
-                      <small className="text-muted">{user.email}</small>
-                    </Col>
-                    <Col>
-                      {user.seenMessages === false ? (
-                        <Badge pill variant="primary">
-                          Ново съобщение
-                        </Badge>
-                      ) : (
-                        ""
-                      )}
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
+            <div style={{ maxHeight: "400px", overflowY: "scroll" }}>
+              <ListGroup>
+                {this.state.chatUsers.map((user) => (
+                  <ListGroup.Item
+                    key={user._id}
+                    id={user._id}
+                    onClick={() => {
+                      this.getMsg(user._id);
+                    }}
+                  >
+                    <Row>
+                      <Col xs={3}>
+                        <img
+                          className="rounded-circle"
+                          src={`${API_URL}/user/img/${user.imgFileName}`}
+                          height="60px"
+                          weight="60px"
+                          alt="avatar"
+                        />
+                      </Col>
+                      <Col>
+                        {user.name.first} {user.name.last}
+                        <br />
+                        <small className="text-muted">{user.email}</small>
+                      </Col>
+                      <Col>
+                        {user.seenMessages === false ? (
+                          <Badge pill variant="primary">
+                            Ново съобщение
+                          </Badge>
+                        ) : (
+                          ""
+                        )}
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </div>
           </Col>
-          <Col xs={7}>
-            <Card className="chat-box" id="chat-box">
+          <Col xs={12} md={7} className="mt-3">
+            {this.state.chatUserInfo.name !== undefined ? (
+              <div className="card mb-3">
+                <Row>
+                  <Col xs={3} md={2}>
+                    <img
+                      className="rounded-circle"
+                      src={`${API_URL}/user/img/${this.state.chatUserInfo.imgFileName}`}
+                      height="60px"
+                      weight="60px"
+                      alt="avatar"
+                    />
+                  </Col>
+                  <Col>
+                    {this.state.chatUserInfo.name.first}
+                    {this.state.chatUserInfo.name.last}
+                    <br />
+                    <small className="text-muted">
+                      {this.state.chatUserInfo.email}
+                    </small>
+                    {this.state.chatUserInfo.activeStatus === true ? (
+                      <div>
+                        <Badge pill variant="success">
+                          На линия
+                        </Badge>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </Col>
+                </Row>
+              </div>
+            ) : (
+              ""
+            )}
+            <div className="chat-box mw-75" id="chat-box">
               {this.state.messages.map((message) =>
                 message.sender === this.state.id ? (
-                  <p key={message.date} className="text-right">
-                    {message.message}
-                  </p>
+                  <div
+                    key={message.date}
+                    className="justify-content-end text-right ml-2 mr-2 mt-3 mb-3"
+                  >
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={
+                        <Tooltip>
+                          {this.formatString(new Date(message.date * 1000))}
+                        </Tooltip>
+                      }
+                    >
+                      <div
+                        style={{
+                          maxWidth: "80%",
+                        }}
+                        className="d-inline-flex flex-wrap rounded bg-primary message text-secondary p-1"
+                      >
+                        <span
+                          style={{
+                            maxWidth: "100%",
+                          }}
+                        >
+                          {message.message}
+                        </span>
+                      </div>
+                    </OverlayTrigger>
+                  </div>
                 ) : (
-                  <p key={message.date} className="text-left">
-                    {message.message}
-                  </p>
+                  <div
+                    key={message.date}
+                    className="justify-content-start text-left ml-2 mr-2 mt-3 mb-3"
+                  >
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={
+                        <Tooltip>
+                          {this.formatString(new Date(message.date * 1000))}
+                        </Tooltip>
+                      }
+                    >
+                      <div
+                        style={{
+                          maxWidth: "80%",
+                        }}
+                        className="d-inline-flex rounded p-1"
+                      >
+                        <img
+                          className="rounded-circle"
+                          height="40px"
+                          weight="40px"
+                          alt="avatar"
+                          src={`${API_URL}\\user\\img\\${this.state.chatUserInfo["imgFileName"]}`}
+                        />
+                        <span
+                          style={{
+                            maxWidth: "100%",
+                          }}
+                          className="mt-2 ml-2"
+                        >
+                          {message.message}
+                        </span>
+                      </div>
+                    </OverlayTrigger>
+                  </div>
                 )
               )}
-            </Card>
-            <FormControl id="message"></FormControl>
-            <Button onClick={this.sendMsg}>Изпрати</Button>
+            </div>
+            <Form onSubmit={this.sendMsg}>
+              <div className="d-flex flex-row bd-highlight mb-3">
+                <FormControl
+                  id="message"
+                  value={this.state.message}
+                  onChange={this.onChangeText}
+                ></FormControl>
+                <Button
+                  type="submit"
+                  disabled={
+                    this.state.currentChatId === "" ||
+                    /^\s*$/.test(this.state.message)
+                      ? true
+                      : false
+                  }
+                >
+                  <FontAwesomeIcon icon={faShare}></FontAwesomeIcon>
+                </Button>
+              </div>
+            </Form>
           </Col>
         </Row>
       </div>

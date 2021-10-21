@@ -108,6 +108,9 @@ a.text-secondary:focus {
   overflow: hidden;
 }
 .chat-box {
+  max-width: 92vw;
   height: 300px;
   overflow-y: scroll;
+  overflow-x: hidden;
+  word-wrap: break-word;
 }

@@ -6,7 +6,6 @@ const axios = require("axios");
 async function refreshToken() {
   const token = getCookie("authorization");
   if (token !== "" && token !== null) {
-    setCookie("authorization", "", 1);
     let headers = { Authorization: `animalAidAuthorization ${token}` };
     const res = await axios.post(
       `${API_URL}/user/refreshToken`,
@@ -15,11 +14,13 @@ async function refreshToken() {
     );
     if (res.data !== false) {
       setCookie("authorization", res.data, 4444444);
-      return true;
+      return res.data;
     } else {
       setCookie("authorization", "", 1);
       return false;
     }
+  } else {
+    return false;
   }
 }
 //*Function for making post request
@@ -38,7 +39,6 @@ async function postRequestToken(url, data, headers) {
   let token = getCookie("authorization");
   if (token !== "" && token !== null) {
     headers["Authorization"] = `animalAidAuthorization ${token}`;
-    console.log(headers);
     let URL = API_URL + url;
     if (url.includes(API_URL)) URL = url;
     try {
@@ -49,7 +49,7 @@ async function postRequestToken(url, data, headers) {
       if (error.response.status === 401) {
         const refreshedToken = await refreshToken();
         if (refreshedToken) {
-          token = getCookie("authorization");
+          token = refreshedToken;
           headers["Authorization"] = `animalAidAuthorization ${token}`;
           const res2 = await axios.post(URL, data, { headers: headers });
           return res2.data;
@@ -90,8 +90,8 @@ async function getRequestToken(url, headers) {
       console.clear();
       if (error.response.status === 401) {
         const refreshedToken = await refreshToken();
-        if (refreshedToken) {
-          token = getCookie("authorization");
+        if (refreshedToken !== false) {
+          token = refreshedToken;
           headers["Authorization"] = `animalAidAuthorization ${token}`;
           const res2 = await axios.get(URL, { headers: headers });
           return res2.data;
@@ -107,4 +107,10 @@ async function getRequestToken(url, headers) {
     return "redirectToLogin";
   }
 }
-export { getRequestToken, postRequestToken, postRequest, getRequest };
+export {
+  getRequestToken,
+  postRequestToken,
+  postRequest,
+  getRequest,
+  refreshToken,
+};
