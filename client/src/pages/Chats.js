@@ -11,7 +11,6 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
-import { formatString } from "../extensionMethods/formatString";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShare } from "@fortawesome/free-solid-svg-icons";
@@ -217,7 +216,7 @@ class Chats extends React.Component {
           <Col xs={12} md={7} className="mt-3">
             {this.state.chatUserInfo.name !== undefined ? (
               <div className="card mb-3">
-                <Row>
+                <Row className="mt-2 ml-2 mb-2 mr-2">
                   <Col xs={3} md={2}>
                     <img
                       className="rounded-circle"

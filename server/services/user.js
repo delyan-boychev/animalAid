@@ -101,7 +101,7 @@ class UserService {
         const token = cryptr.encrypt(
           JSON.stringify({
             user: { id: u._id },
-            exp: parseInt(new Date().getTime() / 1000) + 30,
+            exp: parseInt(new Date().getTime() / 1000) + 1800,
           })
         );
         return token;
@@ -125,7 +125,7 @@ class UserService {
         const refreshToken = cryptr.encrypt(
           JSON.stringify({
             user: decoded["user"],
-            exp: parseInt(new Date().getTime() / 1000) + 30,
+            exp: parseInt(new Date().getTime() / 1000) + 1800,
           })
         );
         return refreshToken;
