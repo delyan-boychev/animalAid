@@ -34,7 +34,7 @@ class Chats extends React.Component {
     this.startSocket(this.state.token);
   }
   startSocket = (token) => {
-    this.socket = io(API_URL, {
+    this.socket = io.connect(API_URL, {
       auth: {
         token: token,
       },
@@ -200,7 +200,7 @@ class Chats extends React.Component {
                       </Col>
                       <Col>
                         {user.seenMessages === false ? (
-                          <Badge pill variant="primary">
+                          <Badge pill bg="primary">
                             Ново съобщение
                           </Badge>
                         ) : (
@@ -216,7 +216,7 @@ class Chats extends React.Component {
           <Col xs={12} md={7} className="mt-3">
             {this.state.chatUserInfo.name !== undefined ? (
               <div className="card mb-3">
-                <Row className="mt-2 ml-2 mb-2 mr-2">
+                <Row className="mt-2 ms-2 mb-2 me-2">
                   <Col xs={3} md={2}>
                     <img
                       className="rounded-circle"
@@ -235,7 +235,7 @@ class Chats extends React.Component {
                     </small>
                     {this.state.chatUserInfo.activeStatus === true ? (
                       <div>
-                        <Badge pill variant="success">
+                        <Badge pill bg="success">
                           На линия
                         </Badge>
                       </div>
@@ -248,12 +248,12 @@ class Chats extends React.Component {
             ) : (
               ""
             )}
-            <div className="chat-box mw-75" id="chat-box">
+            <div className="chat-box" id="chat-box">
               {this.state.messages.map((message) =>
                 message.sender === this.state.id ? (
                   <div
                     key={message.date}
-                    className="justify-content-end text-right ml-2 mr-2 mt-3 mb-3"
+                    className="d-flex justify-content-end text-right me-2 mb-2"
                   >
                     <OverlayTrigger
                       placement="top"
@@ -282,7 +282,7 @@ class Chats extends React.Component {
                 ) : (
                   <div
                     key={message.date}
-                    className="justify-content-start text-left ml-2 mr-2 mt-3 mb-3"
+                    className="djustify-content-start text-left ms-2 me-2 mt-3 mb-3"
                   >
                     <OverlayTrigger
                       placement="top"
@@ -309,7 +309,7 @@ class Chats extends React.Component {
                           style={{
                             maxWidth: "100%",
                           }}
-                          className="mt-2 ml-2"
+                          className="mt-2 ms-2"
                         >
                           {message.message}
                         </span>

@@ -1,6 +1,6 @@
 import React from "react";
 import CustomModal from "../components/CustomModal";
-import { Form, Col, Button, Card } from "react-bootstrap";
+import { Form, Col, Button, Card, Row } from "react-bootstrap";
 const client = require("../clientRequests");
 
 export default class RequestForgotPassword extends React.Component {
@@ -83,7 +83,7 @@ export default class RequestForgotPassword extends React.Component {
         <h3 className="text-center">Забравена парола</h3>
         <Card body>
           <Form onSubmit={this.submitForm}>
-            <Form.Row>
+            <Row className="mb-3">
               <Form.Group as={Col} controlId="email">
                 <Form.Label>Имейл</Form.Label>
                 <Form.Control
@@ -93,7 +93,7 @@ export default class RequestForgotPassword extends React.Component {
                 />
                 <span className="text-danger">{this.state.errors.email}</span>
               </Form.Group>
-            </Form.Row>
+            </Row>
             <Button
               variant="primary"
               type="submit"

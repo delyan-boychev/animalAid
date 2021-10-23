@@ -119,6 +119,13 @@ class UserRepository {
       return false;
     }
   }
+  async getVets() {
+    const vets = await User.find({ role: roles.Vet })
+      .select(["-password"])
+      .lean()
+      .exec();
+    return vets;
+  }
   async moderationVerify(email) {
     const u = await User.findOne({ email: email }).exec();
     if (u != null) {

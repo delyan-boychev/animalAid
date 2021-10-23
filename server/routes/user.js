@@ -49,6 +49,18 @@ router.post("/log", async (req, res) => {
     res.sendStatus(400);
   }
 });
+router.get("/getVets/:pageNum", authenticate, async (req, res) => {
+  try {
+    const pageNum = parseInt(req.params.pageNum);
+    if (pageNum > 0) {
+      res.send(await userService.getVets(pageNum));
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+});
 router.post("/verifyProfile", async (req, res) => {
   if (req.body.key && req.body.key != "") {
     res.send(await userService.verifyProfile(req.body.key));

@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Col, Button } from "react-bootstrap";
+import { Form, Col, Button, Row } from "react-bootstrap";
 import CustomModal from "../components/CustomModal";
 import { withRouter } from "react-router";
 import ImageUploading from "react-images-uploading";
@@ -177,7 +177,7 @@ class RegisterUser extends React.Component {
           closeModal={this.closeModal}
         ></CustomModal>
         <Form onSubmit={this.submitForm}>
-          <Form.Row>
+          <Row className="mb-3">
             <Form.Group as={Col} controlId="firstName">
               <Form.Label>Име</Form.Label>
               <Form.Control
@@ -197,8 +197,8 @@ class RegisterUser extends React.Component {
               />
               <span className="text-danger">{this.state.errors.lastName}</span>
             </Form.Group>
-          </Form.Row>
-          <Form.Row>
+          </Row>
+          <Row className="mb-3">
             <Form.Group as={Col} controlId="email">
               <Form.Label>Имейл</Form.Label>
               <Form.Control
@@ -218,8 +218,8 @@ class RegisterUser extends React.Component {
               />
               <span className="text-danger">{this.state.errors.city}</span>
             </Form.Group>
-          </Form.Row>
-          <Form.Row>
+          </Row>
+          <Row className="mb-3">
             <Form.Group as={Col} controlId="phoneNumber">
               <Form.Label>Телефонен номер</Form.Label>
               <Form.Control
@@ -231,8 +231,8 @@ class RegisterUser extends React.Component {
                 {this.state.errors.phoneNumber}
               </span>
             </Form.Group>
-          </Form.Row>
-          <Form.Row>
+          </Row>
+          <Row className="mb-3">
             <Form.Group as={Col} controlId="password">
               <Form.Label>Парола</Form.Label>
               <Form.Control
@@ -242,8 +242,8 @@ class RegisterUser extends React.Component {
               />
               <span className="text-danger">{this.state.errors.password}</span>
             </Form.Group>
-          </Form.Row>
-          <Form.Row>
+          </Row>
+          <Row className="mb-3">
             <Form.Group as={Col} controlId="confirmPassword">
               <Form.Label>Потвърждение на парола</Form.Label>
               <Form.Control
@@ -255,8 +255,8 @@ class RegisterUser extends React.Component {
                 {this.state.errors.confirmPassword}
               </span>
             </Form.Group>
-          </Form.Row>
-          <Form.Row>
+          </Row>
+          <Row className="mb-3">
             <Form.Group as={Col} controlId="image">
               <Form.Label>Профилна снимка</Form.Label>
               <br />
@@ -297,7 +297,7 @@ class RegisterUser extends React.Component {
               </ImageUploading>
               <span className="text-danger">{this.state.errors.image}</span>
             </Form.Group>
-          </Form.Row>
+          </Row>
           <Button
             variant="primary"
             type="submit"

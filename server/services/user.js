@@ -226,6 +226,19 @@ class UserService {
       return false;
     }
   }
+  async getVets(pageNum) {
+    const vets = await this.#userRepository.getVets();
+    const startIndex = pageNum * 10 - 10;
+    const endIndex = pageNum * 10;
+    const numPages = Math.ceil(vets.length / 10);
+    if (pageNum < 1 || (vets.length < endIndex && vets.length < startIndex)) {
+      return false;
+    } else if (vets.length < endIndex && vets.length > startIndex) {
+      return { vets: vets.splice(startIndex, vets.length), numPages };
+    } else {
+      return { vets: vets.splice(startIndex, endIndex), numPages };
+    }
+  }
   async changePassword(id, oldPassword, newPassword) {
     return await this.#userRepository.changePassword(
       id,

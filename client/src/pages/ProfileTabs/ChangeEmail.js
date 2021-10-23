@@ -1,6 +1,6 @@
 import React from "react";
 import CustomModal from "../../components/CustomModal";
-import { Form, Col, Button, Card } from "react-bootstrap";
+import { Form, Col, Button, Card, Row } from "react-bootstrap";
 import { setCookie } from "../../cookies";
 const client = require("../../clientRequests");
 
@@ -95,7 +95,7 @@ export default class ChangeEmail extends React.Component {
         ></CustomModal>
         <Card body>
           <Form onSubmit={this.submitForm}>
-            <Form.Row>
+            <Row className="mb-3">
               <Form.Group as={Col} controlId="newEmail">
                 <Form.Label>Нов имейл</Form.Label>
                 <Form.Control
@@ -107,8 +107,8 @@ export default class ChangeEmail extends React.Component {
                   {this.state.errors.newEmail}
                 </span>
               </Form.Group>
-            </Form.Row>
-            <Form.Row>
+            </Row>
+            <Row className="mb-3">
               <Form.Group as={Col} controlId="password">
                 <Form.Label>Парола</Form.Label>
                 <Form.Control
@@ -120,7 +120,7 @@ export default class ChangeEmail extends React.Component {
                   {this.state.errors.password}
                 </span>
               </Form.Group>
-            </Form.Row>
+            </Row>
             <Button
               variant="primary"
               type="submit"

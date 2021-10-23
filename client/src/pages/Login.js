@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import config from "../config.json";
-import { Form, Button, Col } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import CustomModal from "../components/CustomModal";
 import { setCookie } from "../cookies";
 import { Link } from "react-router-dom";
@@ -106,28 +106,28 @@ export default class Login extends React.Component {
           closeModal={this.closeModal}
         ></CustomModal>
         <Form onSubmit={this.submitForm}>
-          <Form.Row>
-            <Form.Group as={Col} controlId="email">
-              <Form.Label>Имейл</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.email}
-                onChange={this.handleOnChangeValue}
-              />
+          <Form.Group className="mb-3" controlId="email">
+            <Form.Label>Имейл</Form.Label>
+            <Form.Control
+              type="text"
+              value={this.state.fields.email}
+              onChange={this.handleOnChangeValue}
+            />
+            <Form.Text>
               <span className="text-danger">{this.state.errors.email}</span>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="password">
-              <Form.Label>Парола</Form.Label>
-              <Form.Control
-                type="password"
-                value={this.state.fields.password}
-                onChange={this.handleOnChangeValue}
-              />
+            </Form.Text>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="password">
+            <Form.Label>Парола</Form.Label>
+            <Form.Control
+              type="password"
+              value={this.state.fields.password}
+              onChange={this.handleOnChangeValue}
+            />
+            <Form.Text>
               <span className="text-danger">{this.state.errors.password}</span>
-            </Form.Group>
-          </Form.Row>
+            </Form.Text>
+          </Form.Group>
           <Button variant="primary" type="submit">
             Влизане
           </Button>

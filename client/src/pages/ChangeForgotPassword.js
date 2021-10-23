@@ -1,6 +1,6 @@
 import React from "react";
 import CustomModal from "../components/CustomModal";
-import { Form, Col, Button, Card } from "react-bootstrap";
+import { Form, Col, Button, Card, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 const client = require("../clientRequests");
@@ -106,7 +106,7 @@ export default class ChangeForgotPassword extends React.Component {
             <h3 className="text-center">Промяна на забравена парола</h3>
             <Card body>
               <Form onSubmit={this.submitForm}>
-                <Form.Row>
+                <Row className="mb-3">
                   <Form.Group as={Col} controlId="newPassword">
                     <Form.Label>Нова парола</Form.Label>
                     <Form.Control
@@ -118,8 +118,8 @@ export default class ChangeForgotPassword extends React.Component {
                       {this.state.errors.newPassword}
                     </span>
                   </Form.Group>
-                </Form.Row>
-                <Form.Row>
+                </Row>
+                <Row className="mb-3">
                   <Form.Group as={Col} controlId="newPasswordConfirm">
                     <Form.Label>Потвърждаване на нова парола</Form.Label>
                     <Form.Control
@@ -131,7 +131,7 @@ export default class ChangeForgotPassword extends React.Component {
                       {this.state.errors.newPasswordConfirm}
                     </span>
                   </Form.Group>
-                </Form.Row>
+                </Row>
                 <Button
                   variant="primary"
                   type="submit"

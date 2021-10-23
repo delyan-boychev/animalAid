@@ -15,7 +15,7 @@ export default function Header() {
         id="basic-navbar-nav"
         className="justify-content-between"
       >
-        <Nav className="ml-3 text-secondary" style={{ fontSize: "21px" }}>
+        <Nav className="text-secondary ms-3" style={{ fontSize: "21px" }}>
           <Nav.Link
             as={NavLink}
             exact

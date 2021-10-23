@@ -30,10 +30,7 @@ export default function LoginAndRegPartial() {
     getCookie("authorization") === null
   ) {
     return (
-      <div
-        style={{ fontSize: "20px" }}
-        className="d-xl-inline-flex justify-content-center"
-      >
+      <div style={{ fontSize: "20px" }}>
         <Nav.Link as={Link} to="/login" className="text-secondary">
           <FontAwesomeIcon icon={faSignInAlt}></FontAwesomeIcon> Влизане
         </Nav.Link>
@@ -42,16 +39,16 @@ export default function LoginAndRegPartial() {
   } else {
     if (profile) {
       return (
-        <div className="d-xl-inline-flex justify-content-center">
+        <div>
           <DropdownButton
             id="dropdownbutton"
-            menuAlign={{ lg: "right" }}
+            align={{ lg: "end" }}
+            variant="primary"
             title={
               <span style={{ fontSize: "20px" }} className="font-weight-bold">
                 <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Профил
               </span>
             }
-            variant="primary"
           >
             <Dropdown.Item
               style={{ fontSize: "20px" }}

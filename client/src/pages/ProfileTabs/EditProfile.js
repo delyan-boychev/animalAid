@@ -237,7 +237,7 @@ export default class EditProfile extends React.Component {
                     <Col xs={2}>
                       <Button
                         variant="primary"
-                        className="float-right"
+                        className="float-end"
                         id="fName_button"
                         onClick={this.onEditButtonClick}
                         disabled={
@@ -273,7 +273,7 @@ export default class EditProfile extends React.Component {
                     <Col xs={2}>
                       <Button
                         variant="primary"
-                        className="float-right"
+                        className="float-end"
                         id="lName_button"
                         onClick={this.onEditButtonClick}
                         disabled={
@@ -322,7 +322,7 @@ export default class EditProfile extends React.Component {
                 <Col xs={2}>
                   <Button
                     variant="primary"
-                    className="float-right"
+                    className="float-end"
                     id="phoneNumber_button"
                     onClick={this.onEditButtonClick}
                     disabled={
@@ -356,7 +356,7 @@ export default class EditProfile extends React.Component {
                 <Col xs={2}>
                   <Button
                     variant="primary"
-                    className="float-right"
+                    className="float-end"
                     id="city_button"
                     onClick={this.onEditButtonClick}
                     disabled={
@@ -393,7 +393,7 @@ export default class EditProfile extends React.Component {
                   <Col xs={2}>
                     <Button
                       variant="primary"
-                      className="float-right"
+                      className="float-end"
                       id="address_button"
                       onClick={this.onEditButtonClick}
                       disabled={

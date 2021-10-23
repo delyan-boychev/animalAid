@@ -1,2 +1,24 @@
-@import "custom";
+$primary: #0066db;
+$secondary: #fff;
+$success: #3e8d63;
+$info: #7854e4;
+$warning: #b8c924;
+$danger: #d62518;
+$light: #f8f9fa;
+$dark: #343a40;
+
+//custom color to be mapped
+$accent: #da6d25;
+
+// this is used to map colors. change accordingly.
+$theme-colors: (
+  primary: $primary,
+  secondary: $secondary,
+  success: $success,
+  info: $info,
+  warning: $warning,
+  danger: $danger,
+  light: $light,
+  dark: $dark,
+);
 @import "~bootstrap/scss/bootstrap";
