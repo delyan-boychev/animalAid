@@ -1,6 +1,6 @@
 import React from "react";
 import CustomModal from "../../components/CustomModal";
-import { Form, Col, Button, Card, Row } from "react-bootstrap";
+import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 import { setCookie } from "../../cookies";
 const client = require("../../clientRequests");
 
@@ -96,26 +96,38 @@ export default class ChangeEmail extends React.Component {
         <Card body>
           <Form onSubmit={this.submitForm}>
             <Row className="mb-3">
-              <Form.Group as={Col} controlId="newEmail">
-                <Form.Label>Нов имейл</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={this.state.fields.newEmail}
-                  onChange={this.handleOnChangeValue}
-                />
+              <Form.Group as={Col}>
+                <FloatingLabel
+                  controlId="newEmail"
+                  label="Нов имейл"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    placeholder="Нов имейл"
+                    type="text"
+                    value={this.state.fields.newEmail}
+                    onChange={this.handleOnChangeValue}
+                  />
+                </FloatingLabel>
                 <span className="text-danger">
                   {this.state.errors.newEmail}
                 </span>
               </Form.Group>
             </Row>
             <Row className="mb-3">
-              <Form.Group as={Col} controlId="password">
-                <Form.Label>Парола</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={this.state.fields.password}
-                  onChange={this.handleOnChangeValue}
-                />
+              <Form.Group as={Col}>
+                <FloatingLabel
+                  controlId="password"
+                  label="Парола"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    placeholder="Парола"
+                    type="password"
+                    value={this.state.fields.password}
+                    onChange={this.handleOnChangeValue}
+                  />
+                </FloatingLabel>
                 <span className="text-danger">
                   {this.state.errors.password}
                 </span>

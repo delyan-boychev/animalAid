@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import config from "../config.json";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, FloatingLabel } from "react-bootstrap";
 import CustomModal from "../components/CustomModal";
 import { setCookie } from "../cookies";
 import { Link } from "react-router-dom";
@@ -106,27 +106,31 @@ export default class Login extends React.Component {
           closeModal={this.closeModal}
         ></CustomModal>
         <Form onSubmit={this.submitForm}>
-          <Form.Group className="mb-3" controlId="email">
-            <Form.Label>Имейл</Form.Label>
-            <Form.Control
-              type="text"
-              value={this.state.fields.email}
-              onChange={this.handleOnChangeValue}
-            />
-            <Form.Text>
-              <span className="text-danger">{this.state.errors.email}</span>
-            </Form.Text>
+          <Form.Group className="mb-3">
+            <FloatingLabel
+              controlId="email"
+              label="Имейл адрес"
+              className="mb-3"
+            >
+              <Form.Control
+                placeholder="Имейл адрес"
+                type="text"
+                value={this.state.fields.email}
+                onChange={this.handleOnChangeValue}
+              />
+            </FloatingLabel>
+            <span className="text-danger">{this.state.errors.email}</span>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="password">
-            <Form.Label>Парола</Form.Label>
-            <Form.Control
-              type="password"
-              value={this.state.fields.password}
-              onChange={this.handleOnChangeValue}
-            />
-            <Form.Text>
-              <span className="text-danger">{this.state.errors.password}</span>
-            </Form.Text>
+          <Form.Group className="mb-3">
+            <FloatingLabel controlId="password" label="Парола" className="mb-3">
+              <Form.Control
+                placeholder="Парола"
+                type="password"
+                value={this.state.fields.password}
+                onChange={this.handleOnChangeValue}
+              />
+            </FloatingLabel>
+            <span className="text-danger">{this.state.errors.password}</span>
           </Form.Group>
           <Button variant="primary" type="submit">
             Влизане

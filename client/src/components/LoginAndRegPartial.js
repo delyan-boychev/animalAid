@@ -43,16 +43,17 @@ export default function LoginAndRegPartial() {
           <DropdownButton
             id="dropdownbutton"
             align={{ lg: "end" }}
+            className="ms-3"
             variant="primary"
             title={
-              <span style={{ fontSize: "20px" }} className="font-weight-bold">
+              <span style={{ fontSize: "20px" }} className="fw-bold">
                 <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Профил
               </span>
             }
           >
             <Dropdown.Item
               style={{ fontSize: "20px" }}
-              className="text-primary font-weight-bold"
+              className="text-primary fw-bold"
             >
               {profile.name.first} {profile.name.last}
             </Dropdown.Item>

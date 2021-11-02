@@ -3,12 +3,16 @@ import { Link, NavLink } from "react-router-dom";
 import logo from "../images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoginAndRegPartial from "./LoginAndRegPartial";
-import { faAddressCard, faHome } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAddressCard,
+  faEnvelopeOpenText,
+  faHome,
+} from "@fortawesome/free-solid-svg-icons";
 export default function Header() {
   return (
     <Navbar bg="primary" variant="dark" expand="lg">
-      <Navbar.Brand as={Link} to="/" className="text-secondary">
-        <img src={logo} alt="logo" style={{ maxHeight: "50px" }}></img>
+      <Navbar.Brand as={Link} to="/" className="text-secondary ms-3">
+        <img src={logo} alt="logo" style={{ maxHeight: "70px" }}></img>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse
@@ -35,6 +39,17 @@ export default function Header() {
           >
             <span className="nav-link-effect">
               <FontAwesomeIcon icon={faAddressCard}></FontAwesomeIcon> За нас
+            </span>
+          </Nav.Link>
+          <Nav.Link
+            as={NavLink}
+            to="/contacts"
+            activeClassName="activeNav"
+            className="text-secondary"
+          >
+            <span className="nav-link-effect">
+              <FontAwesomeIcon icon={faEnvelopeOpenText}></FontAwesomeIcon>{" "}
+              Контакти
             </span>
           </Nav.Link>
         </Nav>

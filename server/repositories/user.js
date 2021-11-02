@@ -1,12 +1,6 @@
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const config = require("../config.json");
 const User = require("../models/user");
 const roles = require("../models/roles");
-mongoose.connect(config.CONNECTION_STRING, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 class UserRepository {
   async register(user) {
     if (await User.exists({ email: user.email })) {

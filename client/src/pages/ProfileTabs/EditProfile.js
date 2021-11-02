@@ -220,7 +220,7 @@ export default class EditProfile extends React.Component {
                 <Form.Group controlId="fName">
                   <Row>
                     <Col md={2} xs={3}>
-                      <Form.Label className="font-weight-bold col-form-label">
+                      <Form.Label className="fw-bold col-form-label">
                         Име
                       </Form.Label>
                     </Col>
@@ -256,7 +256,7 @@ export default class EditProfile extends React.Component {
                 <Form.Group controlId="lName">
                   <Row>
                     <Col md={2} xs={3}>
-                      <Form.Label className="font-weight-bold col-form-label">
+                      <Form.Label className="fw-bold col-form-label">
                         Фамилия
                       </Form.Label>
                     </Col>
@@ -293,18 +293,16 @@ export default class EditProfile extends React.Component {
         </Row>
         <ListGroup className="shadow">
           <ListGroup.Item>
-            <span className="font-weight-bold">
+            <span className="fw-bold">
               <FontAwesomeIcon icon={faAt}></FontAwesomeIcon> Имейл адрес:{" "}
-              <span className="font-weight-normal">
-                {this.state.profile.email}
-              </span>
+              <span className="fw-normal">{this.state.profile.email}</span>
             </span>
           </ListGroup.Item>
           <ListGroup.Item>
             <Form.Group controlId="phoneNumber">
               <Row>
                 <Col md={2} xs={3}>
-                  <Form.Label className="font-weight-bold col-form-label">
+                  <Form.Label className="fw-bold col-form-label">
                     <FontAwesomeIcon icon={faPhoneSquareAlt}></FontAwesomeIcon>{" "}
                     Тел.
                   </Form.Label>
@@ -341,7 +339,7 @@ export default class EditProfile extends React.Component {
             <Form.Group controlId="city">
               <Row>
                 <Col md={2} xs={3}>
-                  <Form.Label className="font-weight-bold col-form-label">
+                  <Form.Label className="fw-bold col-form-label">
                     <FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Град
                   </Form.Label>
                 </Col>
@@ -375,7 +373,7 @@ export default class EditProfile extends React.Component {
               <Form.Group controlId="address">
                 <Row>
                   <Col md={2} xs={3}>
-                    <Form.Label className="font-weight-bold col-form-label">
+                    <Form.Label className="fw-bold col-form-label">
                       <FontAwesomeIcon icon={faMapMarkedAlt}></FontAwesomeIcon>{" "}
                       Адрес
                     </Form.Label>
@@ -412,30 +410,27 @@ export default class EditProfile extends React.Component {
             ""
           )}
           <ListGroup.Item>
-            <span className="font-weight-bold">
+            <span className="fw-bold">
               <FontAwesomeIcon icon={faUserTag}></FontAwesomeIcon> Роля:{" "}
-              <span className="font-weight-normal">
+              <span className="fw-normal">
                 {rolesTranslate[this.state.profile.role]}
               </span>
             </span>
           </ListGroup.Item>
           {this.state.profile.role === roles.Vet ? (
             <ListGroup.Item>
-              <span className="font-weight-bold">
+              <span className="fw-bold">
                 <FontAwesomeIcon icon={faUniversity}></FontAwesomeIcon> УРН:{" "}
-                <span className="font-weight-normal ml-1">
-                  {this.state.profile.URN}
-                </span>
+                <span className="fw-normal ml-1">{this.state.profile.URN}</span>
               </span>
             </ListGroup.Item>
           ) : (
             ""
           )}
           <ListGroup.Item>
-            <span className="font-weight-bold">
+            <span className="fw-bold">
               <FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon> Профилът
-              е създаден на:{" "}
-              <span className="font-weight-normal">{createdOn}</span>
+              е създаден на: <span className="fw-normal">{createdOn}</span>
             </span>
           </ListGroup.Item>
         </ListGroup>

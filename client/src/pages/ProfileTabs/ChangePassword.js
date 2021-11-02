@@ -1,6 +1,6 @@
 import React from "react";
 import CustomModal from "../../components/CustomModal";
-import { Form, Col, Button, Card, Row } from "react-bootstrap";
+import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 const client = require("../../clientRequests");
 
 export default class ChangePassword extends React.Component {
@@ -99,38 +99,56 @@ export default class ChangePassword extends React.Component {
           <Form onSubmit={this.submitForm}>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="oldPassword">
-                <Form.Label>Стара парола</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={this.state.fields.oldPassword}
-                  onChange={this.handleOnChangeValue}
-                />
+                <FloatingLabel
+                  controlId="oldPassword"
+                  label="Стара парола"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    placeholder="Стара парола"
+                    type="password"
+                    value={this.state.fields.oldPassword}
+                    onChange={this.handleOnChangeValue}
+                  />
+                </FloatingLabel>
                 <span className="text-danger">
                   {this.state.errors.oldPassword}
                 </span>
               </Form.Group>
             </Row>
             <Row className="mb-3">
-              <Form.Group as={Col} controlId="newPassword">
-                <Form.Label>Нова парола</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={this.state.fields.newPassword}
-                  onChange={this.handleOnChangeValue}
-                />
+              <Form.Group as={Col}>
+                <FloatingLabel
+                  controlId="newPassword"
+                  label="Нова парола"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    placeholder="Нова парола"
+                    type="password"
+                    value={this.state.fields.newPassword}
+                    onChange={this.handleOnChangeValue}
+                  />
+                </FloatingLabel>
                 <span className="text-danger">
                   {this.state.errors.newPassword}
                 </span>
               </Form.Group>
             </Row>
             <Row className="mb-3">
-              <Form.Group as={Col} controlId="newPasswordConfirm">
-                <Form.Label>Потвърждаване на нова парола</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={this.state.fields.newPasswordConfirm}
-                  onChange={this.handleOnChangeValue}
-                />
+              <Form.Group as={Col}>
+                <FloatingLabel
+                  controlId="newPasswordConfirm"
+                  label="Потвърждаване на нова парола"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    placeholder="Потвърждаване на нова парола"
+                    type="password"
+                    value={this.state.fields.newPasswordConfirm}
+                    onChange={this.handleOnChangeValue}
+                  />
+                </FloatingLabel>
                 <span className="text-danger">
                   {this.state.errors.newPasswordConfirm}
                 </span>

@@ -10,10 +10,14 @@ import {
   Form,
   OverlayTrigger,
   Tooltip,
+  Alert,
 } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faExclamationTriangle,
+  faShare,
+} from "@fortawesome/free-solid-svg-icons";
 import { refreshToken } from "../clientRequests";
 const io = require("socket.io-client");
 const API_URL = require("../config.json").API_URL;
@@ -168,6 +172,10 @@ class Chats extends React.Component {
   render() {
     return (
       <div>
+        <Alert variant="warning">
+          <FontAwesomeIcon icon={faExclamationTriangle}></FontAwesomeIcon>{" "}
+          Всички чатове се изтриват две седмици след започването им!
+        </Alert>
         <Row>
           <Col>
             <p>{this.state.connected}</p>

@@ -58,7 +58,7 @@ a.text-secondary:focus {
   font-weight: bold;
 }
 .underline {
-  border-bottom: 4px solid #ffffff;
+  border-bottom: 4px solid currentcolor;
 }
 .text-shadow {
   filter: drop-shadow(1px 1px 10px #000000);

@@ -216,7 +216,7 @@ class UserService {
       transportMail.sendMail({
         from: fromSender,
         to: newEmail,
-        subject: "Смяна на имейл в Animal Aid",
+        subject: "Смяна на имейл адрес в Animal Aid",
         html: verifyTemplates.verifyProfileChangeEmail(key),
       });
       return true;

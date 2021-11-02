@@ -1,39 +1,124 @@
 import homeFirst from "../images/home1.png";
+import homeSecond from "../images/home2.png";
+import homeThird from "../images/home3.png";
+import { Carousel } from "react-bootstrap";
+import "../css/alignCarouselTop.css";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlayCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBookOpen,
+  faEdit,
+  faHandHoldingHeart,
+  faPhoneAlt,
+  faPlayCircle,
+} from "@fortawesome/free-solid-svg-icons";
 export default function Home() {
   return (
     <div>
-      <div
-        style={{
-          backgroundImage: `url(${homeFirst})`,
-          backgroundPosition: "50% 70%",
-          backgroundSize: "cover",
-          height: "500px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div className="container text-center text-secondary">
-          <h1 className="text-shadow-big">
-            Добре дошли в <span className="underline">Animal Aid</span>!
-          </h1>
-          <h2 className="text-shadow-big mt-3">
-            Платформата, която обединява всички ветеринари в България!
-          </h2>
-          <NavLink to="/register">
-            <div
-              className="btn btn-primary mt-5 font-weight-bold"
-              style={{ fontSize: "18px" }}
-            >
-              <FontAwesomeIcon icon={faPlayCircle}></FontAwesomeIcon> Започни
-              сега
+      <Carousel style={{ height: "500px" }}>
+        <Carousel.Item
+          style={{
+            height: "500px",
+            backgroundImage: `url(${homeFirst})`,
+            backgroundPosition: "50% 20%",
+            backgroundSize: "cover",
+          }}
+        >
+          <Carousel.Caption>
+            <div className="container text-center text-secondary mt-5">
+              <h1 className="text-shadow-big">
+                Добре дошли в{" "}
+                <span className="underline text-primary fw-bold">
+                  Animal Aid
+                </span>
+                !
+              </h1>
+              <h2 className="text-shadow-big mt-3">
+                Платформата, която обединява всички ветеринари в България!
+              </h2>
+              <NavLink to="/register">
+                <div
+                  className="btn btn-primary mt-5 fw-bold"
+                  style={{ fontSize: "18px" }}
+                >
+                  <FontAwesomeIcon icon={faPlayCircle}></FontAwesomeIcon>{" "}
+                  Започни сега
+                </div>
+              </NavLink>
             </div>
-          </NavLink>
-        </div>
-      </div>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item
+          style={{
+            height: "500px",
+            backgroundImage: `url(${homeSecond})`,
+            backgroundPosition: "50% 20%",
+            backgroundSize: "cover",
+          }}
+        >
+          <Carousel.Caption>
+            <div className="container text-center text-secondary mt-5">
+              <h2 className="text-shadow-big mt-3">
+                Тази платформа е създадена с{" "}
+                <span className="underline fw-bold text-primary">
+                  много любов
+                </span>{" "}
+                към животните!
+                <br />
+                <FontAwesomeIcon
+                  icon={faHandHoldingHeart}
+                  className="text-primary mt-3"
+                  style={{ fontSize: "70px" }}
+                ></FontAwesomeIcon>
+              </h2>
+              <NavLink to="/about">
+                <div
+                  className="btn btn-primary mt-5 fw-bold"
+                  style={{ fontSize: "18px" }}
+                >
+                  <FontAwesomeIcon icon={faBookOpen}></FontAwesomeIcon> Прочети
+                  повече
+                </div>
+              </NavLink>
+            </div>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item
+          style={{
+            height: "500px",
+            backgroundImage: `url(${homeThird})`,
+            backgroundPosition: "50% 60%",
+            backgroundSize: "cover",
+          }}
+        >
+          <Carousel.Caption>
+            <div className="container text-center text-secondary mt-5">
+              <h2 className="text-shadow-big mt-3">
+                Ако имате{" "}
+                <span className="underline fw-bold text-primary">
+                  идеи или критики
+                </span>{" "}
+                относно развитието на платформата, може да се свържете с нас!
+                <br />
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  className="text-primary mt-3"
+                  style={{ fontSize: "70px" }}
+                ></FontAwesomeIcon>
+              </h2>
+              <NavLink to="/contacts">
+                <div
+                  className="btn btn-primary mt-5 fw-bold"
+                  style={{ fontSize: "18px" }}
+                >
+                  <FontAwesomeIcon icon={faPhoneAlt}></FontAwesomeIcon> Свържи
+                  се
+                </div>
+              </NavLink>
+            </div>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import CustomModal from "../components/CustomModal";
-import { Form, Col, Button, Card, Row } from "react-bootstrap";
+import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 const client = require("../clientRequests");
 
 export default class RequestForgotPassword extends React.Component {
@@ -48,7 +48,7 @@ export default class RequestForgotPassword extends React.Component {
     };
     const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!isEmail.test(fields["email"])) {
-      errors["email"] = "Имейлът е невалиден!";
+      errors["email"] = "Имейл адресът е невалиден!";
       errors["isValid"] = false;
     }
 
@@ -85,12 +85,18 @@ export default class RequestForgotPassword extends React.Component {
           <Form onSubmit={this.submitForm}>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="email">
-                <Form.Label>Имейл</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={this.state.fields.email}
-                  onChange={this.handleOnChangeValue}
-                />
+                <FloatingLabel
+                  controlId="email"
+                  label="Имейл адрес"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    placeholder="Имейл адрес"
+                    type="text"
+                    value={this.state.fields.email}
+                    onChange={this.handleOnChangeValue}
+                  />
+                </FloatingLabel>
                 <span className="text-danger">{this.state.errors.email}</span>
               </Form.Group>
             </Row>

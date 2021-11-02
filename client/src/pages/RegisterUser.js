@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Col, Button, Row } from "react-bootstrap";
+import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import CustomModal from "../components/CustomModal";
 import { withRouter } from "react-router";
 import ImageUploading from "react-images-uploading";
@@ -105,20 +105,23 @@ class RegisterUser extends React.Component {
     const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
     const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
-    if (fields["firstName"].length < 2) {
-      errors["firstName"] = "Името трябва да е поне 2 символа!";
+    if (fields["firstName"].length < 2 || fields["firstName"].length > 50) {
+      errors["firstName"] =
+        "Името трябва да е поне 2 символа и да е максимум 50 символа!";
       errors["isValid"] = false;
     }
-    if (fields["lastName"].length < 2) {
-      errors["lastName"] = "Фамилията трябва да е поне 2 символа!";
+    if (fields["lastName"].length < 2 || fields["lastName"].length > 50) {
+      errors["lastName"] =
+        "Фамилията трябва да е поне 2 символа и да е максимум 50 символа!";
       errors["isValid"] = false;
     }
     if (!isEmail.test(fields["email"])) {
-      errors["email"] = "Имейлът е невалиден!";
+      errors["email"] = "Имейл адресът е невалиден!";
       errors["isValid"] = false;
     }
-    if (fields["city"].length < 2) {
-      errors["city"] = "Името на града трябва да е поне 2 символа!";
+    if (fields["city"].length < 2 || fields["city"].length > 45) {
+      errors["city"] =
+        "Името на града трябва да е поне 2 символа и да е максимум 45 символа!!";
       errors["isValid"] = false;
     }
     if (errors["image"] !== "") {
@@ -132,9 +135,13 @@ class RegisterUser extends React.Component {
         "Невалиден телефонен номер! Пример за валиден: +359123456789";
       errors["isValid"] = false;
     }
-    if (!checkPass.test(fields["password"]) || fields["password"].length < 8) {
+    if (
+      !checkPass.test(fields["password"]) ||
+      fields["password"].length < 8 ||
+      fields["password"].length > 98
+    ) {
       errors["password"] =
-        "Паролата трябва да съдържа поне една малка латинска буква, една главна латинска буква, една цифра и да е поне 8 символа!";
+        "Паролата трябва да съдържа поне една малка латинска буква, една главна латинска буква, една цифра, да е поне 8 символа и да е максимум 98 символа!";
       errors["isValid"] = false;
     }
     if (fields["password"] !== fields["confirmPassword"]) {
@@ -178,79 +185,113 @@ class RegisterUser extends React.Component {
         ></CustomModal>
         <Form onSubmit={this.submitForm}>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="firstName">
-              <Form.Label>Име</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.firstName}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel controlId="firstName" label="Име" className="mb-3">
+                <Form.Control
+                  placeholder="Име"
+                  type="text"
+                  value={this.state.fields.firstName}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.firstName}</span>
             </Form.Group>
 
-            <Form.Group as={Col} controlId="lastName">
-              <Form.Label>Фамилия</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.lastName}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel
+                controlId="lastName"
+                label="Фамилия"
+                className="mb-3"
+              >
+                <Form.Control
+                  placeholder="Фамилия"
+                  type="text"
+                  value={this.state.fields.lastName}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.lastName}</span>
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="email">
-              <Form.Label>Имейл</Form.Label>
-              <Form.Control
-                type="email"
-                value={this.state.fields.email}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel
+                controlId="email"
+                label="Имейл адрес"
+                className="mb-3"
+              >
+                <Form.Control
+                  placeholder="Имейл адрес"
+                  type="text"
+                  value={this.state.fields.email}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.email}</span>
             </Form.Group>
 
-            <Form.Group as={Col} controlId="city">
-              <Form.Label>Град</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.city}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel controlId="city" label="Град" className="mb-3">
+                <Form.Control
+                  placeholder="Град"
+                  type="text"
+                  value={this.state.fields.city}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.city}</span>
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="phoneNumber">
-              <Form.Label>Телефонен номер</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.phoneNumber}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col}>
+              <FloatingLabel
+                controlId="phoneNumber"
+                label="Телефонен номер"
+                className="mb-3"
+              >
+                <Form.Control
+                  placeholder="Телефонен номер"
+                  type="text"
+                  value={this.state.fields.phoneNumber}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">
                 {this.state.errors.phoneNumber}
               </span>
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="password">
-              <Form.Label>Парола</Form.Label>
-              <Form.Control
-                type="password"
-                value={this.state.fields.password}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col}>
+              <FloatingLabel
+                controlId="password"
+                label="Парола"
+                className="mb-3"
+              >
+                <Form.Control
+                  placeholder="Парола"
+                  type="password"
+                  value={this.state.fields.password}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.password}</span>
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="confirmPassword">
-              <Form.Label>Потвърждение на парола</Form.Label>
-              <Form.Control
-                type="password"
-                value={this.state.fields.confirmPassword}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col}>
+              <FloatingLabel
+                controlId="confirmPassword"
+                label="Потвърждаване на парола"
+                className="mb-3"
+              >
+                <Form.Control
+                  placeholder="Потвърждаване на парола"
+                  type="password"
+                  value={this.state.fields.confirmPassword}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">
                 {this.state.errors.confirmPassword}
               </span>

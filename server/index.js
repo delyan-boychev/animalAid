@@ -1,4 +1,6 @@
 const express = require("express");
+const config = require("./config.json");
+const mongoose = require("mongoose");
 const app = express();
 var cors = require("cors");
 const httpServer = require("http").Server(app);
@@ -18,6 +20,10 @@ app.post("/newMessage", (req, res) => {
   res.sendStatus(200);
 });
 app.use("/user", userRoute);
+mongoose.connect(config.CONNECTION_STRING, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 httpServer.listen(port, () => {
   console.log(`Animal Aid server is running!`);
 });

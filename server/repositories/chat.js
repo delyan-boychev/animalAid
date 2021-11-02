@@ -1,11 +1,5 @@
-const mongoose = require("mongoose");
-const config = require("../config.json");
 const Chat = require("../models/chat");
 const extMethods = require("../extensionMethods");
-mongoose.connect(config.CONNECTION_STRING, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 class ChatRepository {
   async startChat(userOne, userTwo, message, date) {
     let chat = new Chat();
@@ -17,7 +11,6 @@ class ChatRepository {
       message: message,
       sender: userOne,
     });
-    chat.isOpen = true;
     chat.save();
     return true;
   }

@@ -9,11 +9,12 @@ import RequestForgotPassword from "./pages/RequestForgotPassword";
 import ChangeForgotPassword from "./pages/ChangeForgotPassword";
 import { Route, Redirect } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
-import "./animations.css";
+import "./css/animations.css";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import { getCookie } from "./cookies";
 import Chats from "./pages/Chats";
+import Contacts from "./pages/Contacts";
 const routes = [
   { path: "/", Component: Home, className: "" },
   { path: "/about", Component: About, className: "container mt-3" },
@@ -52,6 +53,11 @@ const routes = [
     Component: Chats,
     className: "container mt-3",
     loggedIn: true,
+  },
+  {
+    path: "/contacts",
+    Component: Contacts,
+    className: "container mt-3",
   },
   {
     path: "/verifyProfile",

@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Col, Button, Row } from "react-bootstrap";
+import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import CustomModal from "../components/CustomModal";
 import { withRouter } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
@@ -16,6 +16,7 @@ class RegisterVet extends React.Component {
         image: null,
         address: "",
         URN: "",
+        vetDescription: "",
         phoneNumber: "",
         password: "",
         confirmPassword: "",
@@ -28,6 +29,7 @@ class RegisterVet extends React.Component {
         image: "",
         address: "",
         URN: "",
+        vetDescription: "",
         phoneNumber: "",
         password: "",
         confirmPassword: "",
@@ -55,6 +57,7 @@ class RegisterVet extends React.Component {
         email: user.email,
         city: user.city,
         imgDataURL: user.image.data_url,
+        vetDescription: user.vetDescription,
         address: user.address,
         phoneNumber: user.phoneNumber,
         password: user.password,
@@ -102,6 +105,7 @@ class RegisterVet extends React.Component {
       email: "",
       city: "",
       image: this.state.errors.image,
+      vetDescription: "",
       address: "",
       URN: "",
       phoneNumber: "",
@@ -115,28 +119,40 @@ class RegisterVet extends React.Component {
     const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
     const checkURN = /^([А-Я,а-я,\-,0-9]{2,20})\/([0-9]{4})$/;
 
-    if (fields["firstName"].length < 2) {
-      errors["firstName"] = "Името трябва да е поне 2 символа!";
+    if (fields["firstName"].length < 2 || fields["firstName"].length > 50) {
+      errors["firstName"] =
+        "Името трябва да е поне 2 символа и да е максимум 50 символа!";
       errors["isValid"] = false;
     }
-    if (fields["lastName"].length < 2) {
-      errors["lastName"] = "Фамилията трябва да е поне 2 символа!";
+    if (fields["lastName"].length < 2 || fields["lastName"].length > 50) {
+      errors["lastName"] =
+        "Фамилията трябва да е поне 2 символа и да е максимум 50 символа!";
       errors["isValid"] = false;
     }
     if (!isEmail.test(fields["email"])) {
-      errors["email"] = "Имейлът е невалиден!";
+      errors["email"] = "Имейл адресът е невалиден!";
       errors["isValid"] = false;
     }
-    if (fields["city"].length < 2) {
-      errors["city"] = "Името на града трябва да е поне 2 символа!";
+    if (fields["city"].length < 2 || fields["city"].length > 45) {
+      errors["city"] =
+        "Името на града трябва да е поне 2 символа и да е максимум 45 символа!";
       errors["isValid"] = false;
     }
-    if (fields["address"].length < 2) {
-      errors["address"] = "Адресът трябва да е поне 2 символа!";
+    if (fields["address"].length < 2 || fields["address"].length > 90) {
+      errors["address"] =
+        "Адресът трябва да е поне 2 символа и да е максимум 90 символа!";
       errors["isValid"] = false;
     }
     if (!checkURN.test(fields["URN"])) {
       errors["URN"] = "Навалиден УРН!";
+      errors["isValid"] = false;
+    }
+    if (
+      fields["vetDescription"].length < 100 ||
+      fields["vetDescription"].length > 600
+    ) {
+      errors["vetDescription"] =
+        "Краткото описание дейността на вертеринарния лекар трябва да е поне 100 символа и максимум 600 символа!";
       errors["isValid"] = false;
     }
     if (errors["image"] !== "") {
@@ -150,9 +166,13 @@ class RegisterVet extends React.Component {
         "Невалиден телефонен номер! Пример за валиден: +359123456789";
       errors["isValid"] = false;
     }
-    if (!checkPass.test(fields["password"]) || fields["password"].length < 8) {
+    if (
+      !checkPass.test(fields["password"]) ||
+      fields["password"].length < 8 ||
+      fields["password"].length > 98
+    ) {
       errors["password"] =
-        "Паролата трябва да съдържа поне една малка латинска буква, една главна латинска буква, една цифра и да е поне 8 символа!";
+        "Паролата трябва да съдържа поне една малка латинска буква, една главна латинска буква, една цифра, да е поне 8 символа и да е максимум 98 символа!";
       errors["isValid"] = false;
     }
     if (fields["password"] !== fields["confirmPassword"]) {
@@ -196,94 +216,136 @@ class RegisterVet extends React.Component {
         ></CustomModal>
         <Form onSubmit={this.submitForm}>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="firstName">
-              <Form.Label>Име</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.firstName}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel controlId="firstName" label="Име">
+                <Form.Control
+                  placeholder="Име"
+                  type="text"
+                  value={this.state.fields.firstName}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.firstName}</span>
             </Form.Group>
 
-            <Form.Group as={Col} controlId="lastName">
-              <Form.Label>Фамилия</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.lastName}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel controlId="lastName" label="Фамилия">
+                <Form.Control
+                  placeholder="Фамилия"
+                  type="text"
+                  value={this.state.fields.lastName}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.lastName}</span>
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="email">
-              <Form.Label>Имейл</Form.Label>
-              <Form.Control
-                type="email"
-                value={this.state.fields.email}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel controlId="email" label="Имейл адрес">
+                <Form.Control
+                  placeholder="Имейл адрес"
+                  type="text"
+                  value={this.state.fields.email}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.email}</span>
             </Form.Group>
-            <Form.Group as={Col} controlId="phoneNumber">
-              <Form.Label>Телефонен номер</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.phoneNumber}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel controlId="phoneNumber" label="Телефонен номер">
+                <Form.Control
+                  placeholder="Телефонен номер"
+                  type="text"
+                  value={this.state.fields.phoneNumber}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">
                 {this.state.errors.phoneNumber}
               </span>
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="city">
-              <Form.Label>Град</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.city}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel controlId="city" label="Град">
+                <Form.Control
+                  placeholder="Град"
+                  type="text"
+                  value={this.state.fields.city}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.city}</span>
             </Form.Group>
-            <Form.Group as={Col} controlId="address">
-              <Form.Label>Адрес</Form.Label>
-              <Form.Control
-                type="text"
-                value={this.state.fields.address}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col} sm>
+              <FloatingLabel controlId="address" label="Адрес" className="mb-3">
+                <Form.Control
+                  placeholder="Адрес"
+                  type="text"
+                  value={this.state.fields.address}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.address}</span>
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="URN">
-              <Form.Label>УРН на ветеринарен лекар</Form.Label>
-              <Form.Control type="text" onChange={this.handleOnChangeValue} />
+            <Form.Group as={Col}>
+              <FloatingLabel controlId="URN" label="УРН на ветеринарен лекар">
+                <Form.Control
+                  placeholder="УРН на ветеринарен лекар"
+                  type="text"
+                  value={this.state.fields.URN}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.URN}</span>
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="password">
-              <Form.Label>Парола</Form.Label>
-              <Form.Control
-                type="password"
-                value={this.state.fields.password}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col}>
+              <FloatingLabel
+                controlId="description"
+                label="Кратко описание дейността на вертеринарния лекар"
+              >
+                <Form.Control
+                  as="textarea"
+                  placeholder="Кратко описание дейността на вертеринарния лекар"
+                  style={{ resize: "none", height: "200px" }}
+                />
+              </FloatingLabel>
+              <span className="text-danger">
+                {this.state.errors.vetDescription}
+              </span>
+            </Form.Group>
+          </Row>
+          <Row className="mb-3">
+            <Form.Group as={Col}>
+              <FloatingLabel controlId="password" label="Парола">
+                <Form.Control
+                  placeholder="Парола"
+                  type="password"
+                  value={this.state.fields.password}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">{this.state.errors.password}</span>
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="confirmPassword">
-              <Form.Label>Потвърждение на парола</Form.Label>
-              <Form.Control
-                type="password"
-                value={this.state.fields.confirmPassword}
-                onChange={this.handleOnChangeValue}
-              />
+            <Form.Group as={Col}>
+              <FloatingLabel
+                controlId="confirmPassword"
+                label="Потвърждаване на парола"
+              >
+                <Form.Control
+                  placeholder="Потвърждаване на парола"
+                  type="password"
+                  value={this.state.fields.confirmPassword}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
               <span className="text-danger">
                 {this.state.errors.confirmPassword}
               </span>

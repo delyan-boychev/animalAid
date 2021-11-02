@@ -1,17 +1,42 @@
 const mongoose = require("mongoose");
+const roles = require("./roles");
 const schema = new mongoose.Schema({
-  name: { first: String, last: String },
-  email: String,
-  phoneNumber: String,
-  city: String,
-  password: String,
-  createdOn: Number,
-  role: String,
-  URN: String,
-  address: String,
-  imgFileName: String,
-  verified: Boolean,
-  moderationVerified: Boolean,
+  name: {
+    first: { type: String, required: true },
+    last: { type: String, required: true },
+  },
+  email: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
+  city: { type: String, required: true },
+  password: { type: String, required: true },
+  createdOn: { type: Number, required: true },
+  role: { type: String, required: true },
+  vetDescription: {
+    type: String,
+    required: () => {
+      return this.role === roles.Vet;
+    },
+  },
+  URN: {
+    type: String,
+    required: () => {
+      return this.role === roles.Vet;
+    },
+  },
+  address: {
+    type: String,
+    required: () => {
+      return this.role === roles.Vet;
+    },
+  },
+  imgFileName: { type: String, required: true },
+  verified: { type: Boolean, required: true },
+  moderationVerified: {
+    type: Boolean,
+    required: () => {
+      return this.role === roles.Vet;
+    },
+  },
   lastForgotPassword: Number,
   lastRequestForgotPassword: Number,
 });

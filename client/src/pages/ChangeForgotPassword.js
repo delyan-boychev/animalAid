@@ -1,6 +1,6 @@
 import React from "react";
 import CustomModal from "../components/CustomModal";
-import { Form, Col, Button, Card, Row } from "react-bootstrap";
+import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 const client = require("../clientRequests");
@@ -107,26 +107,38 @@ export default class ChangeForgotPassword extends React.Component {
             <Card body>
               <Form onSubmit={this.submitForm}>
                 <Row className="mb-3">
-                  <Form.Group as={Col} controlId="newPassword">
-                    <Form.Label>Нова парола</Form.Label>
-                    <Form.Control
-                      type="password"
-                      value={this.state.fields.newPassword}
-                      onChange={this.handleOnChangeValue}
-                    />
+                  <Form.Group as={Col}>
+                    <FloatingLabel
+                      controlId="newPassword"
+                      label="Нова парола"
+                      className="mb-3"
+                    >
+                      <Form.Control
+                        placeholder="Нова парола"
+                        type="password"
+                        value={this.state.fields.newPassword}
+                        onChange={this.handleOnChangeValue}
+                      />
+                    </FloatingLabel>
                     <span className="text-danger">
                       {this.state.errors.newPassword}
                     </span>
                   </Form.Group>
                 </Row>
                 <Row className="mb-3">
-                  <Form.Group as={Col} controlId="newPasswordConfirm">
-                    <Form.Label>Потвърждаване на нова парола</Form.Label>
-                    <Form.Control
-                      type="password"
-                      value={this.state.fields.newPasswordConfirm}
-                      onChange={this.handleOnChangeValue}
-                    />
+                  <Form.Group as={Col}>
+                    <FloatingLabel
+                      controlId="newPasswordConfirm"
+                      label="Потвърждаване на нова парола"
+                      className="mb-3"
+                    >
+                      <Form.Control
+                        placeholder="Потвърждаване на нова парола"
+                        type="password"
+                        value={this.state.fields.newPasswordConfirm}
+                        onChange={this.handleOnChangeValue}
+                      />
+                    </FloatingLabel>
                     <span className="text-danger">
                       {this.state.errors.newPasswordConfirm}
                     </span>
