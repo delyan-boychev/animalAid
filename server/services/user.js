@@ -20,9 +20,14 @@ class UserService {
   async registerUser(user) {
     let regexImageUrl = /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
     const match = regexImageUrl.exec(user.imgDataURL);
-    const imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+    let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
       8
     )}.${match.groups["mime"].replace("image/", "")}`;
+    while (!fs.access(`${dir}\\${imgFileName}`)) {
+      imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+        8
+      )}.${match.groups["mime"].replace("image/", "")}`;
+    }
     user.imgFileName = imgFileName;
     user.role = "User";
     const isReg = await this.#userRepository.register(user);

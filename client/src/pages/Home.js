@@ -7,10 +7,10 @@ import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookOpen,
-  faEdit,
   faHandHoldingHeart,
   faPhoneAlt,
   faPlayCircle,
+  faLightbulb,
 } from "@fortawesome/free-solid-svg-icons";
 export default function Home() {
   return (
@@ -87,7 +87,7 @@ export default function Home() {
           style={{
             height: "500px",
             backgroundImage: `url(${homeThird})`,
-            backgroundPosition: "50% 60%",
+            backgroundPosition: "50% 80%",
             backgroundSize: "cover",
           }}
         >
@@ -101,7 +101,7 @@ export default function Home() {
                 относно развитието на платформата, може да се свържете с нас!
                 <br />
                 <FontAwesomeIcon
-                  icon={faEdit}
+                  icon={faLightbulb}
                   className="text-primary mt-3"
                   style={{ fontSize: "70px" }}
                 ></FontAwesomeIcon>

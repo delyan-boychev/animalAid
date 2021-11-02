@@ -90,7 +90,7 @@ function authorizationCheck(Component, loggedIn) {
     }
   } else {
     if (token !== "" && token !== null) {
-      return <Redirect to="/"></Redirect>;
+      return <Redirect to="/profile"></Redirect>;
     } else {
       return <Component></Component>;
     }

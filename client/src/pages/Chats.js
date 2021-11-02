@@ -31,6 +31,7 @@ class Chats extends React.Component {
       messages: [],
       id: "",
       message: "",
+      errorMessage: "",
       currentChatId: "",
       connected: false,
       chatUserInfo: {},
@@ -68,8 +69,13 @@ class Chats extends React.Component {
     this.socket.disconnect();
   };
   onChangeText = () => {
+    let errorMessage = "";
     let message = document.getElementById("message").value;
-    this.setState({ message });
+    if (message.length > 255) {
+      errorMessage =
+        "Дължината на съобщението трябва да бъде максимум 255 символа!";
+    }
+    this.setState({ message, errorMessage });
   };
   onNewMessage = (data) => {
     if (data.senderId === this.state.currentChatId) {
@@ -109,26 +115,31 @@ class Chats extends React.Component {
   };
   sendMsg = (event) => {
     event.preventDefault();
-    let message = {
-      sender: this.state.id,
-      date: parseInt(new Date().getTime() / 1000),
-      message: this.state.message.trim(),
-    };
-    this.setState({ message: "", messages: [...this.state.messages, message] });
-    this.socket.emit("newMessage", {
-      msg: message.message,
-      id: this.socket.id,
-      recieveId: this.state.currentChatId,
-      date: message.date,
-    });
-    setTimeout(
-      function () {
-        let chat = document.getElementById("chat-box");
-        chat.scrollTop = chat.scrollHeight;
-        this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
-      }.bind(this),
-      100
-    );
+    if (this.state.errorMessage !== "") {
+      let message = {
+        sender: this.state.id,
+        date: parseInt(new Date().getTime() / 1000),
+        message: this.state.message.trim(),
+      };
+      this.setState({
+        message: "",
+        messages: [...this.state.messages, message],
+      });
+      this.socket.emit("newMessage", {
+        msg: message.message,
+        id: this.socket.id,
+        recieveId: this.state.currentChatId,
+        date: message.date,
+      });
+      setTimeout(
+        function () {
+          let chat = document.getElementById("chat-box");
+          chat.scrollTop = chat.scrollHeight;
+          this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
+        }.bind(this),
+        100
+      );
+    }
   };
   startChat = () => {
     let message = {
@@ -338,7 +349,8 @@ class Chats extends React.Component {
                   type="submit"
                   disabled={
                     this.state.currentChatId === "" ||
-                    /^\s*$/.test(this.state.message)
+                    /^\s*$/.test(this.state.message) ||
+                    this.state.errorMessage !== ""
                       ? true
                       : false
                   }
@@ -346,6 +358,7 @@ class Chats extends React.Component {
                   <FontAwesomeIcon icon={faShare}></FontAwesomeIcon>
                 </Button>
               </div>
+              <span className="text-danger">{this.state.errorMessage}</span>
             </Form>
           </Col>
         </Row>
