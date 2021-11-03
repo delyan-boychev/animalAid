@@ -1,6 +1,7 @@
 import { Navbar, Nav } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../images/logo.png";
+import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoginAndRegPartial from "./LoginAndRegPartial";
 import {
@@ -8,16 +9,28 @@ import {
   faEnvelopeOpenText,
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 export default function Header() {
+  const [open, setOpen] = useState(false);
+  let autoCloseCollapse = () => {
+    if (isMobile) setOpen(!open);
+  };
   return (
-    <Navbar bg="primary" variant="dark" expand="lg">
+    <Navbar
+      bg="primary"
+      style={{ boxShadow: "0 7px 10px 0 rgba(0,0,0,0.7)", zIndex: "2" }}
+      variant="dark"
+      expand="lg"
+    >
       <Navbar.Brand as={Link} to="/" className="text-secondary ms-3">
         <img src={logo} alt="logo" style={{ maxHeight: "70px" }}></img>
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Toggle onClick={() => setOpen(!open)} />
       <Navbar.Collapse
         id="basic-navbar-nav"
         className="justify-content-between"
+        aria-expanded={open}
+        in={open}
       >
         <Nav className="text-secondary ms-3" style={{ fontSize: "21px" }}>
           <Nav.Link
@@ -26,6 +39,7 @@ export default function Header() {
             to="/"
             activeClassName="activeNav"
             className="text-secondary"
+            onClick={autoCloseCollapse}
           >
             <span className="nav-link-effect">
               <FontAwesomeIcon icon={faHome}></FontAwesomeIcon> Начална страница
@@ -36,6 +50,7 @@ export default function Header() {
             to="/about"
             activeClassName="activeNav"
             className="text-secondary"
+            onClick={autoCloseCollapse}
           >
             <span className="nav-link-effect">
               <FontAwesomeIcon icon={faAddressCard}></FontAwesomeIcon> За нас
@@ -46,6 +61,7 @@ export default function Header() {
             to="/contacts"
             activeClassName="activeNav"
             className="text-secondary"
+            onClick={autoCloseCollapse}
           >
             <span className="nav-link-effect">
               <FontAwesomeIcon icon={faEnvelopeOpenText}></FontAwesomeIcon>{" "}
@@ -54,7 +70,7 @@ export default function Header() {
           </Nav.Link>
         </Nav>
         <hr className="d-lg-none border-white" style={{ width: "95%" }} />
-        <LoginAndRegPartial></LoginAndRegPartial>
+        <LoginAndRegPartial onClick={autoCloseCollapse}></LoginAndRegPartial>
       </Navbar.Collapse>
     </Navbar>
   );

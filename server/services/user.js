@@ -54,6 +54,9 @@ class UserService {
     }
     return isReg;
   }
+  async getVet(id) {
+    return await this.#userRepository.getVet(id);
+  }
   async getRole(id) {
     return await this.#userRepository.getRole(id);
   }

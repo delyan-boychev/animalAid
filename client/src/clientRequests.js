@@ -58,7 +58,7 @@ async function postRequestToken(url, data, headers) {
           return "";
         }
       } else {
-        return "";
+        return false;
       }
     }
   } else {
@@ -100,7 +100,7 @@ async function getRequestToken(url, headers) {
           return "";
         }
       } else {
-        return "";
+        return false;
       }
     }
   } else {

@@ -312,6 +312,8 @@ class RegisterVet extends React.Component {
                 <Form.Control
                   as="textarea"
                   placeholder="Кратко описание дейността на вертеринарния лекар"
+                  onChange={this.handleOnChangeValue}
+                  value={this.state.fields.vetDescription}
                   style={{ resize: "none", height: "200px" }}
                 />
               </FloatingLabel>

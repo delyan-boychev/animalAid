@@ -200,98 +200,92 @@ export default class EditProfile extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
         ></CustomModal>
-        <Row className="mb-3">
-          <Col md={2}>
-            <img
-              className="mb-3"
-              src={
-                this.state.profile.imgFileName !== ""
-                  ? `${API_URL}/user/img/${this.state.profile.imgFileName}`
-                  : ""
-              }
-              height="100px"
-              width="100px"
-              alt="profilePicture"
-            />
-          </Col>
-          <Col>
-            <ListGroup className="shadow">
-              <ListGroup.Item>
-                <Form.Group controlId="fName">
-                  <Row>
-                    <Col md={2} xs={3}>
-                      <Form.Label className="fw-bold col-form-label">
-                        Име
-                      </Form.Label>
-                    </Col>
-                    <Col md={8} xs={7}>
-                      <Form.Control
-                        type="text"
-                        value={this.state.profile.name.first}
-                        onChange={this.onChangeValue}
-                      />
-                      <span className="text-danger">
-                        {this.state.errors.name.first}
-                      </span>
-                    </Col>
-                    <Col xs={2}>
-                      <Button
-                        variant="primary"
-                        className="float-end"
-                        id="fName_button"
-                        onClick={this.onEditButtonClick}
-                        disabled={
-                          this.state.errors.name.first !== "" ||
-                          this.state.lastProfile.name.first ===
-                            this.state.profile.name.first
-                        }
-                      >
-                        <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form.Group>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Form.Group controlId="lName">
-                  <Row>
-                    <Col md={2} xs={3}>
-                      <Form.Label className="fw-bold col-form-label">
-                        Фамилия
-                      </Form.Label>
-                    </Col>
-                    <Col md={8} xs={7}>
-                      <Form.Control
-                        type="text"
-                        value={this.state.profile.name.last}
-                        onChange={this.onChangeValue}
-                      />
-                      <span className="text-danger">
-                        {this.state.errors.name.last}
-                      </span>
-                    </Col>
-                    <Col xs={2}>
-                      <Button
-                        variant="primary"
-                        className="float-end"
-                        id="lName_button"
-                        onClick={this.onEditButtonClick}
-                        disabled={
-                          this.state.errors.name.last !== "" ||
-                          this.state.lastProfile.name.last ===
-                            this.state.profile.name.last
-                        }
-                      >
-                        <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form.Group>
-              </ListGroup.Item>
-            </ListGroup>
-          </Col>
-        </Row>
+        <div className="d-flex justify-content-center mb-3">
+          <img
+            className="mb-3 rounded-circle"
+            src={
+              this.state.profile.imgFileName !== ""
+                ? `${API_URL}/user/img/${this.state.profile.imgFileName}`
+                : ""
+            }
+            height="150px"
+            width="150px"
+            alt="profilePicture"
+          />
+        </div>
         <ListGroup className="shadow">
+          <ListGroup.Item>
+            <Form.Group controlId="fName">
+              <Row>
+                <Col md={2} xs={3}>
+                  <Form.Label className="fw-bold col-form-label">
+                    Име
+                  </Form.Label>
+                </Col>
+                <Col md={8} xs={7}>
+                  <Form.Control
+                    type="text"
+                    value={this.state.profile.name.first}
+                    onChange={this.onChangeValue}
+                  />
+                  <span className="text-danger">
+                    {this.state.errors.name.first}
+                  </span>
+                </Col>
+                <Col xs={2}>
+                  <Button
+                    variant="primary"
+                    className="float-end"
+                    id="fName_button"
+                    onClick={this.onEditButtonClick}
+                    disabled={
+                      this.state.errors.name.first !== "" ||
+                      this.state.lastProfile.name.first ===
+                        this.state.profile.name.first
+                    }
+                  >
+                    <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                  </Button>
+                </Col>
+              </Row>
+            </Form.Group>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <Form.Group controlId="lName">
+              <Row>
+                <Col md={2} xs={3}>
+                  <Form.Label className="fw-bold col-form-label">
+                    Фамилия
+                  </Form.Label>
+                </Col>
+                <Col md={8} xs={7}>
+                  <Form.Control
+                    type="text"
+                    value={this.state.profile.name.last}
+                    onChange={this.onChangeValue}
+                  />
+                  <span className="text-danger">
+                    {this.state.errors.name.last}
+                  </span>
+                </Col>
+                <Col xs={2}>
+                  <Button
+                    variant="primary"
+                    className="float-end"
+                    id="lName_button"
+                    onClick={this.onEditButtonClick}
+                    disabled={
+                      this.state.errors.name.last !== "" ||
+                      this.state.lastProfile.name.last ===
+                        this.state.profile.name.last
+                    }
+                  >
+                    <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                  </Button>
+                </Col>
+              </Row>
+            </Form.Group>
+          </ListGroup.Item>
           <ListGroup.Item>
             <span className="fw-bold">
               <FontAwesomeIcon icon={faAt}></FontAwesomeIcon> Имейл адрес:{" "}

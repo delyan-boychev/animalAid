@@ -47,6 +47,19 @@ class UserRepository {
       return false;
     }
   }
+  async getVet(id) {
+    try {
+      const user = await User.findOne({ _id: id, role: roles.Vet }).lean();
+      if (user !== null) {
+        user.password = undefined;
+        return user;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
   async checkUserExistsAndLastForgotPassword(email) {
     let user = await User.findOne({ email: email }).exec();
     if (user != null) {

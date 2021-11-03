@@ -57,15 +57,17 @@ module.exports = (io) => {
       const users = await chatService.getUsersChats(res.id);
       socket.emit("allChatUsers", { users: users, id: res.id });
       activeUsers[res.id] = socket.id;
+      io.emit("changeActiveStatus", { userId: res.id, activeStatus: true });
       socket.on("newMessage", onNewMessage);
       socket.on("requestGetMessages", onRequestGetMessages);
       socket.on("requestGetAllChatUsers", onRequestGetAllChatUsers);
       socket.on("seenMessages", onSeenMessages);
       socket.on("disconnect", function () {
-        const socketId = Object.keys(activeUsers).find(
+        const uId = Object.keys(activeUsers).find(
           (key) => activeUsers[key] === socket.id
         );
-        delete activeUsers[socketId];
+        delete activeUsers[uId];
+        io.emit("changeActiveStatus", { userId: uId, activeStatus: false });
       });
     } else {
       socket.emit("invalidToken", "");

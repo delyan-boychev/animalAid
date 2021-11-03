@@ -45,16 +45,23 @@ class Chats extends React.Component {
       },
     });
     this.socket.on("connect", () => {
-      console.log("true");
       this.socket.on("allChatUsers", this.setAllUsers);
       this.socket.on("newMessage", this.onNewMessage);
       this.socket.on("getMessages", this.setMessages);
       this.socket.on("invalidToken", this.onInvalidToken);
+      this.socket.on("changeActiveStatus", this.onChangeActiveStatus);
       this.socket.on("disconnect", async () => {
         if (!this.leavePage) {
         }
       });
     });
+  };
+  onChangeActiveStatus = (data) => {
+    if (data.userId === this.state.currentChatId) {
+      let userInfo = this.state.chatUserInfo;
+      userInfo["activeStatus"] = data.activeStatus;
+      this.setState({ chatUserInfo: userInfo });
+    }
   };
   onInvalidToken = async () => {
     console.clear();
@@ -115,7 +122,7 @@ class Chats extends React.Component {
   };
   sendMsg = (event) => {
     event.preventDefault();
-    if (this.state.errorMessage !== "") {
+    if (this.state.errorMessage === "") {
       let message = {
         sender: this.state.id,
         date: parseInt(new Date().getTime() / 1000),
@@ -246,12 +253,13 @@ class Chats extends React.Component {
                     />
                   </Col>
                   <Col>
-                    {this.state.chatUserInfo.name.first}
+                    {this.state.chatUserInfo.name.first}{" "}
                     {this.state.chatUserInfo.name.last}
                     <br />
                     <small className="text-muted">
                       {this.state.chatUserInfo.email}
                     </small>
+                    <br />
                     {this.state.chatUserInfo.activeStatus === true ? (
                       <div>
                         <Badge pill bg="success">
@@ -259,7 +267,9 @@ class Chats extends React.Component {
                         </Badge>
                       </div>
                     ) : (
-                      ""
+                      <Badge pill bg="dark">
+                        Офлайн
+                      </Badge>
                     )}
                   </Col>
                 </Row>

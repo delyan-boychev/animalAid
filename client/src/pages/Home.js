@@ -11,6 +11,7 @@ import {
   faPhoneAlt,
   faPlayCircle,
   faLightbulb,
+  faPaw,
 } from "@fortawesome/free-solid-svg-icons";
 export default function Home() {
   return (
@@ -28,13 +29,16 @@ export default function Home() {
             <div className="container text-center text-secondary mt-5">
               <h1 className="text-shadow-big">
                 Добре дошли в{" "}
-                <span className="underline text-primary fw-bold">
-                  Animal Aid
-                </span>
-                !
+                <span className="underline fw-bold">Animal Aid</span>!
               </h1>
               <h2 className="text-shadow-big mt-3">
                 Платформата, която обединява всички ветеринари в България!
+                <br />
+                <FontAwesomeIcon
+                  icon={faPaw}
+                  className="text-primary mt-3"
+                  style={{ fontSize: "70px" }}
+                ></FontAwesomeIcon>
               </h2>
               <NavLink to="/register">
                 <div
@@ -59,11 +63,7 @@ export default function Home() {
           <Carousel.Caption>
             <div className="container text-center text-secondary mt-5">
               <h2 className="text-shadow-big mt-3">
-                Тази платформа е създадена с{" "}
-                <span className="underline fw-bold text-primary">
-                  много любов
-                </span>{" "}
-                към животните!
+                Тази платформа е създадена с много любов към животните!
                 <br />
                 <FontAwesomeIcon
                   icon={faHandHoldingHeart}
@@ -94,11 +94,8 @@ export default function Home() {
           <Carousel.Caption>
             <div className="container text-center text-secondary mt-5">
               <h2 className="text-shadow-big mt-3">
-                Ако имате{" "}
-                <span className="underline fw-bold text-primary">
-                  идеи или критики
-                </span>{" "}
-                относно развитието на платформата, може да се свържете с нас!
+                Ако имате идеи или критики относно развитието на платформата,
+                може да се свържете с нас!
                 <br />
                 <FontAwesomeIcon
                   icon={faLightbulb}

@@ -6,11 +6,13 @@ import {
   faUser,
   faSignOutAlt,
   faComments,
+  faUserMd,
 } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Dropdown, DropdownButton } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-export default function LoginAndRegPartial() {
+const roles = require("../enums/roles");
+export default function LoginAndRegPartial(props) {
   const [profile, setProfile] = useState("");
   let getProfile = async () => {
     let profile = await getRequestToken("/user/profile");
@@ -64,15 +66,32 @@ export default function LoginAndRegPartial() {
               as={Link}
               to="/profile"
               className="text-primary"
+              onClick={props.onClick}
             >
               <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Моят профил
             </Dropdown.Item>
+            {profile.role !== roles.Vet ? (
+              <Dropdown.Item
+                style={{ fontSize: "19px" }}
+                eventKey="1"
+                as={Link}
+                to="/vets"
+                className="text-primary"
+                onClick={props.onClick}
+              >
+                <FontAwesomeIcon icon={faUserMd}></FontAwesomeIcon> Ветеринарни
+                лекари
+              </Dropdown.Item>
+            ) : (
+              ""
+            )}
             <Dropdown.Item
               style={{ fontSize: "19px" }}
               eventKey="1"
               as={Link}
               to="/chats"
               className="text-primary"
+              onClick={props.onClick}
             >
               <FontAwesomeIcon icon={faComments}></FontAwesomeIcon> Чатове
             </Dropdown.Item>

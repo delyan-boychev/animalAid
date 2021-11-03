@@ -13,6 +13,7 @@ const onConnection = require("./chatSockets")(io);
 io.on("connection", onConnection);
 const port = 4000;
 const userRoute = require("./routes/user");
+const captchaRoute = require("./routes/captcha");
 app.use(express.json());
 app.use(cors());
 app.post("/newMessage", (req, res) => {
@@ -20,6 +21,7 @@ app.post("/newMessage", (req, res) => {
   res.sendStatus(200);
 });
 app.use("/user", userRoute);
+app.use("/captcha", captchaRoute);
 mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

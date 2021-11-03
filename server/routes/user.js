@@ -50,15 +50,35 @@ router.post("/log", async (req, res) => {
   }
 });
 router.get("/getVets/:pageNum", authenticate, async (req, res) => {
-  try {
-    const pageNum = parseInt(req.params.pageNum);
-    if (pageNum > 0) {
-      res.send(await userService.getVets(pageNum));
-    } else {
+  if (req.user.role !== roles.Vet) {
+    try {
+      const pageNum = parseInt(req.params.pageNum);
+      if (pageNum > 0) {
+        res.send(await userService.getVets(pageNum));
+      } else {
+        res.sendStatus(400);
+      }
+    } catch {
       res.sendStatus(400);
     }
-  } catch {
-    res.sendStatus(400);
+  } else {
+    res.sendStatus(403);
+  }
+});
+router.get("/getVet/:id", authenticate, async (req, res) => {
+  if (req.user.role !== roles.Vet) {
+    if (req.params.id !== undefined && req.params.id !== "") {
+      const vet = await userService.getVet(req.params.id);
+      if (vet !== false) {
+        res.send(vet);
+      } else {
+        res.sendStatus(404);
+      }
+    } else {
+      res.sendStatus(404);
+    }
+  } else {
+    res.sendStatus(403);
   }
 });
 router.post("/verifyProfile", async (req, res) => {
