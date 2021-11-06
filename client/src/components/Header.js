@@ -41,7 +41,7 @@ export default function Header() {
             className="text-secondary"
             onClick={autoCloseCollapse}
           >
-            <span className="nav-link-effect">
+            <span className="nav-link-effect shadow-navbar">
               <FontAwesomeIcon icon={faHome}></FontAwesomeIcon> Начална страница
             </span>
           </Nav.Link>
@@ -52,7 +52,7 @@ export default function Header() {
             className="text-secondary"
             onClick={autoCloseCollapse}
           >
-            <span className="nav-link-effect">
+            <span className="nav-link-effect shadow-navbar">
               <FontAwesomeIcon icon={faAddressCard}></FontAwesomeIcon> За нас
             </span>
           </Nav.Link>
@@ -63,7 +63,7 @@ export default function Header() {
             className="text-secondary"
             onClick={autoCloseCollapse}
           >
-            <span className="nav-link-effect">
+            <span className="nav-link-effect shadow-navbar">
               <FontAwesomeIcon icon={faEnvelopeOpenText}></FontAwesomeIcon>{" "}
               Контакти
             </span>

@@ -157,7 +157,6 @@ class RegisterUser extends React.Component {
     this.validate();
   };
   onError = (error) => {
-    console.log(error);
     if (error["acceptType"]) {
       let errors = this.state.errors;
       errors["image"] = "Неподдържан файлов формат!";

@@ -1,6 +1,7 @@
 "use strict";
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const Validator = require("jsonschema").Validator;
 const userRegisterSchema = require("../models/validation/userRegister");
 const vetRegisterSchema = require("../models/validation/vetRegister");
@@ -35,10 +36,12 @@ router.post("/regVet", async (req, res) => {
 });
 router.get("/img/:filename", async (req, res) => {
   const fileName = req.params.filename;
-  let dir = `${path.dirname(
-    require.main.filename || process.mainModule.filename
-  )}\\img`;
-  res.sendFile(`${dir}\\${fileName}`);
+  let dir = `${path.dirname(require.main.filename)}\\img`;
+  if (fs.existsSync(`${dir}\\${fileName}`)) {
+    res.sendFile(`${dir}\\${fileName}`);
+  } else {
+    res.sendStatus(404);
+  }
 });
 router.post("/log", async (req, res) => {
   let v = new Validator();
@@ -106,7 +109,8 @@ router.post("/edit/:property", authenticate, async (req, res) => {
     prop == "lName" ||
     prop == "city" ||
     prop == "phoneNumber" ||
-    (prop == "address" && req.user.role == roles.Vet)
+    (prop == "address" && req.user.role == roles.Vet) ||
+    (prop == "vetDescription" && req.user.role == roles.Vet)
   ) {
     if (req.body[prop] != undefined && req.body[prop] != "") {
       let v = new Validator();

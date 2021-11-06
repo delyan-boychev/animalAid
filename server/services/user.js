@@ -23,7 +23,8 @@ class UserService {
     let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
       8
     )}.${match.groups["mime"].replace("image/", "")}`;
-    while (!fs.access(`${dir}\\${imgFileName}`)) {
+    let dir = `${path.dirname(require.main.filename)}\\img`;
+    while (!fs.existsSync(`${dir}\\${imgFileName}`)) {
       imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
         8
       )}.${match.groups["mime"].replace("image/", "")}`;
@@ -44,9 +45,6 @@ class UserService {
         `data:${match.groups["mime"]};base64,`,
         ""
       );
-      let dir = `${path.dirname(
-        require.main.filename || process.mainModule.filename
-      )}\\img`;
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
@@ -66,6 +64,12 @@ class UserService {
     const imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
       8
     )}.${match.groups["mime"].replace("image/", "")}`;
+    let dir = `${path.dirname(require.main.filename)}\\img`;
+    while (!fs.existsSync(`${dir}\\${imgFileName}`)) {
+      imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+        8
+      )}.${match.groups["mime"].replace("image/", "")}`;
+    }
     user.imgFileName = imgFileName;
     user.role = "Vet";
     const isReg = await this.#userRepository.register(user);
@@ -82,9 +86,6 @@ class UserService {
         `data:${match.groups["mime"]};base64,`,
         ""
       );
-      let dir = `${path.dirname(
-        require.main.filename || process.mainModule.filename
-      )}\\img`;
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }

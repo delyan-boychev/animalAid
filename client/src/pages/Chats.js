@@ -311,7 +311,7 @@ class Chats extends React.Component {
                 ) : (
                   <div
                     key={message.date}
-                    className="djustify-content-start text-left ms-2 me-2 mt-3 mb-3"
+                    className="justify-content-start text-left ms-2 me-2 mt-3 mb-3"
                   >
                     <OverlayTrigger
                       placement="top"

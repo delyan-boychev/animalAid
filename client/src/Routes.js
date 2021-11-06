@@ -16,6 +16,7 @@ import { getCookie } from "./cookies";
 import Chats from "./pages/Chats";
 import Contacts from "./pages/Contacts";
 import Vets from "./pages/Vets";
+import Vet from "./pages/Vet";
 const routes = [
   { path: "/", Component: Home, className: "" },
   { path: "/about", Component: About, className: "container mt-3" },
@@ -58,6 +59,12 @@ const routes = [
   {
     path: "/vets",
     Component: Vets,
+    className: "container mt-3",
+    loggedIn: true,
+  },
+  {
+    path: "/vet",
+    Component: Vet,
     className: "container mt-3",
     loggedIn: true,
   },

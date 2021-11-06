@@ -188,7 +188,6 @@ class RegisterVet extends React.Component {
     this.validate();
   };
   onError = (error) => {
-    console.log(error);
     if (error["acceptType"]) {
       let errors = this.state.errors;
       errors["image"] = "Неподдържан файлов формат!";
@@ -306,12 +305,12 @@ class RegisterVet extends React.Component {
           <Row className="mb-3">
             <Form.Group as={Col}>
               <FloatingLabel
-                controlId="description"
-                label="Кратко описание дейността на вертеринарния лекар"
+                controlId="vetDescription"
+                label="Описание на вертеринарния лекар"
               >
                 <Form.Control
                   as="textarea"
-                  placeholder="Кратко описание дейността на вертеринарния лекар"
+                  placeholder="Описание на вертеринарния лекар"
                   onChange={this.handleOnChangeValue}
                   value={this.state.fields.vetDescription}
                   style={{ resize: "none", height: "200px" }}

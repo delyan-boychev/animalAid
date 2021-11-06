@@ -230,6 +230,9 @@ class UserRepository {
         case "address":
           u.address = value;
           break;
+        case "vetDescription":
+          u.vetDescription = value;
+          break;
         default:
           return false;
       }

@@ -10,6 +10,7 @@ import {
   faMapMarkedAlt,
   faCity,
   faPen,
+  faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
@@ -31,6 +32,7 @@ export default class EditProfile extends React.Component {
         city: "",
         address: "",
         URN: "",
+        vetDescription: "",
         imgFileName: "",
         createdOn: 0,
         role: "",
@@ -44,6 +46,7 @@ export default class EditProfile extends React.Component {
         city: "",
         address: "",
         phoneNumber: "",
+        vetDescription: "",
       },
       errors: {
         name: {
@@ -53,6 +56,7 @@ export default class EditProfile extends React.Component {
         city: "",
         phoneNumber: "",
         address: "",
+        vetDescription: "",
       },
       modal: {
         show: false,
@@ -84,6 +88,7 @@ export default class EditProfile extends React.Component {
         city: res.city,
         address: res.address,
         phoneNumber: res.phoneNumber,
+        vetDescription: res.vetDescription,
       },
     });
   }
@@ -112,20 +117,32 @@ export default class EditProfile extends React.Component {
       city: "",
       phoneNumber: "",
       address: "",
+      vetDescription: "",
     };
     let fields = this.state.profile;
     const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
-    if (fields.name.first.length < 2) {
-      errors.name.first = "Името трябва да е поне 2 символа!";
+    if (fields.name.first.length < 2 || fields.name.first.length > 50) {
+      errors.name.first =
+        "Името трябва да е поне 2 символа и да е максимум 50 символа!";
     }
-    if (fields.name.last.length < 2) {
-      errors.name.last = "Фамилията трябва да е поне 2 символа!";
+    if (fields.name.last.length < 2 || fields.name.last.length > 50) {
+      errors.name.last =
+        "Фамилията трябва да е поне 2 символа и да е максимум 50 символа!";
     }
-    if (fields["city"].length < 2) {
-      errors["city"] = "Името на града трябва да е поне 2 символа!";
+    if (fields["city"].length < 2 || fields["city"].length > 45) {
+      errors["city"] =
+        "Името на града трябва да е поне 2 символа и да е максимум 45 символа!";
     }
-    if (fields["address"] && fields["address"].length < 2) {
-      errors["address"] = "Адресът трябва да е поне 2 символа!";
+    if (fields["address"].length < 2 || fields["address"].length > 90) {
+      errors["address"] =
+        "Адресът трябва да е поне 2 символа и да е максимум 90 символа!";
+    }
+    if (
+      fields["vetDescription"].length < 100 ||
+      fields["vetDescription"].length > 600
+    ) {
+      errors["vetDescription"] =
+        "Краткото описание дейността на вертеринарния лекар трябва да е поне 100 символа и максимум 600 символа!";
     }
     if (!isPhoneNumber.test(fields["phoneNumber"])) {
       errors["phoneNumber"] = "Невалиден телефонен номер!";
@@ -160,6 +177,13 @@ export default class EditProfile extends React.Component {
       case "address":
         if (this.state.errors.address === "") {
           body = { address: this.state.profile.address };
+        } else {
+          return;
+        }
+        break;
+      case "vetDescription":
+        if (this.state.errors.vetDescription === "") {
+          body = { vetDescription: this.state.profile.vetDescription };
         } else {
           return;
         }
@@ -392,6 +416,49 @@ export default class EditProfile extends React.Component {
                         this.state.errors.address !== "" ||
                         this.state.lastProfile.address ===
                           this.state.profile.address
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
+            </ListGroup.Item>
+          ) : (
+            ""
+          )}
+          {this.state.profile.role === roles.Vet ? (
+            <ListGroup.Item>
+              <Form.Group controlId="vetDescription">
+                <Row>
+                  <Col md={2} xs={3}>
+                    <Form.Label className="fw-bold col-form-label">
+                      <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>{" "}
+                      Описание на ветеринарния лекар
+                    </Form.Label>
+                  </Col>
+                  <Col md={8} xs={7}>
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Описание на вертеринарния лекар"
+                      onChange={this.onChangeValue}
+                      value={this.state.profile.vetDescription}
+                      style={{ resize: "none", height: "200px" }}
+                    />
+                    <span className="text-danger">
+                      {this.state.errors.vetDescription}
+                    </span>
+                  </Col>
+                  <Col xs={2}>
+                    <Button
+                      variant="primary"
+                      className="float-end"
+                      id="vetDescription_button"
+                      onClick={this.onEditButtonClick}
+                      disabled={
+                        this.state.errors.vetDescription !== "" ||
+                        this.state.lastProfile.vetDescription ===
+                          this.state.profile.vetDescription
                       }
                     >
                       <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>

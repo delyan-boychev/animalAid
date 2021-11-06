@@ -33,7 +33,12 @@ export default function LoginAndRegPartial(props) {
   ) {
     return (
       <div style={{ fontSize: "20px" }}>
-        <Nav.Link as={Link} to="/login" className="text-secondary">
+        <Nav.Link
+          as={Link}
+          to="/login"
+          className="text-secondary shadow-navbar"
+          onClick={props.onClick}
+        >
           <FontAwesomeIcon icon={faSignInAlt}></FontAwesomeIcon> Влизане
         </Nav.Link>
       </div>
@@ -48,7 +53,10 @@ export default function LoginAndRegPartial(props) {
             className="ms-3"
             variant="primary"
             title={
-              <span style={{ fontSize: "20px" }} className="fw-bold">
+              <span
+                style={{ fontSize: "20px" }}
+                className="fw-bold shadow-navbar"
+              >
                 <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Профил
               </span>
             }
@@ -75,7 +83,7 @@ export default function LoginAndRegPartial(props) {
                 style={{ fontSize: "19px" }}
                 eventKey="1"
                 as={Link}
-                to="/vets"
+                to="/vets?page=1"
                 className="text-primary"
                 onClick={props.onClick}
               >

@@ -1,9 +1,26 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400&display=swap");
+::-webkit-scrollbar-track {
+  border: 3px solid #ffffff;
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  border-left: 3px solid #ffffff;
+  border-right: 3px solid #ffffff;
+  background-color: #239554;
+}
 body {
   margin: 0;
   font-family: "Nunito", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: thin;
 }
 
 code {
@@ -30,8 +47,8 @@ a.text-secondary:focus {
   position: relative;
   color: #ffffff;
 }
-.nav-link-effect {
-  filter: drop-shadow(1px 1px 5px #000000);
+.shadow-navbar {
+  filter: drop-shadow(2px 2px 5px #000000);
 }
 @media (hover: hover) and (pointer: fine) {
   .nav-link-effect:after {
@@ -113,22 +130,4 @@ a.text-secondary:focus {
   overflow-y: scroll;
   overflow-x: hidden;
   word-wrap: break-word;
-}
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
