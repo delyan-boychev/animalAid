@@ -8,7 +8,9 @@ module.exports = (io) => {
       (key) => activeUsers[key] === socket.id
     );
     const users = await chatService.getUsersChats(senderId);
-    io.to(socket.id).emit("allChatUsers", { users: users, id: senderId });
+    if (users !== false) {
+      io.to(socket.id).emit("allChatUsers", { users: users, id: senderId });
+    }
   };
   const onSeenMessages = async function (socket) {
     const senderId = Object.keys(activeUsers).find(
@@ -21,33 +23,37 @@ module.exports = (io) => {
       (key) => activeUsers[key] === socket.id
     );
     const messages = await chatService.getMessages(senderId, socket.getId);
-    const user = await chatService.getProfile(socket.getId);
-    user["activeStatus"] = false;
-    if (activeUsers[socket.getId]) {
-      user["activeStatus"] = true;
+    if (messages !== false) {
+      const user = await chatService.getProfile(socket.getId);
+      user["activeStatus"] = false;
+      if (activeUsers[socket.getId]) {
+        user["activeStatus"] = true;
+      }
+      io.to(activeUsers[senderId]).emit("getMessages", {
+        id: socket.id,
+        user: user,
+        messages: messages,
+      });
     }
-    io.to(activeUsers[senderId]).emit("getMessages", {
-      id: socket.id,
-      user: user,
-      messages: messages,
-    });
   };
   const onNewMessage = async function (socket) {
     const senderId = Object.keys(activeUsers).find(
       (key) => activeUsers[key] === socket.id
     );
-    await chatService.sendMessage(
+    const message = await chatService.sendMessage(
       senderId,
       socket.recieveId,
       socket.msg,
       socket.date
     );
-    if (activeUsers[socket.recieveId]) {
-      io.to(activeUsers[socket.recieveId]).emit("newMessage", {
-        msg: socket.msg,
-        senderId: senderId,
-        date: socket.date,
-      });
+    if (message !== false) {
+      if (activeUsers[socket.recieveId]) {
+        io.to(activeUsers[socket.recieveId]).emit("newMessage", {
+          msg: socket.msg,
+          senderId: senderId,
+          date: socket.date,
+        });
+      }
     }
   };
   const onConnection = async function (socket) {

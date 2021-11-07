@@ -1,5 +1,5 @@
 import React from "react";
-import { ListGroup } from "react-bootstrap";
+import { ListGroup, Button } from "react-bootstrap";
 import {
   faAt,
   faPhoneSquareAlt,
@@ -17,6 +17,7 @@ class Vet extends React.Component {
     super(props);
     this.state = {
       vet: {
+        _id: "",
         name: {
           first: "",
           last: "",
@@ -34,7 +35,7 @@ class Vet extends React.Component {
     };
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
-    if (id !== "" && id !== undefined) {
+    if (id !== null) {
       this.getVet(id);
     } else {
       this.props.history.push("/");
@@ -67,6 +68,13 @@ class Vet extends React.Component {
             alt="profilePicture"
           />
         </div>
+        <Button
+          onClick={() =>
+            this.props.history.push(`/chats?startId=${this.state.vet._id}`)
+          }
+        >
+          Започни чат
+        </Button>
         <ListGroup>
           <ListGroup.Item>
             <span className="fw-bold">

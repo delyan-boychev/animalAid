@@ -101,6 +101,11 @@ class Chats extends React.Component {
   };
   setAllUsers = (data) => {
     this.setState({ chatUsers: data.users, id: data.id });
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("startId");
+    if (id !== null) {
+      this.startChat(id);
+    }
   };
   seenMessages = () => {
     this.socket.emit("seenMessages", {
@@ -148,27 +153,28 @@ class Chats extends React.Component {
       );
     }
   };
-  startChat = () => {
+  startChat = (id) => {
     let message = {
       sender: this.state.id,
       date: parseInt(new Date().getTime() / 1000),
-      message: document.getElementById("message").value,
+      message: "Здравейте!",
     };
-    this.setState({
-      message: "",
-      messages: [...this.state.messages, message],
-      currentChatId: document.getElementById("recid").value,
-    });
     this.socket.emit("newMessage", {
       msg: message.message,
       id: this.socket.id,
-      recieveId: document.getElementById("recid").value,
+      recieveId: id,
       date: message.date,
     });
-    setTimeout(function () {
-      let chat = document.getElementById("chat-box");
-      chat.scrollTop = chat.scrollHeight;
-    }, 100);
+    this.props.history.push(`/chats?startId=`);
+    setTimeout(
+      function () {
+        let chat = document.getElementById("chat-box");
+        chat.scrollTop = chat.scrollHeight;
+        this.getMsg(id);
+        this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
+      }.bind(this),
+      100
+    );
   };
   getMsg = (id) => {
     this.socket.emit("requestGetMessages", {
@@ -196,9 +202,6 @@ class Chats extends React.Component {
         </Alert>
         <Row>
           <Col>
-            <p>{this.state.connected}</p>
-            <FormControl id="recid"></FormControl>
-            <Button onClick={this.startChat}>Започни</Button>
             <div style={{ maxHeight: "400px", overflowY: "scroll" }}>
               <ListGroup>
                 {this.state.chatUsers.map((user) => (
