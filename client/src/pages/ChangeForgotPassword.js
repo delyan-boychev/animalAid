@@ -1,5 +1,5 @@
 import React from "react";
-import CustomModal from "../components/CustomModal";
+import InfoModal from "../components/InfoModal";
 import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
@@ -97,12 +97,12 @@ export default class ChangeForgotPassword extends React.Component {
       <div>
         {this.state.tokenValid ? (
           <div>
-            <CustomModal
+            <InfoModal
               show={this.state.modal.show}
               title={this.state.modal.title}
               body={this.state.modal.body}
               closeModal={this.closeModal}
-            ></CustomModal>
+            ></InfoModal>
             <h3 className="text-center">Промяна на забравена парола</h3>
             <Card body>
               <Form onSubmit={this.submitForm}>

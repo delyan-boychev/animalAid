@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap");
 ::-webkit-scrollbar-track {
   border: 3px solid #ffffff;
   background-color: #ffffff;
@@ -17,15 +17,10 @@
 }
 body {
   margin: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scrollbar-width: thin;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }
 html,
 body {
@@ -48,7 +43,7 @@ a.text-secondary:focus {
   color: #ffffff;
 }
 .shadow-navbar {
-  filter: drop-shadow(2px 2px 5px #000000);
+  filter: drop-shadow(2px 5px 5px #000000);
 }
 @media (hover: hover) and (pointer: fine) {
   .nav-link-effect:after {
@@ -130,4 +125,10 @@ a.text-secondary:focus {
   overflow-y: scroll;
   overflow-x: hidden;
   word-wrap: break-word;
+}
+.activeChat {
+  background-color: rgba(35, 149, 84, 0.4);
+}
+.logo-shadow {
+  filter: drop-shadow(1px 4px 4px #000000);
 }

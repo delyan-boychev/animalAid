@@ -1,5 +1,5 @@
 import React from "react";
-import CustomModal from "../../components/CustomModal";
+import InfoModal from "../../components/InfoModal";
 import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 import { setCookie } from "../../cookies";
 const client = require("../../clientRequests");
@@ -87,12 +87,12 @@ export default class ChangeEmail extends React.Component {
     }
     return (
       <div>
-        <CustomModal
+        <InfoModal
           show={this.state.modal.show}
           title={this.state.modal.title}
           body={this.state.modal.body}
           closeModal={this.closeModal}
-        ></CustomModal>
+        ></InfoModal>
         <Card body>
           <Form onSubmit={this.submitForm}>
             <Row className="mb-3">

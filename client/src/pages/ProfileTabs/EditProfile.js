@@ -1,5 +1,5 @@
 import React from "react";
-import CustomModal from "../../components/CustomModal";
+import InfoModal from "../../components/InfoModal";
 import { ListGroup, Button, Row, Col, Form } from "react-bootstrap";
 import {
   faAt,
@@ -218,12 +218,12 @@ export default class EditProfile extends React.Component {
       .pad()}ч.`;
     return (
       <div>
-        <CustomModal
+        <InfoModal
           show={this.state.modal.show}
           title={this.state.modal.title}
           body={this.state.modal.body}
           closeModal={this.closeModal}
-        ></CustomModal>
+        ></InfoModal>
         <div className="d-flex justify-content-center mb-3">
           <img
             className="mb-3 rounded-circle"

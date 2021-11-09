@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import config from "../config.json";
 import { Form, Button, FloatingLabel } from "react-bootstrap";
-import CustomModal from "../components/CustomModal";
+import InfoModal from "../components/InfoModal";
 import { setCookie } from "../cookies";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -99,12 +99,12 @@ export default class Login extends React.Component {
     return (
       <div>
         <h3 className="text-center">Влизане</h3>
-        <CustomModal
+        <InfoModal
           show={this.state.modal.show}
           title={this.state.modal.title}
           body={this.state.modal.body}
           closeModal={this.closeModal}
-        ></CustomModal>
+        ></InfoModal>
         <Form onSubmit={this.submitForm}>
           <Form.Group className="mb-3">
             <FloatingLabel

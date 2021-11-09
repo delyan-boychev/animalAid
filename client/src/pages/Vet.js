@@ -7,9 +7,12 @@ import {
   faMapMarkedAlt,
   faCity,
   faInfoCircle,
+  faCommentMedical,
+  faPhoneAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withRouter } from "react-router";
+import DialogModal from "../components/DialogModal";
 const client = require("../clientRequests");
 const API_URL = require("../config.json").API_URL;
 class Vet extends React.Component {
@@ -32,6 +35,11 @@ class Vet extends React.Component {
         role: "",
         phoneNumber: "",
       },
+      modal: {
+        show: false,
+        title: "Съобщение",
+        body: "",
+      },
     };
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
@@ -41,6 +49,17 @@ class Vet extends React.Component {
       this.props.history.push("/");
     }
   }
+  openModal = (body) => {
+    let modal = this.state.modal;
+    modal.show = true;
+    modal.body = body;
+    this.setState({ modal });
+  };
+  closeModal = () => {
+    let modal = this.state.modal;
+    modal.show = false;
+    this.setState({ modal });
+  };
   getVet = async (id) => {
     const data = await client.getRequestToken(`/user/getVet/${id}`);
     if (data === false) {
@@ -52,6 +71,15 @@ class Vet extends React.Component {
   render() {
     return (
       <div>
+        <DialogModal
+          show={this.state.modal.show}
+          title={this.state.modal.title}
+          body={this.state.modal.body}
+          closeModal={this.closeModal}
+          task={() =>
+            this.props.history.push(`/chats?startId=${this.state.vet._id}`)
+          }
+        ></DialogModal>
         <h3 className="text-center">
           {this.state.vet.name.first} {this.state.vet.name.last}
         </h3>
@@ -68,13 +96,24 @@ class Vet extends React.Component {
             alt="profilePicture"
           />
         </div>
-        <Button
-          onClick={() =>
-            this.props.history.push(`/chats?startId=${this.state.vet._id}`)
-          }
-        >
-          Започни чат
-        </Button>
+        <div className="d-flex flex-row mb-3">
+          <Button
+            onClick={() =>
+              this.openModal(
+                `Сигурни ли сте, че искате да започнете чат с ${this.state.vet.name.first} ${this.state.vet.name.last}?`
+              )
+            }
+          >
+            <FontAwesomeIcon icon={faCommentMedical}></FontAwesomeIcon> Започни
+            чат
+          </Button>
+          <Button
+            onClick={() => window.open(`tel:${this.state.vet.phoneNumber}`)}
+            className="ms-3"
+          >
+            <FontAwesomeIcon icon={faPhoneAlt}></FontAwesomeIcon> Обади се
+          </Button>
+        </div>
         <ListGroup>
           <ListGroup.Item>
             <span className="fw-bold">

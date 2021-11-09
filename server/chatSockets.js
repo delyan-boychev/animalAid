@@ -22,18 +22,31 @@ module.exports = (io) => {
     const senderId = Object.keys(activeUsers).find(
       (key) => activeUsers[key] === socket.id
     );
-    const messages = await chatService.getMessages(senderId, socket.getId);
+    const messages = await chatService.getMessages(
+      senderId,
+      socket.getId,
+      socket.numPage
+    );
     if (messages !== false) {
-      const user = await chatService.getProfile(socket.getId);
-      user["activeStatus"] = false;
-      if (activeUsers[socket.getId]) {
-        user["activeStatus"] = true;
+      if (socket.numPage > 1) {
+        io.to(activeUsers[senderId]).emit("getMessagesNextPage", {
+          id: socket.id,
+          messages: messages.messages,
+          numPages: messages.numPages,
+        });
+      } else {
+        const user = await chatService.getProfile(socket.getId);
+        user["activeStatus"] = false;
+        if (activeUsers[socket.getId]) {
+          user["activeStatus"] = true;
+        }
+        io.to(activeUsers[senderId]).emit("getMessages", {
+          id: socket.id,
+          user: user,
+          messages: messages.messages,
+          numPages: messages.numPages,
+        });
       }
-      io.to(activeUsers[senderId]).emit("getMessages", {
-        id: socket.id,
-        user: user,
-        messages: messages,
-      });
     }
   };
   const onNewMessage = async function (socket) {
@@ -44,7 +57,8 @@ module.exports = (io) => {
       senderId,
       socket.recieveId,
       socket.msg,
-      socket.date
+      socket.date,
+      socket.startChat
     );
     if (message !== false) {
       if (activeUsers[socket.recieveId]) {

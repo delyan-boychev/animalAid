@@ -23,6 +23,8 @@ const io = require("socket.io-client");
 const API_URL = require("../config.json").API_URL;
 class Chats extends React.Component {
   leavePage = false;
+  page = 1;
+  pages = 1;
   constructor(props) {
     super(props);
     this.state = {
@@ -48,6 +50,7 @@ class Chats extends React.Component {
       this.socket.on("allChatUsers", this.setAllUsers);
       this.socket.on("newMessage", this.onNewMessage);
       this.socket.on("getMessages", this.setMessages);
+      this.socket.on("getMessagesNextPage", this.setMessagesNextPage);
       this.socket.on("invalidToken", this.onInvalidToken);
       this.socket.on("changeActiveStatus", this.onChangeActiveStatus);
       this.socket.on("disconnect", async () => {
@@ -103,7 +106,7 @@ class Chats extends React.Component {
     this.setState({ chatUsers: data.users, id: data.id });
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("startId");
-    if (id !== null) {
+    if (id !== null && id !== "") {
       this.startChat(id);
     }
   };
@@ -115,15 +118,32 @@ class Chats extends React.Component {
   };
   setMessages = (data) => {
     this.seenMessages();
-    this.setState({ messages: data.messages, chatUserInfo: data.user });
+    this.setState({
+      messages: [...data.messages, ...this.state.messages],
+      chatUserInfo: data.user,
+    });
+    this.pages = data.numPages;
     let chat = document.getElementById("chat-box");
     chat.scrollTop = chat.scrollHeight;
+    chat.addEventListener("scroll", (event) => {
+      if (chat.scrollTop === 0) {
+        this.getNextPage();
+      }
+    });
     setTimeout(
       function () {
         this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
       }.bind(this),
       100
     );
+  };
+  setMessagesNextPage = (data) => {
+    this.setState({
+      messages: [...data.messages, ...this.state.messages],
+    });
+    this.pages = data.numPages;
+    let chat = document.getElementById("chat-box");
+    chat.scrollTop = 10;
   };
   sendMsg = (event) => {
     event.preventDefault();
@@ -142,6 +162,7 @@ class Chats extends React.Component {
         id: this.socket.id,
         recieveId: this.state.currentChatId,
         date: message.date,
+        startChat: false,
       });
       setTimeout(
         function () {
@@ -164,8 +185,9 @@ class Chats extends React.Component {
       id: this.socket.id,
       recieveId: id,
       date: message.date,
+      startChat: true,
     });
-    this.props.history.push(`/chats?startId=`);
+    this.props.history.replace(`/chats`);
     setTimeout(
       function () {
         let chat = document.getElementById("chat-box");
@@ -176,12 +198,26 @@ class Chats extends React.Component {
       100
     );
   };
+  getNextPage = () => {
+    if (this.page + 1 <= this.pages) {
+      this.page++;
+      this.socket.emit("requestGetMessages", {
+        id: this.socket.id,
+        getId: this.state.currentChatId,
+        numPage: this.page,
+      });
+    }
+  };
   getMsg = (id) => {
+    let chat = document.getElementById("chat-box");
+    chat.scrollTop = chat.scrollHeight;
+    this.setState({ messages: [], currentChatId: id });
+    this.page = 1;
     this.socket.emit("requestGetMessages", {
       id: this.socket.id,
       getId: id,
+      numPage: 1,
     });
-    this.setState({ currentChatId: id });
   };
   formatString = (date) => {
     return `${date.getDate().pad()}-${(
@@ -208,6 +244,9 @@ class Chats extends React.Component {
                   <ListGroup.Item
                     key={user._id}
                     id={user._id}
+                    className={`${
+                      user._id === this.state.currentChatId ? "activeChat" : ""
+                    }`}
                     onClick={() => {
                       this.getMsg(user._id);
                     }}
@@ -281,10 +320,11 @@ class Chats extends React.Component {
               ""
             )}
             <div className="chat-box" id="chat-box">
-              {this.state.messages.map((message) =>
+              {this.state.messages.map((message, index) =>
                 message.sender === this.state.id ? (
                   <div
-                    key={message.date}
+                    key={index}
+                    id={`ms-${index}`}
                     className="d-flex justify-content-end text-right me-2 mb-2"
                   >
                     <OverlayTrigger
@@ -313,7 +353,8 @@ class Chats extends React.Component {
                   </div>
                 ) : (
                   <div
-                    key={message.date}
+                    key={index}
+                    id={`ms-${index}`}
                     className="justify-content-start text-left ms-2 me-2 mt-3 mb-3"
                   >
                     <OverlayTrigger

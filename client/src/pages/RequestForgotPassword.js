@@ -1,5 +1,5 @@
 import React from "react";
-import CustomModal from "../components/CustomModal";
+import InfoModal from "../components/InfoModal";
 import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 const client = require("../clientRequests");
 
@@ -74,12 +74,12 @@ export default class RequestForgotPassword extends React.Component {
   render() {
     return (
       <div>
-        <CustomModal
+        <InfoModal
           show={this.state.modal.show}
           title={this.state.modal.title}
           body={this.state.modal.body}
           closeModal={this.closeModal}
-        ></CustomModal>
+        ></InfoModal>
         <h3 className="text-center">Забравена парола</h3>
         <Card body>
           <Form onSubmit={this.submitForm}>

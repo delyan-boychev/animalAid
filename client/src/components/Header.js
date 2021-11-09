@@ -23,7 +23,12 @@ export default function Header() {
       expand="lg"
     >
       <Navbar.Brand as={Link} to="/" className="text-secondary ms-3">
-        <img src={logo} alt="logo" style={{ maxHeight: "70px" }}></img>
+        <img
+          src={logo}
+          alt="logo"
+          style={{ maxHeight: "70px" }}
+          className="logo-shadow"
+        ></img>
       </Navbar.Brand>
       <Navbar.Toggle onClick={() => setOpen(!open)} />
       <Navbar.Collapse

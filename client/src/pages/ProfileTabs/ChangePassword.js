@@ -1,5 +1,5 @@
 import React from "react";
-import CustomModal from "../../components/CustomModal";
+import InfoModal from "../../components/InfoModal";
 import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 const client = require("../../clientRequests");
 
@@ -89,12 +89,12 @@ export default class ChangePassword extends React.Component {
   render() {
     return (
       <div>
-        <CustomModal
+        <InfoModal
           show={this.state.modal.show}
           title={this.state.modal.title}
           body={this.state.modal.body}
           closeModal={this.closeModal}
-        ></CustomModal>
+        ></InfoModal>
         <Card body>
           <Form onSubmit={this.submitForm}>
             <Row className="mb-3">

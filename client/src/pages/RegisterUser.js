@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
-import CustomModal from "../components/CustomModal";
+import InfoModal from "../components/InfoModal";
 import { withRouter } from "react-router";
 import ImageUploading from "react-images-uploading";
 const client = require("../clientRequests");
@@ -176,12 +176,12 @@ class RegisterUser extends React.Component {
     return (
       <div>
         <h3 className="text-center">Регистрация на потребител</h3>
-        <CustomModal
+        <InfoModal
           show={this.state.modal.show}
           title={this.state.modal.title}
           body={this.state.modal.body}
           closeModal={this.closeModal}
-        ></CustomModal>
+        ></InfoModal>
         <Form onSubmit={this.submitForm}>
           <Row className="mb-3">
             <Form.Group as={Col} sm>

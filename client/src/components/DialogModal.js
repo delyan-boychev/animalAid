@@ -1,5 +1,9 @@
 import { Modal, Button } from "react-bootstrap";
-export default function CustomModal(props) {
+export default function DialogModal(props) {
+  let onAccept = () => {
+    props.closeModal();
+    props.task();
+  };
   return (
     <Modal show={props.show} onHide={props.closeModal}>
       <Modal.Header closeButton>
@@ -7,8 +11,11 @@ export default function CustomModal(props) {
       </Modal.Header>
       <Modal.Body>{props.body}</Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={props.closeModal}>
-          Затвори
+        <Button variant="danger" onClick={props.closeModal}>
+          Не
+        </Button>
+        <Button variant="primary" onClick={onAccept}>
+          Да
         </Button>
       </Modal.Footer>
     </Modal>
