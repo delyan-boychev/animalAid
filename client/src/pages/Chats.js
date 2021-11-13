@@ -114,6 +114,10 @@ class Chats extends React.Component {
       this.setState({ messages: [...this.state.messages, message] });
       let chat = document.getElementById("chat-box");
       chat.scrollTop = chat.scrollHeight;
+      this.socket.emit("seenMessages", {
+        id: this.socket.id,
+        recieveId: this.state.currentChatId,
+      });
     } else {
       this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
     }

@@ -108,10 +108,7 @@ class UserService {
       if (u.verified) {
         const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
         const token = cryptr.encrypt(
-          JSON.stringify({
-            user: { id: u._id },
-            exp: parseInt(new Date().getTime() / 1000) + 1800,
-          })
+          `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
         );
         return token;
       } else {
@@ -127,15 +124,12 @@ class UserService {
   refreshToken(token) {
     const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
     try {
-      const decoded = JSON.parse(cryptr.decrypt(token));
-      if (decoded["exp"] > parseInt(new Date().getTime() / 1000)) {
+      const decoded = cryptr.decrypt(token).split(";");
+      if (parseInt(decoded[1]) > parseInt(new Date().getTime() / 1000)) {
         return false;
       } else {
         const refreshToken = cryptr.encrypt(
-          JSON.stringify({
-            user: decoded["user"],
-            exp: parseInt(new Date().getTime() / 1000) + 1800,
-          })
+          `${decoded[0]};${parseInt(new Date().getTime() / 1000) + 1800}`
         );
         return refreshToken;
       }

@@ -9,16 +9,16 @@ const authenticate = async function (req, res, next) {
     const token = authHeader.replace("animalAidAuthorization ", "");
     const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
     try {
-      let data = JSON.parse(cryptr.decrypt(token));
-      if (data["exp"] < parseInt(new Date().getTime() / 1000)) {
+      let data = cryptr.decrypt(token).split(";");
+      if (parseInt(data[1]) < parseInt(new Date().getTime() / 1000)) {
         res.sendStatus(401);
       } else {
-        const role = await userService.getRole(data["user"]["id"]);
-        data["user"]["role"] = role;
+        const role = await userService.getRole(data[0]);
+        let user = { id: data[0], role: role };
         if (role === false) {
           res.sendStatus(401);
         } else {
-          req.user = data["user"];
+          req.user = user;
           next();
         }
       }
