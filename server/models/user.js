@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const roles = require("./roles");
+const typeAnimals = require("./typeAnimals");
 const schema = new mongoose.Schema({
   name: {
     first: { type: String, required: true },
@@ -10,7 +11,23 @@ const schema = new mongoose.Schema({
   city: { type: String, required: true },
   password: { type: String, required: true },
   createdOn: { type: Number, required: true },
-  role: { type: String, required: true },
+  role: {
+    type: String,
+    required: true,
+    enum: [roles.Admin, roles.Moderator, roles.User, roles.Vet],
+  },
+  typeAnimals: {
+    type: [String],
+    required: () => {
+      return this.role === roles.Vet;
+    },
+    enum: [
+      typeAnimals.Cats,
+      typeAnimals.Dogs,
+      typeAnimals.ExoticAnimals,
+      typeAnimals.Birds,
+    ],
+  },
   vetDescription: {
     type: String,
     required: () => {

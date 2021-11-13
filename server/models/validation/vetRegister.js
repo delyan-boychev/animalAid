@@ -1,3 +1,4 @@
+const typeAnimals = require("../typeAnimals");
 const vetRegisterSchema = {
   id: "/vetRegister",
   type: "object",
@@ -14,6 +15,17 @@ const vetRegisterSchema = {
     URN: { type: "string", pattern: `^([А-Я,а-я,\-,0-9]{2,20})\/([0-9]{4})$` },
     address: { type: "string", minLength: 2, maxLenght: 90 },
     vetDescription: { type: "string", minLength: 100, maxLength: 600 },
+    typeAnimals: {
+      type: "array",
+      items: {
+        enum: [
+          typeAnimals.Cats,
+          typeAnimals.Dogs,
+          typeAnimals.ExoticAnimals,
+          typeAnimals.Birds,
+        ],
+      },
+    },
     city: { type: "string", minLength: 2, maxLength: 45 },
     password: { type: "string", minLength: 8, maxLength: 98 },
     email: { type: "string", format: "email" },
