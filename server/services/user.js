@@ -17,6 +17,11 @@ const Cryptr = require("cryptr");
 const fromSender = "Animal Aid <bganimalaid@gmail.com>";
 class UserService {
   #userRepository = new userRepository();
+  /**
+   * Register user
+   * @param {{}} user User info
+   * @returns {Boolean}
+   */
   async registerUser(user) {
     let regexImageUrl = /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
     const match = regexImageUrl.exec(user.imgDataURL);
@@ -52,12 +57,27 @@ class UserService {
     }
     return isReg;
   }
+  /**
+   * Get vet profile
+   * @param {String} id User id
+   * @returns {{}}
+   */
   async getVet(id) {
     return await this.#userRepository.getVet(id);
   }
+  /**
+   * Get user role
+   * @param {String} id User id
+   * @returns {String}
+   */
   async getRole(id) {
     return await this.#userRepository.getRole(id);
   }
+  /**
+   * Register vet
+   * @param {{}} user User info
+   * @returns {Boolean}
+   */
   async registerVet(user) {
     let regexImageUrl = /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
     const match = regexImageUrl.exec(user.imgDataURL);
@@ -93,6 +113,11 @@ class UserService {
     }
     return isReg;
   }
+  /**
+   * Profile verification
+   * @param {String} key Key for verification
+   * @returns {Boolean}
+   */
   async verifyProfile(key) {
     const cryptr = new Cryptr(config.ENCRYPTION_KEY);
     try {
@@ -102,6 +127,11 @@ class UserService {
       return false;
     }
   }
+  /**
+   * Login user
+   * @param {{}} user User info
+   * @returns {Boolean|String}
+   */
   async loginUser(user) {
     const u = await this.#userRepository.loginUser(user);
     if (u !== false) {
@@ -118,9 +148,19 @@ class UserService {
       return false;
     }
   }
+  /**
+   * Get user profile
+   * @param {String} id User id
+   * @returns {{}}
+   */
   async getProfile(id) {
     return await this.#userRepository.getProfile(id);
   }
+  /**
+   *
+   * @param {String} token
+   * @returns {String|Boolean}
+   */
   refreshToken(token) {
     const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
     try {
@@ -137,9 +177,21 @@ class UserService {
       return false;
     }
   }
+  /**
+   * Edit property profile
+   * @param {String} prop Name of the property for edit
+   * @param {String} value New value of the property
+   * @param {String} id User id
+   * @returns {Boolean}
+   */
   async edit(prop, value, id) {
     return await this.#userRepository.edit(prop, value, id);
   }
+  /**
+   * Validate forgot password token
+   * @param {String} token Forgot password token
+   * @returns {{}}
+   */
   async validateForgotPasswordToken(token) {
     const cryptr = new Cryptr(config.ENCRYPTION_KEY);
     try {
@@ -165,6 +217,12 @@ class UserService {
       return { isValid: false, email: "" };
     }
   }
+  /**
+   * Change forgot password
+   * @param {String} token Forgot password token
+   * @param {String} newPassword New password
+   * @returns {Boolean}
+   */
   async forgotPasswordChange(token, newPassword) {
     const isValid = await this.validateForgotPasswordToken(token);
     if (isValid["isValid"]) {
@@ -177,6 +235,11 @@ class UserService {
       return false;
     }
   }
+  /**
+   * Request for forgot password
+   * @param {String} email User email
+   * @returns {Boolean}
+   */
   async requestForgotPassword(email) {
     const userExists =
       await this.#userRepository.checkUserExistsAndLastRequestForgotPassword(
@@ -208,6 +271,13 @@ class UserService {
       return userExists;
     }
   }
+  /**
+   * Change user email
+   * @param {String} newEmail New user email
+   * @param {String} password User password
+   * @param {String} id User id
+   * @returns {Boolean|String}
+   */
   async changeEmail(newEmail, password, id) {
     const changeEmailRes = await this.#userRepository.changeEmail(
       { id: id, password: password },
@@ -229,6 +299,11 @@ class UserService {
       return false;
     }
   }
+  /**
+   * Get vet profiles
+   * @param {Number} pageNum Number of the page
+   * @returns {[]}
+   */
   async getVets(pageNum) {
     const vets = await this.#userRepository.getVets();
     const startIndex = pageNum * 10 - 10;
@@ -246,6 +321,13 @@ class UserService {
       return { vets: vets.slice(startIndex, endIndex), numPages };
     }
   }
+  /**
+   * Change user password
+   * @param {String} id User id
+   * @param {*} oldPassword Old user password
+   * @param {*} newPassword New user password
+   * @returns {Boolean}
+   */
   async changePassword(id, oldPassword, newPassword) {
     return await this.#userRepository.changePassword(
       id,
