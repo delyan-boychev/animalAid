@@ -9,6 +9,7 @@ import { withRouter } from "react-router";
 import isNormalInteger from "../extensionFunctions/isNumber";
 const API_URL = require("../config.json").API_URL;
 const client = require("../clientRequests");
+const animalsTranslate = require("../enums/animalsTranslate");
 class Vets extends React.Component {
   constructor(props) {
     super(props);
@@ -88,7 +89,14 @@ class Vets extends React.Component {
                 <Col>
                   {vet.name.first} {vet.name.last}
                   <br />
-                  <small className="text-muted">{vet.email}</small>
+                  <small className="text-muted">
+                    {vet.typeAnimals.map(
+                      (animal, index) =>
+                        `${animalsTranslate[animal]}${
+                          vet.typeAnimals.length - 1 > index ? ", " : ""
+                        }`
+                    )}
+                  </small>
                 </Col>
               </Row>
             </ListGroup.Item>

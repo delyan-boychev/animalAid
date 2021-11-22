@@ -94,8 +94,8 @@ export default function Home() {
           <Carousel.Caption>
             <div className="container text-center text-secondary mt-5">
               <h2 className="text-shadow-big mt-3">
-                Ако имате идеи или критики относно развитието на платформата,
-                може да се свържете с нас!
+                Ако имате идеи относно развитието на платформата, може да се
+                свържете с нас!
                 <br />
                 <FontAwesomeIcon
                   icon={faLightbulb}

@@ -15,6 +15,7 @@ import {
 import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faDotCircle,
   faExclamationTriangle,
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
@@ -273,7 +274,7 @@ class Chats extends React.Component {
                       this.getMsg(user._id);
                     }}
                   >
-                    <Row>
+                    <Row className="align-items-center">
                       <Col xs={3}>
                         <img
                           className="rounded-circle"
@@ -288,11 +289,13 @@ class Chats extends React.Component {
                         <br />
                         <small className="text-muted">{user.email}</small>
                       </Col>
-                      <Col>
+                      <Col className="align-items-center">
                         {user.seenMessages === false ? (
-                          <Badge pill bg="primary">
-                            Ново съобщение
-                          </Badge>
+                          <FontAwesomeIcon
+                            icon={faDotCircle}
+                            style={{ fontSize: "25px" }}
+                            className="text-success fade-animation"
+                          ></FontAwesomeIcon>
                         ) : (
                           ""
                         )}
@@ -342,7 +345,7 @@ class Chats extends React.Component {
               ""
             )}
             <div className="chat-box" id="chat-box">
-              {this.state.messages.map((message, index) =>
+              {this.state.messages.map((message) =>
                 message.sender === this.state.id ? (
                   <div
                     key={message._id}
@@ -377,7 +380,7 @@ class Chats extends React.Component {
                   <div
                     key={message._id}
                     id={`ms-${message._id}`}
-                    className="justify-content-start text-left ms-2 me-2 mt-3 mb-3"
+                    className="justify-content-start text-left ms-2 me-2 mb-2"
                   >
                     <OverlayTrigger
                       placement="top"

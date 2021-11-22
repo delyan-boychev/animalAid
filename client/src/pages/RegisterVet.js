@@ -16,6 +16,7 @@ class RegisterVet extends React.Component {
         image: null,
         address: "",
         URN: "",
+        typeAnimals: [],
         vetDescription: "",
         phoneNumber: "",
         password: "",
@@ -29,6 +30,7 @@ class RegisterVet extends React.Component {
         image: "",
         address: "",
         URN: "",
+        typeAnimals: "",
         vetDescription: "",
         phoneNumber: "",
         password: "",
@@ -56,6 +58,7 @@ class RegisterVet extends React.Component {
         URN: user.URN,
         email: user.email,
         city: user.city,
+        typeAnimals: user.typeAnimals,
         imgDataURL: user.image.data_url,
         vetDescription: user.vetDescription,
         address: user.address,
@@ -66,9 +69,31 @@ class RegisterVet extends React.Component {
         this.openModal("Вие се регистрирахте успешно!");
         this.registrationComplete = true;
       } else {
-        this.openModal("Вече същсетвува профил с този имейл адрес!");
+        this.openModal("Вече съществува профил с този имейл адрес или УРН!");
       }
     }
+  };
+  onCheckUncheck = (event) => {
+    let checkbox = document.getElementById(event.target.id);
+    if (
+      checkbox.checked === true &&
+      !this.state.fields.typeAnimals.includes(checkbox.value)
+    ) {
+      let fields = this.state.fields;
+      fields.typeAnimals.push(checkbox.value);
+      this.setState({ fields });
+    } else if (
+      checkbox.checked === false &&
+      this.state.fields.typeAnimals.includes(checkbox.value)
+    ) {
+      let fields = this.state.fields;
+      const index = fields.typeAnimals.indexOf(checkbox.value);
+      if (index > -1) {
+        fields.typeAnimals.splice(index, 1);
+        this.setState({ fields });
+      }
+    }
+    this.validate();
   };
   onImageChange = (image) => {
     if (image[0] !== undefined) {
@@ -105,6 +130,7 @@ class RegisterVet extends React.Component {
       email: "",
       city: "",
       image: this.state.errors.image,
+      typeAnimals: "",
       vetDescription: "",
       address: "",
       URN: "",
@@ -166,6 +192,10 @@ class RegisterVet extends React.Component {
         "Невалиден телефонен номер! Пример за валиден: +359123456789";
       errors["isValid"] = false;
     }
+    if (fields["typeAnimals"].length === 0) {
+      errors["typeAnimals"] = "Трябва да изберете поне един тип животни!";
+      errors["isValid"] = false;
+    }
     if (
       !checkPass.test(fields["password"]) ||
       fields["password"].length < 8 ||
@@ -214,9 +244,9 @@ class RegisterVet extends React.Component {
           closeModal={this.closeModal}
         ></InfoModal>
         <Form onSubmit={this.submitForm}>
-          <Row className="mb-3">
+          <Row>
             <Form.Group as={Col} sm>
-              <FloatingLabel controlId="firstName" label="Име">
+              <FloatingLabel controlId="firstName" label="Име" className="mb-3">
                 <Form.Control
                   placeholder="Име"
                   type="text"
@@ -228,7 +258,11 @@ class RegisterVet extends React.Component {
             </Form.Group>
 
             <Form.Group as={Col} sm>
-              <FloatingLabel controlId="lastName" label="Фамилия">
+              <FloatingLabel
+                controlId="lastName"
+                label="Фамилия"
+                className="mb-3"
+              >
                 <Form.Control
                   placeholder="Фамилия"
                   type="text"
@@ -239,9 +273,13 @@ class RegisterVet extends React.Component {
               <span className="text-danger">{this.state.errors.lastName}</span>
             </Form.Group>
           </Row>
-          <Row className="mb-3">
+          <Row>
             <Form.Group as={Col} sm>
-              <FloatingLabel controlId="email" label="Имейл адрес">
+              <FloatingLabel
+                controlId="email"
+                label="Имейл адрес"
+                className="mb-3"
+              >
                 <Form.Control
                   placeholder="Имейл адрес"
                   type="text"
@@ -252,7 +290,11 @@ class RegisterVet extends React.Component {
               <span className="text-danger">{this.state.errors.email}</span>
             </Form.Group>
             <Form.Group as={Col} sm>
-              <FloatingLabel controlId="phoneNumber" label="Телефонен номер">
+              <FloatingLabel
+                controlId="phoneNumber"
+                label="Телефонен номер"
+                className="mb-3"
+              >
                 <Form.Control
                   placeholder="Телефонен номер"
                   type="text"
@@ -265,9 +307,9 @@ class RegisterVet extends React.Component {
               </span>
             </Form.Group>
           </Row>
-          <Row className="mb-3">
+          <Row>
             <Form.Group as={Col} sm>
-              <FloatingLabel controlId="city" label="Град">
+              <FloatingLabel controlId="city" label="Град" className="mb-3">
                 <Form.Control
                   placeholder="Град"
                   type="text"
@@ -349,6 +391,61 @@ class RegisterVet extends React.Component {
               </FloatingLabel>
               <span className="text-danger">
                 {this.state.errors.confirmPassword}
+              </span>
+            </Form.Group>
+          </Row>
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="image">
+              <Form.Label>
+                Животни, с които се занимава вертеринарния лекар
+              </Form.Label>
+              <br />
+              <div key="inline-checkbox" className="mb-3">
+                <Form.Check
+                  inline
+                  label="Кучета"
+                  name="typeAnimals"
+                  type="checkbox"
+                  id="checkbox-dogs"
+                  value="DOGS"
+                  checked={this.state.fields.typeAnimals.includes("DOGS")}
+                  onChange={this.onCheckUncheck}
+                />
+                <Form.Check
+                  inline
+                  label="Котки"
+                  name="typeAnimals"
+                  type="checkbox"
+                  id="checkbox-cats"
+                  value="CATS"
+                  checked={this.state.fields.typeAnimals.includes("CATS")}
+                  onChange={this.onCheckUncheck}
+                />
+                <Form.Check
+                  inline
+                  label="Екзотични животни"
+                  name="typeAnimals"
+                  type="checkbox"
+                  id="checkbox-exoticanimals"
+                  value="EXOTICANIMALS"
+                  checked={this.state.fields.typeAnimals.includes(
+                    "EXOTICANIMALS"
+                  )}
+                  onChange={this.onCheckUncheck}
+                />
+                <Form.Check
+                  inline
+                  label="Птици"
+                  name="typeAnimals"
+                  type="checkbox"
+                  id="checkbox-birds"
+                  value="BIRDS"
+                  checked={this.state.fields.typeAnimals.includes("BIRDS")}
+                  onChange={this.onCheckUncheck}
+                />
+              </div>
+              <span className="text-danger">
+                {this.state.errors.typeAnimals}
               </span>
             </Form.Group>
           </Row>

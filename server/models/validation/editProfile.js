@@ -1,3 +1,4 @@
+const animals = require("../typeAnimals");
 const getSchema = (prop) => {
   return schemas[prop];
 };
@@ -55,6 +56,25 @@ const vetDescription = {
   additionalProperties: false,
   required: ["vetDescription"],
 };
+const typeAnimals = {
+  id: "/typeAnimals",
+  type: "object",
+  properties: {
+    typeAnimals: {
+      type: "array",
+      items: {
+        enum: [
+          animals.Cats,
+          animals.Dogs,
+          animals.ExoticAnimals,
+          animals.Birds,
+        ],
+      },
+    },
+  },
+  additionalProperties: false,
+  required: ["typeAnimals"],
+};
 const schemas = Object.freeze({
   fName: fName,
   lName: lName,
@@ -62,5 +82,6 @@ const schemas = Object.freeze({
   city: city,
   address: address,
   vetDescription: vetDescription,
+  typeAnimals: typeAnimals,
 });
 module.exports = { getSchema };

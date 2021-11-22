@@ -15,6 +15,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
 import { getCookie } from "../../cookies";
+const arrayCompare = require("../../extensionFunctions/arrayCompare");
 const client = require("../../clientRequests");
 const roles = require("../../enums/roles");
 const API_URL = require("../../config.json").API_URL;
@@ -33,6 +34,7 @@ export default class EditProfile extends React.Component {
         address: "",
         URN: "",
         vetDescription: "",
+        typeAnimals: [],
         imgFileName: "",
         createdOn: 0,
         role: "",
@@ -47,6 +49,7 @@ export default class EditProfile extends React.Component {
         address: "",
         phoneNumber: "",
         vetDescription: "",
+        typeAnimals: [],
       },
       errors: {
         name: {
@@ -57,6 +60,7 @@ export default class EditProfile extends React.Component {
         phoneNumber: "",
         address: "",
         vetDescription: "",
+        typeAnimals: "",
       },
       modal: {
         show: false,
@@ -89,6 +93,8 @@ export default class EditProfile extends React.Component {
         address: res.address,
         phoneNumber: res.phoneNumber,
         vetDescription: res.vetDescription,
+        typeAnimals:
+          res.typeAnimals !== undefined ? [...res.typeAnimals] : undefined,
       },
     });
   }
@@ -118,6 +124,7 @@ export default class EditProfile extends React.Component {
       phoneNumber: "",
       address: "",
       vetDescription: "",
+      typeAnimals: "",
     };
     let fields = this.state.profile;
     const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
@@ -133,16 +140,21 @@ export default class EditProfile extends React.Component {
       errors["city"] =
         "Името на града трябва да е поне 2 символа и да е максимум 45 символа!";
     }
-    if (fields["address"].length < 2 || fields["address"].length > 90) {
-      errors["address"] =
-        "Адресът трябва да е поне 2 символа и да е максимум 90 символа!";
-    }
-    if (
-      fields["vetDescription"].length < 100 ||
-      fields["vetDescription"].length > 600
-    ) {
-      errors["vetDescription"] =
-        "Краткото описание дейността на вертеринарния лекар трябва да е поне 100 символа и максимум 600 символа!";
+    if (fields["role"] === roles.Vet) {
+      if (fields["address"].length < 2 || fields["address"].length > 90) {
+        errors["address"] =
+          "Адресът трябва да е поне 2 символа и да е максимум 90 символа!";
+      }
+      if (
+        fields["vetDescription"].length < 100 ||
+        fields["vetDescription"].length > 600
+      ) {
+        errors["vetDescription"] =
+          "Краткото описание дейността на вертеринарния лекар трябва да е поне 100 символа и максимум 600 символа!";
+      }
+      if (fields["typeAnimals"].length === 0) {
+        errors["typeAnimals"] = "Трябва да изберете поне един тип животни!";
+      }
     }
     if (!isPhoneNumber.test(fields["phoneNumber"])) {
       errors["phoneNumber"] = "Невалиден телефонен номер!";
@@ -188,6 +200,13 @@ export default class EditProfile extends React.Component {
           return;
         }
         break;
+      case "typeAnimals":
+        if (this.state.errors.typeAnimals === "") {
+          body = { typeAnimals: this.state.profile.typeAnimals };
+        } else {
+          return;
+        }
+        break;
       case "phoneNumber":
         if (this.state.errors.phoneNumber === "") {
           body = { phoneNumber: this.state.profile.phoneNumber };
@@ -206,6 +225,30 @@ export default class EditProfile extends React.Component {
         "Възникна грешка при редакция! Извиняваме се за неудобството!"
       );
     }
+  };
+  onCheckUncheck = (event) => {
+    let checkbox = document.getElementById(event.target.id);
+    if (
+      checkbox.checked === true &&
+      !this.state.profile.typeAnimals.includes(checkbox.value)
+    ) {
+      let fields = this.state.profile;
+      fields.typeAnimals.push(checkbox.value);
+      this.setState({ profile: fields });
+    } else if (
+      checkbox.checked === false &&
+      this.state.profile.typeAnimals.includes(checkbox.value)
+    ) {
+      let fields = this.state.profile;
+      const index = fields.typeAnimals.indexOf(checkbox.value);
+      if (index > -1) {
+        fields.typeAnimals.splice(index, 1);
+        this.setState({ profile: fields });
+      }
+    }
+    this.validateEditProfile();
+    console.log(this.state.profile.typeAnimals);
+    console.log(this.state.lastProfile.typeAnimals);
   };
   render() {
     let createdOn = new Date(this.state.profile.createdOn);
@@ -459,6 +502,94 @@ export default class EditProfile extends React.Component {
                         this.state.errors.vetDescription !== "" ||
                         this.state.lastProfile.vetDescription ===
                           this.state.profile.vetDescription
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
+            </ListGroup.Item>
+          ) : (
+            ""
+          )}
+          {this.state.profile.role === roles.Vet ? (
+            <ListGroup.Item>
+              <Form.Group controlId="typeAnimals">
+                <Row>
+                  <Col md={2} xs={3}>
+                    <Form.Label className="fw-bold col-form-label">
+                      <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>{" "}
+                      Описание на ветеринарния лекар
+                    </Form.Label>
+                  </Col>
+                  <Col md={8} xs={7}>
+                    <div key="inline-checkbox" className="mb-3">
+                      <Form.Check
+                        inline
+                        label="Кучета"
+                        name="typeAnimals"
+                        type="checkbox"
+                        id="checkbox-dogs"
+                        value="DOGS"
+                        checked={this.state.profile.typeAnimals.includes(
+                          "DOGS"
+                        )}
+                        onChange={this.onCheckUncheck}
+                      />
+                      <Form.Check
+                        inline
+                        label="Котки"
+                        name="typeAnimals"
+                        type="checkbox"
+                        id="checkbox-cats"
+                        value="CATS"
+                        checked={this.state.profile.typeAnimals.includes(
+                          "CATS"
+                        )}
+                        onChange={this.onCheckUncheck}
+                      />
+                      <Form.Check
+                        inline
+                        label="Екзотични животни"
+                        name="typeAnimals"
+                        type="checkbox"
+                        id="checkbox-exoticanimals"
+                        value="EXOTICANIMALS"
+                        checked={this.state.profile.typeAnimals.includes(
+                          "EXOTICANIMALS"
+                        )}
+                        onChange={this.onCheckUncheck}
+                      />
+                      <Form.Check
+                        inline
+                        label="Птици"
+                        name="typeAnimals"
+                        type="checkbox"
+                        id="checkbox-birds"
+                        value="BIRDS"
+                        checked={this.state.profile.typeAnimals.includes(
+                          "BIRDS"
+                        )}
+                        onChange={this.onCheckUncheck}
+                      />
+                    </div>
+                    <span className="text-danger">
+                      {this.state.errors.typeAnimals}
+                    </span>
+                  </Col>
+                  <Col xs={2}>
+                    <Button
+                      variant="primary"
+                      className="float-end"
+                      id="typeAnimals_button"
+                      onClick={this.onEditButtonClick}
+                      disabled={
+                        this.state.errors.typeAnimals !== "" ||
+                        arrayCompare(
+                          this.state.profile.typeAnimals,
+                          this.state.lastProfile.typeAnimals
+                        )
                       }
                     >
                       <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>

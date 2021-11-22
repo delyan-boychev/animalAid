@@ -29,7 +29,7 @@ class UserService {
       8
     )}.${match.groups["mime"].replace("image/", "")}`;
     let dir = `${path.dirname(require.main.filename)}\\img`;
-    while (!fs.existsSync(`${dir}\\${imgFileName}`)) {
+    while (fs.existsSync(`${dir}\\${imgFileName}`)) {
       imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
         8
       )}.${match.groups["mime"].replace("image/", "")}`;
@@ -81,11 +81,11 @@ class UserService {
   async registerVet(user) {
     let regexImageUrl = /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
     const match = regexImageUrl.exec(user.imgDataURL);
-    const imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+    let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
       8
     )}.${match.groups["mime"].replace("image/", "")}`;
     let dir = `${path.dirname(require.main.filename)}\\img`;
-    while (!fs.existsSync(`${dir}\\${imgFileName}`)) {
+    while (fs.existsSync(`${dir}\\${imgFileName}`)) {
       imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
         8
       )}.${match.groups["mime"].replace("image/", "")}`;
@@ -324,8 +324,8 @@ class UserService {
   /**
    * Change user password
    * @param {String} id User id
-   * @param {*} oldPassword Old user password
-   * @param {*} newPassword New user password
+   * @param {String} oldPassword Old user password
+   * @param {String} newPassword New user password
    * @returns {Boolean}
    */
   async changePassword(id, oldPassword, newPassword) {

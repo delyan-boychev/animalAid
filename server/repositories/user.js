@@ -6,12 +6,17 @@ class UserRepository {
     if (await User.exists({ email: user.email })) {
       return false;
     } else {
+      if (user.role === roles.Vet) {
+        if (await User.exists({ URN: user.URN })) {
+          return false;
+        }
+      }
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(user.password, salt);
       user.password = hash;
       user.createdOn = new Date().getTime().toString();
       user.role = roles[user.role];
-      if (user.role == roles.Vet) {
+      if (user.role === roles.Vet) {
         user.moderationVerified = false;
       }
       user.verified = false;
@@ -92,7 +97,7 @@ class UserRepository {
   async getProfile(id) {
     let user = await User.findById(id).lean().exec();
     if (user == null) {
-      return {};
+      return false;
     } else {
       user.password = undefined;
       return user;
@@ -228,10 +233,25 @@ class UserRepository {
           u.phoneNumber = value;
           break;
         case "address":
-          u.address = value;
+          if (u.role === roles.Vet) {
+            u.address = value;
+          } else {
+            return false;
+          }
           break;
         case "vetDescription":
-          u.vetDescription = value;
+          if (u.role === roles.Vet) {
+            u.vetDescription = value;
+          } else {
+            return false;
+          }
+          break;
+        case "typeAnimals":
+          if (u.role === roles.Vet) {
+            u.typeAnimals = value;
+          } else {
+            return false;
+          }
           break;
         default:
           return false;

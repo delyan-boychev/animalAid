@@ -57,7 +57,7 @@ class RegisterUser extends React.Component {
         this.openModal("Вие се регистрирахте успешно!");
         this.registerComplete = true;
       } else if (response === false) {
-        this.openModal("Вече същсетвува профил с този имейл адрес!");
+        this.openModal("Вече съществува профил с този имейл адрес!");
       }
     }
   };
@@ -183,7 +183,7 @@ class RegisterUser extends React.Component {
           closeModal={this.closeModal}
         ></InfoModal>
         <Form onSubmit={this.submitForm}>
-          <Row className="mb-3">
+          <Row>
             <Form.Group as={Col} sm>
               <FloatingLabel controlId="firstName" label="Име" className="mb-3">
                 <Form.Control
@@ -212,7 +212,7 @@ class RegisterUser extends React.Component {
               <span className="text-danger">{this.state.errors.lastName}</span>
             </Form.Group>
           </Row>
-          <Row className="mb-3">
+          <Row>
             <Form.Group as={Col} sm>
               <FloatingLabel
                 controlId="email"
@@ -243,11 +243,7 @@ class RegisterUser extends React.Component {
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col}>
-              <FloatingLabel
-                controlId="phoneNumber"
-                label="Телефонен номер"
-                className="mb-3"
-              >
+              <FloatingLabel controlId="phoneNumber" label="Телефонен номер">
                 <Form.Control
                   placeholder="Телефонен номер"
                   type="text"
@@ -262,11 +258,7 @@ class RegisterUser extends React.Component {
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col}>
-              <FloatingLabel
-                controlId="password"
-                label="Парола"
-                className="mb-3"
-              >
+              <FloatingLabel controlId="password" label="Парола">
                 <Form.Control
                   placeholder="Парола"
                   type="password"
@@ -282,7 +274,6 @@ class RegisterUser extends React.Component {
               <FloatingLabel
                 controlId="confirmPassword"
                 label="Потвърждаване на парола"
-                className="mb-3"
               >
                 <Form.Control
                   placeholder="Потвърждаване на парола"

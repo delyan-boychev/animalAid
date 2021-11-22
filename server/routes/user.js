@@ -110,13 +110,20 @@ router.post("/edit/:property", authenticate, async (req, res) => {
     prop == "city" ||
     prop == "phoneNumber" ||
     (prop == "address" && req.user.role == roles.Vet) ||
-    (prop == "vetDescription" && req.user.role == roles.Vet)
+    (prop == "vetDescription" && req.user.role == roles.Vet) ||
+    (prop == "typeAnimals" && req.user.role == roles.Vet)
   ) {
     if (req.body[prop] != undefined && req.body[prop] != "") {
       let v = new Validator();
       const valRes = v.validate(req.body, editProfileSchema.getSchema(prop));
       if (valRes.valid) {
-        res.send(await userService.edit(prop, req.body[prop], req.user.id));
+        const isEdit = await userService.edit(
+          prop,
+          req.body[prop],
+          req.user.id
+        );
+        if (isEdit) res.send(isEdit);
+        else res.sendStatus(401);
       } else {
         res.sendStatus(400);
       }
@@ -128,7 +135,12 @@ router.post("/edit/:property", authenticate, async (req, res) => {
   }
 });
 router.get("/profile", authenticate, async (req, res) => {
-  res.send(await userService.getProfile(req.user["id"]));
+  const profile = await userService.getProfile(req.user["id"]);
+  if (profile === false) {
+    res.sendStatus(401);
+  } else {
+    res.send(profile);
+  }
 });
 router.post("/changeEmail", authenticate, async (req, res) => {
   let v = new Validator();
