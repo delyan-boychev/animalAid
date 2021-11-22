@@ -11,6 +11,7 @@ import {
   faCity,
   faPen,
   faInfoCircle,
+  faPaw,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
@@ -517,13 +518,13 @@ export default class EditProfile extends React.Component {
             <ListGroup.Item>
               <Form.Group controlId="typeAnimals">
                 <Row>
-                  <Col md={2} xs={3}>
+                  <Col md={3} xs={4}>
                     <Form.Label className="fw-bold col-form-label">
-                      <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>{" "}
-                      Описание на ветеринарния лекар
+                      <FontAwesomeIcon icon={faPaw}></FontAwesomeIcon> Животни,
+                      с които се занимава ветеринарния лекар
                     </Form.Label>
                   </Col>
-                  <Col md={8} xs={7}>
+                  <Col md={7} xs={6}>
                     <div key="inline-checkbox" className="mb-3">
                       <Form.Check
                         inline
