@@ -40,7 +40,6 @@ class UserRepository {
           user.lastRequestForgotPassword + 86400 <
           parseInt(new Date().getTime() / 1000)
         ) {
-          console.log(true);
           return true;
         } else {
           return "TOO_EARLY";

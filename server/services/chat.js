@@ -53,18 +53,22 @@ class ChatService {
       (await this.#userRepository.checkUserExists(userTwo));
     if (usersExists) {
       const messages = await this.#chatRepository.getMessages(userOne, userTwo);
-      const startIndex = messages.length - pageNum * 10;
-      const endIndex = messages.length - (pageNum - 1) * 10;
-      const numPages = Math.ceil(messages.length / 10);
-      if (
-        pageNum < 1 ||
-        (messages.length < endIndex && messages.length < startIndex)
-      ) {
-        return false;
-      } else if (startIndex < 0 && endIndex > 0) {
-        return { messages: messages.slice(0, endIndex), numPages };
+      if (messages !== null) {
+        const startIndex = messages.length - pageNum * 10;
+        const endIndex = messages.length - (pageNum - 1) * 10;
+        const numPages = Math.ceil(messages.length / 10);
+        if (
+          pageNum < 1 ||
+          (messages.length < endIndex && messages.length < startIndex)
+        ) {
+          return false;
+        } else if (startIndex < 0 && endIndex > 0) {
+          return { messages: messages.slice(0, endIndex), numPages };
+        } else {
+          return { messages: messages.slice(startIndex, endIndex), numPages };
+        }
       } else {
-        return { messages: messages.slice(startIndex, endIndex), numPages };
+        return false;
       }
     } else {
       return false;

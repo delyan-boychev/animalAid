@@ -66,7 +66,7 @@ a.text-secondary:focus {
     transform-origin: bottom left;
   }
 }
-.activeNav {
+.navLink.active {
   font-weight: bold;
 }
 .underline {
@@ -78,7 +78,7 @@ a.text-secondary:focus {
 .text-shadow-big {
   filter: drop-shadow(4px 4px 10px #000000);
 }
-.activeNav span {
+.navLink.active span {
   filter: drop-shadow(2px 2px 5px #000000);
 }
 @keyframes fadeInAnimation {
@@ -89,7 +89,7 @@ a.text-secondary:focus {
     opacity: 1;
   }
 }
-.activeNav span::after {
+.navLink.active span::after {
   content: "";
   position: absolute;
   width: 100%;

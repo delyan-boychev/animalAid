@@ -5,7 +5,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { ListGroup, Pagination, Col, Row } from "react-bootstrap";
-import { withRouter } from "react-router";
+import { useNavigate } from "react-router";
 import isNormalInteger from "../extensionFunctions/isNumber";
 const API_URL = require("../config.json").API_URL;
 const client = require("../clientRequests");
@@ -19,7 +19,7 @@ class Vets extends React.Component {
       page = parseInt(page);
       this.getVets(page);
     } else {
-      this.props.history.push("/");
+      this.props.navigate("/");
     }
     this.state = {
       page: 1,
@@ -28,19 +28,19 @@ class Vets extends React.Component {
     };
   }
   changePage = (page) => {
-    this.props.history.push(`/vets?page=${page}`);
+    this.props.navigate(`/vets?page=${page}`);
   };
 
   getVets = async (page) => {
     const data = await client.getRequestToken(`/user/getVets/${page}`);
     if (data === false) {
-      this.props.history.push("/");
+      this.props.navigate("/");
     } else {
       this.setState({ page: page, numPages: data.numPages, vets: data.vets });
     }
   };
   openVet = async (id) => {
-    this.props.history.push(`/vet?id=${id}`);
+    this.props.navigate(`/vet?id=${id}`);
   };
   componentDidUpdate() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -107,4 +107,8 @@ class Vets extends React.Component {
     );
   }
 }
-export default withRouter(Vets);
+function WithNavigate(props) {
+  let navigate = useNavigate();
+  return <Vets {...props} navigate={navigate} />;
+}
+export default WithNavigate;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import InfoModal from "../components/InfoModal";
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router";
 import ImageUploading from "react-images-uploading";
 const client = require("../clientRequests");
 class RegisterVet extends React.Component {
@@ -120,7 +120,7 @@ class RegisterVet extends React.Component {
     modal.show = false;
     this.setState({ modal });
     if (this.registrationComplete) {
-      this.props.history.push("/login");
+      this.props.navigate("/login");
     }
   };
   validate() {
@@ -503,4 +503,8 @@ class RegisterVet extends React.Component {
     );
   }
 }
-export default withRouter(RegisterVet);
+function WithNavigate(props) {
+  let navigate = useNavigate();
+  return <RegisterVet {...props} navigate={navigate} />;
+}
+export default WithNavigate;

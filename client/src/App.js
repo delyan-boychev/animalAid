@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./components/Header";
-import { BrowserRouter as Router, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Navigate } from "react-router-dom";
 import Routes from "./Routes";
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <Routes></Routes>
       </div>
       {window.location.hash === "#redirectToProfile" ? (
-        <Redirect to="/profile"></Redirect>
+        <Navigate to="/profile"></Navigate>
       ) : (
         <div></div>
       )}

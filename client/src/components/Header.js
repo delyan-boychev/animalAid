@@ -40,10 +40,8 @@ export default function Header() {
         <Nav className="text-secondary ms-3" style={{ fontSize: "21px" }}>
           <Nav.Link
             as={NavLink}
-            exact
             to="/"
-            activeClassName="activeNav"
-            className="text-secondary"
+            className="navLink text-secondary"
             onClick={autoCloseCollapse}
           >
             <span className="nav-link-effect shadow-navbar">
@@ -53,8 +51,7 @@ export default function Header() {
           <Nav.Link
             as={NavLink}
             to="/about"
-            activeClassName="activeNav"
-            className="text-secondary"
+            className="navLink text-secondary"
             onClick={autoCloseCollapse}
           >
             <span className="nav-link-effect shadow-navbar">
@@ -64,8 +61,7 @@ export default function Header() {
           <Nav.Link
             as={NavLink}
             to="/contacts"
-            activeClassName="activeNav"
-            className="text-secondary"
+            className="navLink text-secondary"
             onClick={autoCloseCollapse}
           >
             <span className="nav-link-effect shadow-navbar">

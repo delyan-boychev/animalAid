@@ -7,8 +7,9 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import RequestForgotPassword from "./pages/RequestForgotPassword";
 import ChangeForgotPassword from "./pages/ChangeForgotPassword";
-import { Route, Redirect } from "react-router-dom";
-import { CSSTransition } from "react-transition-group";
+import { Routes as Router, Route, Navigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./css/animations.css";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
@@ -100,33 +101,30 @@ function authorizationCheck(Component, loggedIn) {
     if (token !== "" && token !== null) {
       return <Component></Component>;
     } else {
-      return <Redirect to="/"></Redirect>;
+      return <Navigate to="/"></Navigate>;
     }
   } else {
     if (token !== "" && token !== null) {
-      return <Redirect to="/profile"></Redirect>;
+      return <Navigate to="/profile"></Navigate>;
     } else {
       return <Component></Component>;
     }
   }
 }
 export default function Routes() {
+  const location = useLocation();
   const routeComponents = routes.map(
     ({ path, Component, className, loggedIn }) => (
-      <Route key={path} exact={path !== "*"} path={path}>
-        {({ match }) => (
-          <CSSTransition
-            in={match != null}
-            timeout={300}
-            classNames="page"
-            unmountOnExit
-          >
-            <div className={className}>
-              {authorizationCheck(Component, loggedIn)}
-            </div>
-          </CSSTransition>
-        )}
-      </Route>
+      <Route
+        key={path}
+        exact={path !== "*"}
+        path={path}
+        element={
+          <div className={className}>
+            {authorizationCheck(Component, loggedIn)}
+          </div>
+        }
+      />
     )
   );
   routeComponents.push(
@@ -136,21 +134,18 @@ export default function Routes() {
           routes.filter((r) => r.path === routeProps.location.pathname)
             .length === 0
         ) {
-          return (
-            <CSSTransition
-              in={routeProps.match != null}
-              timeout={300}
-              classNames="page"
-              unmountOnExit
-            >
-              <NotFound />
-            </CSSTransition>
-          );
+          return <NotFound />;
         } else {
           return "";
         }
       }}
     </Route>
   );
-  return routeComponents;
+  return (
+    <TransitionGroup component={null}>
+      <CSSTransition key={location.key} classNames="page" timeout={300}>
+        <Router location={location}>{routeComponents}</Router>
+      </CSSTransition>
+    </TransitionGroup>
+  );
 }

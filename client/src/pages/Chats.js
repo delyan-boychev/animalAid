@@ -12,13 +12,13 @@ import {
   Tooltip,
   Alert,
 } from "react-bootstrap";
-import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDotCircle,
   faExclamationTriangle,
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router";
 import { refreshToken } from "../clientRequests";
 const io = require("socket.io-client");
 const API_URL = require("../config.json").API_URL;
@@ -36,6 +36,7 @@ class Chats extends React.Component {
       id: "",
       message: "",
       errorMessage: "",
+      page: 1,
       currentChatId: "",
       connected: false,
       chatUserInfo: {},
@@ -134,10 +135,12 @@ class Chats extends React.Component {
       chatUserInfo: data.user,
       lastMessageId: data.messages[0]._id,
     });
+    window.scrollTo(0, document.body.scrollHeight);
   };
   setMessagesNextPage = (data) => {
     this.setState({
       messages: [...data.messages, ...this.state.messages],
+      page: this.state.page + 1,
     });
     this.pages = data.numPages;
     this.setState({ lastMessageId: data.messages[0]._id });
@@ -146,7 +149,7 @@ class Chats extends React.Component {
     if (
       prevState.messages !== this.state.messages &&
       prevState.currentChatId === this.state.currentChatId &&
-      this.state.lastMessageId
+      prevState.page !== this.state.page
     ) {
       document
         .getElementById(`ms-${this.state.lastMessageId}`)
@@ -164,6 +167,9 @@ class Chats extends React.Component {
         }.bind(this),
         200
       );
+    } else if (prevState.messages !== this.state.messages) {
+      let chat = document.getElementById("chat-box");
+      chat.scrollTop = chat.scrollHeight;
     }
   }
   sendMsg = (event) => {
@@ -187,8 +193,6 @@ class Chats extends React.Component {
       });
       setTimeout(
         function () {
-          let chat = document.getElementById("chat-box");
-          chat.scrollTop = chat.scrollHeight;
           this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
         }.bind(this),
         100
@@ -208,7 +212,7 @@ class Chats extends React.Component {
       date: message.date,
       startChat: true,
     });
-    this.props.history.replace(`/chats`);
+    this.props.navigategate("/chats");
     setTimeout(
       function () {
         let chat = document.getElementById("chat-box");
@@ -445,4 +449,8 @@ class Chats extends React.Component {
     );
   }
 }
-export default withRouter(Chats);
+function WithNavigate(props) {
+  let navigate = useNavigate();
+  return <Chats {...props} navigate={navigate} />;
+}
+export default WithNavigate;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import InfoModal from "../components/InfoModal";
-import { withRouter } from "react-router";
+import { useNavigate } from "react-router";
 import ImageUploading from "react-images-uploading";
 const client = require("../clientRequests");
 class RegisterUser extends React.Component {
@@ -71,7 +71,7 @@ class RegisterUser extends React.Component {
     let modal = this.state.modal;
     modal.show = false;
     if (this.registerComplete) {
-      this.props.history.push("/login");
+      this.props.navigate("/login");
     }
   };
   onImageChange = (image) => {
@@ -341,4 +341,8 @@ class RegisterUser extends React.Component {
     );
   }
 }
-export default withRouter(RegisterUser);
+function WithNavigate(props) {
+  let navigate = useNavigate();
+  return <RegisterUser {...props} navigate={navigate} />;
+}
+export default WithNavigate;

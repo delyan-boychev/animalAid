@@ -12,7 +12,7 @@ import {
   faPaw,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { withRouter } from "react-router";
+import { useNavigate } from "react-router";
 import DialogModal from "../components/DialogModal";
 const client = require("../clientRequests");
 const API_URL = require("../config.json").API_URL;
@@ -49,7 +49,7 @@ class Vet extends React.Component {
     if (id !== null) {
       this.getVet(id);
     } else {
-      this.props.history.push("/");
+      this.props.navigate("/");
     }
   }
   openModal = (body) => {
@@ -66,7 +66,7 @@ class Vet extends React.Component {
   getVet = async (id) => {
     const data = await client.getRequestToken(`/user/getVet/${id}`);
     if (data === false) {
-      this.props.history.push("/");
+      this.props.navigate("/");
     } else {
       this.setState({ vet: data });
     }
@@ -80,7 +80,7 @@ class Vet extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
           task={() =>
-            this.props.history.push(`/chats?startId=${this.state.vet._id}`)
+            this.props.navigate(`/chats?startId=${this.state.vet._id}`)
           }
         ></DialogModal>
         <h3 className="text-center">
@@ -191,4 +191,8 @@ class Vet extends React.Component {
     );
   }
 }
-export default withRouter(Vet);
+function WithNavigate(props) {
+  let navigate = useNavigate();
+  return <Vet {...props} navigate={navigate} />;
+}
+export default WithNavigate;

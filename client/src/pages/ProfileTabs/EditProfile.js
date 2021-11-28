@@ -248,8 +248,6 @@ export default class EditProfile extends React.Component {
       }
     }
     this.validateEditProfile();
-    console.log(this.state.profile.typeAnimals);
-    console.log(this.state.lastProfile.typeAnimals);
   };
   render() {
     let createdOn = new Date(this.state.profile.createdOn);
