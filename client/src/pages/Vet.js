@@ -9,12 +9,14 @@ import {
   faInfoCircle,
   faCommentMedical,
   faPhoneAlt,
+  faPaw,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withRouter } from "react-router";
 import DialogModal from "../components/DialogModal";
 const client = require("../clientRequests");
 const API_URL = require("../config.json").API_URL;
+const animalsTranslate = require("../enums/animalsTranslate");
 class Vet extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +32,7 @@ class Vet extends React.Component {
         address: "",
         URN: "",
         vetDescription: "",
+        typeAnimals: [],
         imgFileName: "",
         createdOn: 0,
         role: "",
@@ -148,6 +151,20 @@ class Vet extends React.Component {
                 >
                   {this.state.vet.phoneNumber}
                 </a>
+              </span>
+            </span>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <span className="fw-bold">
+              <FontAwesomeIcon icon={faPaw}></FontAwesomeIcon> Животни, с които
+              се занимава ветеринарния лекар:{" "}
+              <span className="fw-normal">
+                {this.state.vet.typeAnimals.map(
+                  (animal, index) =>
+                    `${animalsTranslate[animal]}${
+                      this.state.vet.typeAnimals.length - 1 > index ? ", " : ""
+                    }`
+                )}
               </span>
             </span>
           </ListGroup.Item>
