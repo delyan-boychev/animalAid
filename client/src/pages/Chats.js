@@ -120,6 +120,13 @@ class Chats extends React.Component {
         id: this.socket.id,
         recieveId: this.state.currentChatId,
       });
+      this.page = 1;
+      this.pages = 1;
+      this.socket.emit("requestGetMessages", {
+        id: this.socket.id,
+        getId: this.state.currentChatId,
+        numPage: 1,
+      });
     } else {
       this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
     }
@@ -193,6 +200,13 @@ class Chats extends React.Component {
       });
       setTimeout(
         function () {
+          this.page = 1;
+          this.pages = 1;
+          this.socket.emit("requestGetMessages", {
+            id: this.socket.id,
+            getId: this.state.currentChatId,
+            numPage: 1,
+          });
           this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
         }.bind(this),
         100
@@ -212,7 +226,7 @@ class Chats extends React.Component {
       date: message.date,
       startChat: true,
     });
-    this.props.navigategate("/chats");
+    this.props.navigate("/chats");
     setTimeout(
       function () {
         let chat = document.getElementById("chat-box");
@@ -235,8 +249,6 @@ class Chats extends React.Component {
   };
   getMsg = (id) => {
     if (id !== this.state.currentChatId) {
-      let chat = document.getElementById("chat-box");
-      chat.scrollTop = chat.scrollHeight;
       this.page = 1;
       this.pages = 1;
       this.socket.emit("requestGetMessages", {
