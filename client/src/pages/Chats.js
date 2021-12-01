@@ -61,11 +61,6 @@ class Chats extends React.Component {
     });
     this.socket.on("connect", () => {
       if (!this.listenerSet) this.setListener();
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get("startId");
-      if (id !== null && id !== "") {
-        this.startChat(id);
-      }
       this.socket.on("allChatUsers", this.setAllUsers);
       this.socket.on("newMessage", this.onNewMessage);
       this.socket.on("getMessages", this.setMessages);
@@ -76,6 +71,16 @@ class Chats extends React.Component {
         if (!this.leavePage) {
         }
       });
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get("chatId");
+      if (id !== null && id !== "") {
+        setTimeout(
+          function () {
+            this.startChat(id);
+          }.bind(this),
+          100
+        );
+      }
     });
   };
   onChangeActiveStatus = (data) => {
@@ -142,7 +147,6 @@ class Chats extends React.Component {
       chatUserInfo: data.user,
       lastMessageId: data.messages[0]._id,
     });
-    window.scrollTo(0, document.body.scrollHeight);
   };
   setMessagesNextPage = (data) => {
     this.setState({
@@ -164,6 +168,9 @@ class Chats extends React.Component {
     } else if (prevState.currentChatId !== this.state.currentChatId) {
       let chat = document.getElementById("chat-box");
       chat.scrollTop = chat.scrollHeight;
+      document
+        .querySelector("body")
+        .scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
       this.socket.emit("seenMessages", {
         id: this.socket.id,
         recieveId: this.state.currentChatId,
@@ -226,7 +233,6 @@ class Chats extends React.Component {
       date: message.date,
       startChat: true,
     });
-    this.props.navigate("/chats");
     setTimeout(
       function () {
         let chat = document.getElementById("chat-box");
@@ -258,15 +264,17 @@ class Chats extends React.Component {
       });
     }
   };
+  changeChat = (id) => {
+    if (id !== this.state.currentChatId) {
+      this.props.navigate(`/chats?chatId=${id}`);
+    }
+  };
   formatString = (date) => {
     return `${date.getDate().pad()}-${(
       date.getMonth() + 1
     ).pad()}-${date.getFullYear()} ${date.getHours().pad()}:${date
       .getMinutes()
       .pad()}:${date.getSeconds().pad()}ч.`;
-  };
-  openChat = (event) => {
-    this.props.history.push(`/chat?id=${event.target.id}`);
   };
   render() {
     return (
@@ -287,7 +295,7 @@ class Chats extends React.Component {
                       user._id === this.state.currentChatId ? "activeChat" : ""
                     }`}
                     onClick={() => {
-                      this.getMsg(user._id);
+                      this.changeChat(user._id);
                     }}
                   >
                     <Row className="align-items-center">

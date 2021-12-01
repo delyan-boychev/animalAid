@@ -53,7 +53,7 @@ class ChatService {
       (await this.#userRepository.checkUserExists(userTwo));
     if (usersExists) {
       const messages = await this.#chatRepository.getMessages(userOne, userTwo);
-      if (messages !== null) {
+      if (messages !== false) {
         const startIndex = messages.length - pageNum * 10;
         const endIndex = messages.length - (pageNum - 1) * 10;
         const numPages = Math.ceil(messages.length / 10);

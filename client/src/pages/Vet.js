@@ -80,7 +80,7 @@ class Vet extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
           task={() =>
-            this.props.navigate(`/chats?startId=${this.state.vet._id}`)
+            this.props.navigate(`/chats?chatId=${this.state.vet._id}`)
           }
         ></DialogModal>
         <h3 className="text-center">
