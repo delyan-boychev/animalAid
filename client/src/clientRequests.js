@@ -61,8 +61,6 @@ async function postRequestToken(url, data, headers) {
         return false;
       }
     }
-  } else {
-    window.location.href = "/login";
   }
 }
 //*Function for making get request
@@ -103,8 +101,6 @@ async function getRequestToken(url, headers) {
         return false;
       }
     }
-  } else {
-    return "redirectToLogin";
   }
 }
 export {

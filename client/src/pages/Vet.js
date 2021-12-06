@@ -49,7 +49,7 @@ class Vet extends React.Component {
     if (id !== null) {
       this.getVet(id);
     } else {
-      this.props.navigate("/");
+      window.location.href = "/";
     }
   }
   openModal = (body) => {

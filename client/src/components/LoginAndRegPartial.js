@@ -15,8 +15,13 @@ const roles = require("../enums/roles");
 export default function LoginAndRegPartial(props) {
   const [profile, setProfile] = useState("");
   let getProfile = async () => {
-    let profile = await getRequestToken("/user/profile");
-    setProfile(profile);
+    if (
+      getCookie("authorization") !== "" ||
+      getCookie("authorization") !== null
+    ) {
+      let profile = await getRequestToken("/user/profile");
+      setProfile(profile);
+    }
   };
   useEffect(() => {
     if (!profile) {

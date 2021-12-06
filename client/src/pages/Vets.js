@@ -13,14 +13,6 @@ const animalsTranslate = require("../enums/animalsTranslate");
 class Vets extends React.Component {
   constructor(props) {
     super(props);
-    const urlParams = new URLSearchParams(window.location.search);
-    let page = urlParams.get("page");
-    if (isNormalInteger(page)) {
-      page = parseInt(page);
-      this.getVets(page);
-    } else {
-      this.props.navigate("/");
-    }
     this.state = {
       page: 1,
       vets: [],
@@ -42,6 +34,16 @@ class Vets extends React.Component {
   openVet = async (id) => {
     this.props.navigate(`/vet?id=${id}`);
   };
+  componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let page = urlParams.get("page");
+    if (isNormalInteger(page)) {
+      page = parseInt(page);
+      this.getVets(page);
+    } else {
+      window.location.href = "/";
+    }
+  }
   componentDidUpdate() {
     const urlParams = new URLSearchParams(window.location.search);
     let page = urlParams.get("page");

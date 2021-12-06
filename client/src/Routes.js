@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import RequestForgotPassword from "./pages/RequestForgotPassword";
 import ChangeForgotPassword from "./pages/ChangeForgotPassword";
-import { Routes as Router, Route, Navigate } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./css/animations.css";
@@ -18,133 +18,187 @@ import Chats from "./pages/Chats";
 import Contacts from "./pages/Contacts";
 import Vets from "./pages/Vets";
 import Vet from "./pages/Vet";
-const routes = [
-  { path: "/", Component: Home, className: "" },
-  { path: "/about", Component: About, className: "container mt-3" },
+const routes = (isLoggedIn) => [
+  { path: "/", element: <Home />, exact: true },
+  {
+    path: "/about",
+    element: (
+      <div className="container mt-3">
+        <About />
+      </div>
+    ),
+    exact: true,
+  },
   {
     path: "/register",
-    Component: Register,
-    className: "container mt-3",
-    loggedIn: false,
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <Register />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/registerUser",
-    Component: RegisterUser,
-    className: "container mt-3",
-    loggedIn: false,
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <RegisterUser />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/registerVet",
-    Component: RegisterVet,
-    className: "container mt-3",
-    loggedIn: false,
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <RegisterVet />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/login",
-    Component: Login,
-    className: "container mt-3",
-    loggedIn: false,
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <Login />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/profile",
-    Component: Profile,
-    className: "container mt-3",
-    loggedIn: true,
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <Profile />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/chats",
-    Component: Chats,
-    className: "container mt-3",
-    loggedIn: true,
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <Chats />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/vets",
-    Component: Vets,
-    className: "container mt-3",
-    loggedIn: true,
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <Vets />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/vet",
-    Component: Vet,
-    className: "container mt-3",
-    loggedIn: true,
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <Vet />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/contacts",
-    Component: Contacts,
-    className: "container mt-3",
+    element: (
+      <div className="container mt-3">
+        <Contacts />
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/verifyProfile",
-    Component: VerifyProfile,
-    className: "container mt-3",
-    loggedIn: false,
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <VerifyProfile />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/requestForgotPassword",
-    Component: RequestForgotPassword,
-    className: "container mt-3",
-    loggedIn: false,
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <RequestForgotPassword />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
   },
   {
     path: "/changeForgotPassword",
-    Component: ChangeForgotPassword,
-    className: "container mt-3",
-    loggedIn: false,
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <ChangeForgotPassword />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "*",
+    element: (
+      <div className="container mt-3">
+        <NotFound />
+      </div>
+    ),
   },
 ];
-function authorizationCheck(Component, loggedIn) {
-  const token = getCookie("authorization");
-  if (loggedIn === undefined) {
-    return <Component></Component>;
-  } else if (loggedIn === true) {
-    if (token !== "" && token !== null) {
-      return <Component></Component>;
-    } else {
-      return <Navigate to="/"></Navigate>;
-    }
-  } else {
-    if (token !== "" && token !== null) {
-      return <Navigate to="/profile"></Navigate>;
-    } else {
-      return <Component></Component>;
-    }
-  }
-}
 export default function Routes() {
   const location = useLocation();
-  const routeComponents = routes.map(
-    ({ path, Component, className, loggedIn }) => (
-      <Route
-        key={path}
-        exact={path !== "*"}
-        path={path}
-        element={
-          <div className={className}>
-            {authorizationCheck(Component, loggedIn)}
-          </div>
-        }
-      />
-    )
-  );
-  routeComponents.push(
-    <Route key="*">
-      {(routeProps) => {
-        if (
-          routes.filter((r) => r.path === routeProps.location.pathname)
-            .length === 0
-        ) {
-          return <NotFound />;
-        } else {
-          return "";
-        }
-      }}
-    </Route>
-  );
+  const token = getCookie("authorization");
+  const loggedIn = token !== null && token !== "";
+  const routeComponents = useRoutes(routes(loggedIn));
   return (
     <TransitionGroup component={null}>
       <CSSTransition key={location.key} classNames="page" timeout={300}>
-        <Router location={location}>{routeComponents}</Router>
+        {routeComponents}
       </CSSTransition>
     </TransitionGroup>
   );

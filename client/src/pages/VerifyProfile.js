@@ -4,7 +4,6 @@ import {
   faCheckCircle,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { Navigate } from "react-router-dom";
 import { postRequest } from "../clientRequests";
 export default class VerifyProfile extends React.Component {
   constructor(props) {
@@ -15,7 +14,6 @@ export default class VerifyProfile extends React.Component {
         key: urlParams.get("key") ?? "",
       },
       verificationComplete: false,
-      redirect: false,
     };
     this.verifyProfile();
   }
@@ -29,9 +27,6 @@ export default class VerifyProfile extends React.Component {
     }
   };
   render() {
-    if (this.state.redirect === true) {
-      return <Navigate to="/login"></Navigate>;
-    }
     return (
       <div>
         {this.state.verificationComplete === true ? (

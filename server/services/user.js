@@ -1,6 +1,7 @@
 const userRepository = require("../repositories/user");
 const path = require("path");
 const fs = require("fs");
+const sharp = require("sharp");
 const extenstionMethods = require("../extensionMethods");
 const config = require("../config.json");
 const nodemailer = require("nodemailer");
@@ -10,7 +11,7 @@ const transportMail = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "bganimalaid@gmail.com",
-    pass: "kcyatskxnwbxtfhx",
+    pass: "nyyjnqksvjgpkqnd",
   },
 });
 const Cryptr = require("cryptr");
@@ -53,7 +54,16 @@ class UserService {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
-      fs.writeFileSync(`${dir}\\${imgFileName}`, base64Data, "base64");
+      sharp(Buffer.from(base64Data, "base64"))
+        .extract({
+          top: user.imageCrop.y,
+          left: user.imageCrop.x,
+          width: user.imageCrop.width,
+          height: user.imageCrop.height,
+        })
+        .toFile(`${dir}\\${imgFileName}`, function (err) {
+          if (err) console.log(err);
+        });
     }
     return isReg;
   }
@@ -109,7 +119,16 @@ class UserService {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
-      fs.writeFileSync(`${dir}\\${imgFileName}`, base64Data, "base64");
+      sharp(Buffer.from(base64Data, "base64"))
+        .extract({
+          top: user.imageCrop.y,
+          left: user.imageCrop.x,
+          width: user.imageCrop.width,
+          height: user.imageCrop.height,
+        })
+        .toFile(`${dir}\\${imgFileName}`, function (err) {
+          if (err) console.log(err);
+        });
     }
     return isReg;
   }

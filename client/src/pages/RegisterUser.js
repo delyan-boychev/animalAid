@@ -3,6 +3,7 @@ import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import InfoModal from "../components/InfoModal";
 import { useNavigate } from "react-router";
 import ImageUploading from "react-images-uploading";
+import Cropper from "react-easy-crop";
 const client = require("../clientRequests");
 class RegisterUser extends React.Component {
   constructor(props) {
@@ -14,6 +15,12 @@ class RegisterUser extends React.Component {
         email: "",
         city: "",
         image: null,
+        imageCrop: {
+          x: null,
+          y: null,
+          width: null,
+          height: null,
+        },
         phoneNumber: "",
         password: "",
         confirmPassword: "",
@@ -34,6 +41,13 @@ class RegisterUser extends React.Component {
         title: "Съобщение",
         body: "",
       },
+      modal2: {
+        show: false,
+        title: "Изрязване на изображение",
+        body: "",
+      },
+      crop: { x: 0, y: 0 },
+      zoom: 1,
     };
   }
   registerComplete = false;
@@ -48,6 +62,7 @@ class RegisterUser extends React.Component {
           last: user.lastName,
         },
         imgDataURL: user.image.data_url,
+        imageCrop: user.imageCrop,
         email: user.email,
         city: user.city,
         phoneNumber: user.phoneNumber,
@@ -74,6 +89,16 @@ class RegisterUser extends React.Component {
       this.props.navigate("/login");
     }
   };
+  openModal2 = () => {
+    let modal2 = this.state.modal2;
+    modal2.show = true;
+    this.setState({ modal2 });
+  };
+  closeModal2 = () => {
+    let modal2 = this.state.modal2;
+    modal2.show = false;
+    this.setState({ modal2 });
+  };
   onImageChange = (image) => {
     if (image[0] !== undefined) {
       let fields = this.state.fields;
@@ -87,6 +112,9 @@ class RegisterUser extends React.Component {
       this.setState({ fields });
     }
     this.validate();
+    if (this.state.fields.image !== null) {
+      this.openModal2();
+    }
   };
   validate() {
     let errors = {
@@ -150,6 +178,20 @@ class RegisterUser extends React.Component {
     }
     this.setState({ errors });
   }
+  onCropChange = (crop) => {
+    this.setState({ crop });
+  };
+
+  onCropComplete = (croppedArea, croppedAreaPixels) => {
+    console.log(croppedAreaPixels);
+    let fields = this.state.fields;
+    fields.imageCrop = croppedAreaPixels;
+    this.setState({ fields });
+  };
+
+  onZoomChange = (zoom) => {
+    this.setState({ zoom });
+  };
   handleOnChangeValue = (event) => {
     let fields = this.state.fields;
     fields[event.target.id] = event.target.value;
@@ -165,10 +207,6 @@ class RegisterUser extends React.Component {
       let errors = this.state.errors;
       errors["image"] = "Файлът трябва да е по-малък от 1MB!";
       this.setState({ errors });
-    } else if (error["resolution"]) {
-      let errors = this.state.errors;
-      errors["image"] = "Изображението трябва да бъде квадратно!";
-      this.setState({ errors });
     }
     this.validate();
   };
@@ -181,6 +219,28 @@ class RegisterUser extends React.Component {
           title={this.state.modal.title}
           body={this.state.modal.body}
           closeModal={this.closeModal}
+        ></InfoModal>
+        <InfoModal
+          body={
+            <div style={{ height: "500px" }}>
+              <Cropper
+                image={
+                  this.state.fields.image !== null
+                    ? this.state.fields.image.data_url
+                    : null
+                }
+                crop={this.state.crop}
+                zoom={this.state.zoom}
+                aspect={1 / 1}
+                onCropChange={this.onCropChange}
+                onCropComplete={this.onCropComplete}
+                onZoomChange={this.onZoomChange}
+              />
+            </div>
+          }
+          show={this.state.modal2.show}
+          title={this.state.modal2.title}
+          closeModal={this.closeModal2}
         ></InfoModal>
         <Form onSubmit={this.submitForm}>
           <Row>
@@ -297,9 +357,6 @@ class RegisterUser extends React.Component {
                 maxFileSize={1048576}
                 onError={this.onError}
                 acceptType={["png", "jpg", "jpeg"]}
-                resolutionType="ratio"
-                resolutionHeight="1"
-                resolutionWidth="1"
                 onChange={this.onImageChange}
                 dataURLKey="data_url"
               >

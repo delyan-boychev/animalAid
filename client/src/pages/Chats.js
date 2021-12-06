@@ -18,7 +18,6 @@ import {
   faExclamationTriangle,
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router";
 import { refreshToken } from "../clientRequests";
 const io = require("socket.io-client");
 const API_URL = require("../config.json").API_URL;
@@ -264,11 +263,6 @@ class Chats extends React.Component {
       });
     }
   };
-  changeChat = (id) => {
-    if (id !== this.state.currentChatId) {
-      this.props.navigate(`/chats?chatId=${id}`);
-    }
-  };
   formatString = (date) => {
     return `${date.getDate().pad()}-${(
       date.getMonth() + 1
@@ -295,7 +289,7 @@ class Chats extends React.Component {
                       user._id === this.state.currentChatId ? "activeChat" : ""
                     }`}
                     onClick={() => {
-                      this.changeChat(user._id);
+                      this.getMsg(user._id);
                     }}
                   >
                     <Row className="align-items-center">
@@ -469,8 +463,4 @@ class Chats extends React.Component {
     );
   }
 }
-function WithNavigate(props) {
-  let navigate = useNavigate();
-  return <Chats {...props} navigate={navigate} />;
-}
-export default WithNavigate;
+export default Chats;
