@@ -21,51 +21,57 @@ class UserService {
   /**
    * Register user
    * @param {{}} user User info
-   * @returns {Boolean}
+   * @returns {Boolean|String}
    */
   async registerUser(user) {
-    let regexImageUrl = /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
-    const match = regexImageUrl.exec(user.imgDataURL);
-    let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
-      8
-    )}.${match.groups["mime"].replace("image/", "")}`;
-    let dir = `${path.dirname(require.main.filename)}\\img`;
-    while (fs.existsSync(`${dir}\\${imgFileName}`)) {
-      imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+    const cryptr = new Cryptr(config.CAPTCHA_ENCRYPTION_KEY);
+    if (cryptr.decrypt(user.captchaCode) === user.captcha) {
+      let regexImageUrl =
+        /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
+      const match = regexImageUrl.exec(user.imgDataURL);
+      let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
         8
       )}.${match.groups["mime"].replace("image/", "")}`;
-    }
-    user.imgFileName = imgFileName;
-    user.role = "User";
-    const isReg = await this.#userRepository.register(user);
-    if (isReg) {
-      const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-      const key = cryptr.encrypt(user.email);
-      transportMail.sendMail({
-        from: fromSender,
-        to: user.email,
-        subject: "Успешна регистрация в Animal Aid",
-        html: verifyTemplates.verifyProfileUser(user.name.first, key),
-      });
-      let base64Data = user.imgDataURL.replace(
-        `data:${match.groups["mime"]};base64,`,
-        ""
-      );
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
+      let dir = `${path.dirname(require.main.filename)}\\img`;
+      while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+        imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+          8
+        )}.${match.groups["mime"].replace("image/", "")}`;
       }
-      sharp(Buffer.from(base64Data, "base64"))
-        .extract({
-          top: user.imageCrop.y,
-          left: user.imageCrop.x,
-          width: user.imageCrop.width,
-          height: user.imageCrop.height,
-        })
-        .toFile(`${dir}\\${imgFileName}`, function (err) {
-          if (err) console.log(err);
+      user.imgFileName = imgFileName;
+      user.role = "User";
+      const isReg = await this.#userRepository.register(user);
+      if (isReg === true) {
+        const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+        const key = cryptr.encrypt(user.email);
+        transportMail.sendMail({
+          from: fromSender,
+          to: user.email,
+          subject: "Успешна регистрация в Animal Aid",
+          html: verifyTemplates.verifyProfileUser(user.name.first, key),
         });
+        let base64Data = user.imgDataURL.replace(
+          `data:${match.groups["mime"]};base64,`,
+          ""
+        );
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir);
+        }
+        sharp(Buffer.from(base64Data, "base64"))
+          .extract({
+            top: user.imageCrop.y,
+            left: user.imageCrop.x,
+            width: user.imageCrop.width,
+            height: user.imageCrop.height,
+          })
+          .toFile(`${dir}\\${imgFileName}`, function (err) {
+            if (err) console.log(err);
+          });
+      }
+      return isReg;
+    } else {
+      return "INVALID_CAPTCHA";
     }
-    return isReg;
   }
   /**
    * Get vet profile
@@ -86,51 +92,57 @@ class UserService {
   /**
    * Register vet
    * @param {{}} user User info
-   * @returns {Boolean}
+   * @returns {Boolean|String}
    */
   async registerVet(user) {
-    let regexImageUrl = /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
-    const match = regexImageUrl.exec(user.imgDataURL);
-    let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
-      8
-    )}.${match.groups["mime"].replace("image/", "")}`;
-    let dir = `${path.dirname(require.main.filename)}\\img`;
-    while (fs.existsSync(`${dir}\\${imgFileName}`)) {
-      imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+    const cryptr = new Cryptr(config.CAPTCHA_ENCRYPTION_KEY);
+    if (cryptr.decrypt(user.captchaCode) === user.captcha) {
+      let regexImageUrl =
+        /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
+      const match = regexImageUrl.exec(user.imgDataURL);
+      let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
         8
       )}.${match.groups["mime"].replace("image/", "")}`;
-    }
-    user.imgFileName = imgFileName;
-    user.role = "Vet";
-    const isReg = await this.#userRepository.register(user);
-    if (isReg) {
-      const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-      const key = cryptr.encrypt(user.email);
-      transportMail.sendMail({
-        from: fromSender,
-        to: user.email,
-        subject: "Успешна регистрация в Animal Aid",
-        html: verifyTemplates.verifyProfileVet(user.name.first, key),
-      });
-      let base64Data = user.imgDataURL.replace(
-        `data:${match.groups["mime"]};base64,`,
-        ""
-      );
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
+      let dir = `${path.dirname(require.main.filename)}\\img`;
+      while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+        imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+          8
+        )}.${match.groups["mime"].replace("image/", "")}`;
       }
-      sharp(Buffer.from(base64Data, "base64"))
-        .extract({
-          top: user.imageCrop.y,
-          left: user.imageCrop.x,
-          width: user.imageCrop.width,
-          height: user.imageCrop.height,
-        })
-        .toFile(`${dir}\\${imgFileName}`, function (err) {
-          if (err) console.log(err);
+      user.imgFileName = imgFileName;
+      user.role = "Vet";
+      const isReg = await this.#userRepository.register(user);
+      if (isReg === true) {
+        const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+        const key = cryptr.encrypt(user.email);
+        transportMail.sendMail({
+          from: fromSender,
+          to: user.email,
+          subject: "Успешна регистрация в Animal Aid",
+          html: verifyTemplates.verifyProfileVet(user.name.first, key),
         });
+        let base64Data = user.imgDataURL.replace(
+          `data:${match.groups["mime"]};base64,`,
+          ""
+        );
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir);
+        }
+        sharp(Buffer.from(base64Data, "base64"))
+          .extract({
+            top: user.imageCrop.y,
+            left: user.imageCrop.x,
+            width: user.imageCrop.width,
+            height: user.imageCrop.height,
+          })
+          .toFile(`${dir}\\${imgFileName}`, function (err) {
+            if (err) console.log(err);
+          });
+      }
+      return isReg;
+    } else {
+      return "INVALID_CAPTCHA";
     }
-    return isReg;
   }
   /**
    * Profile verification
@@ -152,19 +164,24 @@ class UserService {
    * @returns {Boolean|String}
    */
   async loginUser(user) {
-    const u = await this.#userRepository.loginUser(user);
-    if (u !== false) {
-      if (u.verified) {
-        const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
-        const token = cryptr.encrypt(
-          `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
-        );
-        return token;
+    const cryptr = new Cryptr(config.CAPTCHA_ENCRYPTION_KEY);
+    if (cryptr.decrypt(user.captchaCode) === user.captcha) {
+      const u = await this.#userRepository.loginUser(user);
+      if (u !== false) {
+        if (u.verified) {
+          const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
+          const token = cryptr.encrypt(
+            `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
+          );
+          return token;
+        } else {
+          return "PROFILE_NOT_VERIFIED";
+        }
       } else {
-        return "PROFILE_NOT_VERIFIED";
+        return false;
       }
     } else {
-      return false;
+      return "INVALID_CAPTCHA";
     }
   }
   /**

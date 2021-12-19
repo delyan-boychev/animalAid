@@ -4,19 +4,18 @@ const roles = require("../models/roles");
 class UserRepository {
   async register(user) {
     if (await User.exists({ email: user.email })) {
-      return false;
+      return "EMAIL_EXISTS";
     } else {
-      if (user.role === roles.Vet) {
-        if (await User.exists({ URN: user.URN })) {
-          return false;
-        }
-      }
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(user.password, salt);
       user.password = hash;
       user.createdOn = new Date().getTime().toString();
       user.role = roles[user.role];
       if (user.role === roles.Vet) {
+        const exists = await User.exists({ URN: user.URN });
+        if (exists) {
+          return "URN_EXISTS";
+        }
         user.moderationVerified = false;
       }
       user.verified = false;

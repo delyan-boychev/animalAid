@@ -22,6 +22,12 @@ const userRegisterSchema = {
     password: { type: "string", minLength: 8, maxLength: 98 },
     email: { type: "string", format: "email" },
     phoneNumber: { type: "string", pattern: "^\\+(?:[0-9]●?){6,14}[0-9]$" },
+    captcha: {
+      type: "string",
+      pattern:
+        "^[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*]{6}$",
+    },
+    captchaCode: { type: "string" },
   },
   additionalProperties: false,
   required: [
@@ -32,6 +38,8 @@ const userRegisterSchema = {
     "password",
     "email",
     "phoneNumber",
+    "captcha",
+    "captchaCode",
   ],
 };
 module.exports = userRegisterSchema;

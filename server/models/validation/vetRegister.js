@@ -37,6 +37,12 @@ const vetRegisterSchema = {
     password: { type: "string", minLength: 8, maxLength: 98 },
     email: { type: "string", format: "email" },
     phoneNumber: { type: "string", pattern: "^\\+(?:[0-9]●?){6,14}[0-9]$" },
+    captcha: {
+      type: "string",
+      pattern:
+        "^[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*]{6}$",
+    },
+    captchaCode: { type: "string" },
   },
   additionalProperties: false,
   required: [
@@ -48,6 +54,8 @@ const vetRegisterSchema = {
     "email",
     "phoneNumber",
     "URN",
+    "captcha",
+    "captchaCode",
   ],
 };
 module.exports = vetRegisterSchema;

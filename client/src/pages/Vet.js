@@ -157,7 +157,7 @@ class Vet extends React.Component {
           <ListGroup.Item>
             <span className="fw-bold">
               <FontAwesomeIcon icon={faPaw}></FontAwesomeIcon> Животни, с които
-              се занимава ветеринарния лекар:{" "}
+              вертеринарния лекар практикува:{" "}
               <span className="fw-normal">
                 {this.state.vet.typeAnimals.map(
                   (animal, index) =>

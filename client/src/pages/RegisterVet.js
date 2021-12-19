@@ -1,6 +1,8 @@
 import React from "react";
 import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import InfoModal from "../components/InfoModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
 import ImageUploading from "react-images-uploading";
 import Cropper from "react-easy-crop";
@@ -28,6 +30,7 @@ class RegisterVet extends React.Component {
         phoneNumber: "",
         password: "",
         confirmPassword: "",
+        captcha: "",
       },
       errors: {
         firstName: "",
@@ -42,7 +45,12 @@ class RegisterVet extends React.Component {
         phoneNumber: "",
         password: "",
         confirmPassword: "",
+        captcha: "",
         isValid: false,
+      },
+      captcha: {
+        captchaImage: "",
+        captchaCode: "",
       },
       modal: {
         show: false,
@@ -57,6 +65,7 @@ class RegisterVet extends React.Component {
       crop: { x: 0, y: 0 },
       zoom: 1,
     };
+    this.getCaptcha();
   }
   registrationComplete = false;
   submitForm = async (event) => {
@@ -79,12 +88,21 @@ class RegisterVet extends React.Component {
         address: user.address,
         phoneNumber: user.phoneNumber,
         password: user.password,
+        captcha: user.captcha,
+        captchaCode: this.state.captcha.captchaCode,
       });
       if (response === true) {
         this.openModal("Вие се регистрирахте успешно!");
         this.registrationComplete = true;
-      } else {
-        this.openModal("Вече съществува профил с този имейл адрес или УРН!");
+      } else if (response === "INVALID_CAPTCHA") {
+        this.openModal("Въвели сте невалиден код за потвърждение!");
+        this.getCaptcha();
+      } else if (response === "EMAIL_EXISTS") {
+        this.openModal("Вече съществува профил с този имейл адрес!");
+        this.getCaptcha();
+      } else if (response === "URN_EXISTS") {
+        this.openModal("Вече съществува профил с този УРН!");
+        this.getCaptcha();
       }
     }
   };
@@ -151,6 +169,12 @@ class RegisterVet extends React.Component {
       this.props.navigate("/login");
     }
   };
+  getCaptcha = async () => {
+    const res = await client.getRequest("/captcha/getCaptcha");
+    let captcha = { captchaImage: res.dataUrl, captchaCode: res.code };
+    console.log(captcha);
+    this.setState({ captcha });
+  };
   validate() {
     let errors = {
       firstName: "",
@@ -165,6 +189,7 @@ class RegisterVet extends React.Component {
       phoneNumber: "",
       password: "",
       confirmPassword: "",
+      captcha: "",
       isValid: true,
     };
     let fields = this.state.fields;
@@ -172,6 +197,8 @@ class RegisterVet extends React.Component {
     const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
     const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
     const checkURN = /^([А-Я,а-я,\-,0-9]{2,20})\/([0-9]{4})$/;
+    const checkCaptcha =
+      /^[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*]{6}$/;
 
     if (fields["firstName"].length < 2 || fields["firstName"].length > 50) {
       errors["firstName"] =
@@ -235,6 +262,10 @@ class RegisterVet extends React.Component {
     }
     if (fields["password"] !== fields["confirmPassword"]) {
       errors["confirmPassword"] = "Двете пароли не съвпадат!";
+      errors["isValid"] = false;
+    }
+    if (!checkCaptcha.test(fields["captcha"])) {
+      errors["captcha"] = "Кодът е невалиден!";
       errors["isValid"] = false;
     }
     this.setState({ errors });
@@ -457,7 +488,7 @@ class RegisterVet extends React.Component {
           <Row className="mb-3">
             <Form.Group as={Col} controlId="image">
               <Form.Label>
-                Животни, с които се занимава вертеринарния лекар
+                Животни, с които вертеринарния лекар практикува
               </Form.Label>
               <br />
               <div key="inline-checkbox" className="mb-3">
@@ -546,6 +577,34 @@ class RegisterVet extends React.Component {
                 )}
               </ImageUploading>
               <span className="text-danger">{this.state.errors.image}</span>
+            </Form.Group>
+          </Row>
+          <Row className="mb-3">
+            <Form.Label>Код за потвърждение</Form.Label>
+            <Col xs="9" sm="5" md="3">
+              <img
+                src={this.state.captcha.captchaImage}
+                hidden={this.state.captcha.captchaImage === ""}
+                alt="captcha"
+              ></img>
+            </Col>
+            <Col>
+              <Button className="mt-3" onClick={this.getCaptcha}>
+                <FontAwesomeIcon icon={faSyncAlt}></FontAwesomeIcon>
+              </Button>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Form.Group as={Col}>
+              <FloatingLabel controlId="captcha" label="Код">
+                <Form.Control
+                  placeholder="Код"
+                  type="text"
+                  value={this.state.fields.captcha}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
+              <span className="text-danger">{this.state.errors.captcha}</span>
             </Form.Group>
           </Row>
           <Button

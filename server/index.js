@@ -14,7 +14,7 @@ io.on("connection", onConnection);
 const port = 4000;
 const userRoute = require("./routes/user");
 const captchaRoute = require("./routes/captcha");
-app.use(express.json({ limit: "50mb" }));
+app.use(express.json({ limit: "10mb" }));
 app.use(cors());
 app.post("/newMessage", (req, res) => {
   io.to("testroom").emit("newMessage", req.body.mes);

@@ -519,7 +519,7 @@ export default class EditProfile extends React.Component {
                   <Col md={3} xs={4}>
                     <Form.Label className="fw-bold col-form-label">
                       <FontAwesomeIcon icon={faPaw}></FontAwesomeIcon> Животни,
-                      с които се занимава ветеринарния лекар
+                      с които вертеринарния лекар практикува
                     </Form.Label>
                   </Col>
                   <Col md={7} xs={6}>
@@ -550,18 +550,6 @@ export default class EditProfile extends React.Component {
                       />
                       <Form.Check
                         inline
-                        label="Екзотични животни"
-                        name="typeAnimals"
-                        type="checkbox"
-                        id="checkbox-exoticanimals"
-                        value="EXOTICANIMALS"
-                        checked={this.state.profile.typeAnimals.includes(
-                          "EXOTICANIMALS"
-                        )}
-                        onChange={this.onCheckUncheck}
-                      />
-                      <Form.Check
-                        inline
                         label="Птици"
                         name="typeAnimals"
                         type="checkbox"
@@ -569,6 +557,18 @@ export default class EditProfile extends React.Component {
                         value="BIRDS"
                         checked={this.state.profile.typeAnimals.includes(
                           "BIRDS"
+                        )}
+                        onChange={this.onCheckUncheck}
+                      />
+                      <Form.Check
+                        inline
+                        label="Екзотични животни"
+                        name="typeAnimals"
+                        type="checkbox"
+                        id="checkbox-exoticanimals"
+                        value="EXOTICANIMALS"
+                        checked={this.state.profile.typeAnimals.includes(
+                          "EXOTICANIMALS"
                         )}
                         onChange={this.onCheckUncheck}
                       />

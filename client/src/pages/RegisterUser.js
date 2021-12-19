@@ -2,8 +2,10 @@ import React from "react";
 import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import InfoModal from "../components/InfoModal";
 import { useNavigate } from "react-router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageUploading from "react-images-uploading";
 import Cropper from "react-easy-crop";
+import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 const client = require("../clientRequests");
 class RegisterUser extends React.Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class RegisterUser extends React.Component {
         phoneNumber: "",
         password: "",
         confirmPassword: "",
+        captcha: "",
       },
       errors: {
         firstName: "",
@@ -34,7 +37,12 @@ class RegisterUser extends React.Component {
         phoneNumber: "",
         password: "",
         confirmPassword: "",
+        captcha: "",
         isValid: false,
+      },
+      captcha: {
+        captchaImage: "",
+        captchaCode: "",
       },
       modal: {
         show: false,
@@ -49,6 +57,7 @@ class RegisterUser extends React.Component {
       crop: { x: 0, y: 0 },
       zoom: 1,
     };
+    this.getCaptcha();
   }
   registerComplete = false;
   submitForm = async (event) => {
@@ -67,12 +76,18 @@ class RegisterUser extends React.Component {
         city: user.city,
         phoneNumber: user.phoneNumber,
         password: user.password,
+        captcha: user.captcha,
+        captchaCode: this.state.captcha.captchaCode,
       });
       if (response === true) {
         this.openModal("Вие се регистрирахте успешно!");
         this.registerComplete = true;
-      } else if (response === false) {
+      } else if (response === "INVALID_CAPTCHA") {
+        this.openModal("Въвели сте невалиден код за потвърждение!");
+        this.getCaptcha();
+      } else if (response === "EMAIL_EXISTS") {
         this.openModal("Вече съществува профил с този имейл адрес!");
+        this.getCaptcha();
       }
     }
   };
@@ -85,6 +100,7 @@ class RegisterUser extends React.Component {
   closeModal = () => {
     let modal = this.state.modal;
     modal.show = false;
+    this.setState({ modal });
     if (this.registerComplete) {
       this.props.navigate("/login");
     }
@@ -116,6 +132,12 @@ class RegisterUser extends React.Component {
       this.openModal2();
     }
   };
+  getCaptcha = async () => {
+    const res = await client.getRequest("/captcha/getCaptcha");
+    let captcha = { captchaImage: res.dataUrl, captchaCode: res.code };
+    console.log(captcha);
+    this.setState({ captcha });
+  };
   validate() {
     let errors = {
       firstName: "",
@@ -126,13 +148,15 @@ class RegisterUser extends React.Component {
       phoneNumber: "",
       password: "",
       confirmPassword: "",
+      captcha: "",
       isValid: true,
     };
     let fields = this.state.fields;
     const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
     const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-
+    const checkCaptcha =
+      /^[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*]{6}$/;
     if (fields["firstName"].length < 2 || fields["firstName"].length > 50) {
       errors["firstName"] =
         "Името трябва да е поне 2 символа и да е максимум 50 символа!";
@@ -174,6 +198,10 @@ class RegisterUser extends React.Component {
     }
     if (fields["password"] !== fields["confirmPassword"]) {
       errors["confirmPassword"] = "Двете пароли не съвпадат!";
+      errors["isValid"] = false;
+    }
+    if (!checkCaptcha.test(fields["captcha"])) {
+      errors["captcha"] = "Кодът е невалиден!";
       errors["isValid"] = false;
     }
     this.setState({ errors });
@@ -384,6 +412,34 @@ class RegisterUser extends React.Component {
                 )}
               </ImageUploading>
               <span className="text-danger">{this.state.errors.image}</span>
+            </Form.Group>
+          </Row>
+          <Row className="mb-3">
+            <Form.Label>Код за потвърждение</Form.Label>
+            <Col xs="9" sm="5" md="3">
+              <img
+                src={this.state.captcha.captchaImage}
+                hidden={this.state.captcha.captchaImage === ""}
+                alt="captcha"
+              ></img>
+            </Col>
+            <Col>
+              <Button className="mt-3" onClick={this.getCaptcha}>
+                <FontAwesomeIcon icon={faSyncAlt}></FontAwesomeIcon>
+              </Button>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Form.Group as={Col}>
+              <FloatingLabel controlId="captcha" label="Код">
+                <Form.Control
+                  placeholder="Код"
+                  type="text"
+                  value={this.state.fields.captcha}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
+              <span className="text-danger">{this.state.errors.captcha}</span>
             </Form.Group>
           </Row>
           <Button

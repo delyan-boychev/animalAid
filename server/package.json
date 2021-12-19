@@ -10,18 +10,17 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.19.1",
     "canvas": "^2.8.0",
     "cors": "^2.8.5",
     "cryptr": "^6.0.2",
-    "express": "^4.17.1",
-    "gm": "^1.23.1",
+    "express": "^4.17.2",
     "http": "0.0.1-security",
     "jsonschema": "^1.4.0",
-    "mongoose": "^6.0.12",
-    "nodemailer": "^6.7.0",
+    "mongoose": "^6.1.2",
+    "nodemailer": "^6.7.2",
     "sharp": "^0.29.3",
-    "socket.io": "^4.3.2"
+    "socket.io": "^4.4.0"
   },
   "keywords": [],
   "description": ""
