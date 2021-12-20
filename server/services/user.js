@@ -25,7 +25,13 @@ class UserService {
    */
   async registerUser(user) {
     const cryptr = new Cryptr(config.CAPTCHA_ENCRYPTION_KEY);
-    if (cryptr.decrypt(user.captchaCode) === user.captcha) {
+    let captcha;
+    try {
+      captcha = cryptr.decrypt(user.captchaCode);
+    } catch {
+      return "INVALID_CAPTCHACODE";
+    }
+    if (captcha === user.captcha) {
       let regexImageUrl =
         /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
       const match = regexImageUrl.exec(user.imgDataURL);
@@ -96,7 +102,13 @@ class UserService {
    */
   async registerVet(user) {
     const cryptr = new Cryptr(config.CAPTCHA_ENCRYPTION_KEY);
-    if (cryptr.decrypt(user.captchaCode) === user.captcha) {
+    let captcha;
+    try {
+      captcha = cryptr.decrypt(user.captchaCode);
+    } catch {
+      return "INVALID_CAPTCHACODE";
+    }
+    if (captcha === user.captcha) {
       let regexImageUrl =
         /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
       const match = regexImageUrl.exec(user.imgDataURL);
@@ -165,7 +177,13 @@ class UserService {
    */
   async loginUser(user) {
     const cryptr = new Cryptr(config.CAPTCHA_ENCRYPTION_KEY);
-    if (cryptr.decrypt(user.captchaCode) === user.captcha) {
+    let captcha;
+    try {
+      captcha = cryptr.decrypt(user.captchaCode);
+    } catch {
+      return "INVALID_CAPTCHACODE";
+    }
+    if (captcha === user.captcha) {
       const u = await this.#userRepository.loginUser(user);
       if (u !== false) {
         if (u.verified) {
