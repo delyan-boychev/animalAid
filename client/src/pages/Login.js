@@ -69,7 +69,6 @@ export default class Login extends React.Component {
   getCaptcha = async () => {
     const res = await client.getRequest("/captcha/getCaptcha");
     let captcha = { captchaImage: res.dataUrl, captchaCode: res.code };
-    console.log(captcha);
     this.setState({ captcha });
   };
   validate() {
