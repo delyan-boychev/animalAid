@@ -27,7 +27,11 @@ const userRegisterSchema = {
       pattern:
         "^[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*]{6}$",
     },
-    captchaCode: { type: "string" },
+    captchaCode: {
+      type: "string",
+      pattern:
+        "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$",
+    },
   },
   additionalProperties: false,
   required: [

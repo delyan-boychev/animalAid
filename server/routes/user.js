@@ -2,37 +2,29 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
-const Validator = require("jsonschema").Validator;
-const userRegisterSchema = require("../models/validation/userRegister");
-const vetRegisterSchema = require("../models/validation/vetRegister");
-const userLoginSchema = require("../models/validation/userLogin");
-const changeEmailSchema = require("../models/validation/changeEmail");
-const changePasswordSchema = require("../models/validation/changePassword");
-const forgotPasswordSchema = require("../models/validation/forgotPassword");
-const forgotPasswordChangeSchema = require("../models/validation/forgotPasswordChange");
+const validation = require("../models/validation/validation");
+const userRegisterSchema = require("../models/validation/user/userRegister");
+const vetRegisterSchema = require("../models/validation/user/vetRegister");
+const userLoginSchema = require("../models/validation/user/userLogin");
+const changeEmailSchema = require("../models/validation/user/changeEmail");
+const changePasswordSchema = require("../models/validation/user/changePassword");
+const forgotPasswordSchema = require("../models/validation/user/forgotPassword");
+const forgotPasswordChangeSchema = require("../models/validation/user/forgotPasswordChange");
 const authenticate = require("../authentication/authenticate");
-const editProfileSchema = require("../models/validation/editProfile");
+const editProfileSchema = require("../models/validation/user/editProfile");
 const roles = require("../models/roles");
 let router = express.Router();
 const UserService = require("../services/user");
 const userService = new UserService();
 router.post("/regUser", async (req, res) => {
-  let v = new Validator();
-  const valRes = v.validate(req.body, userRegisterSchema);
-  if (valRes.valid) {
+  validation(req.body, userRegisterSchema, res, async () => {
     res.send(await userService.registerUser(req.body));
-  } else {
-    res.sendStatus(400);
-  }
+  });
 });
 router.post("/regVet", async (req, res) => {
-  let v = new Validator();
-  const valRes = v.validate(req.body, vetRegisterSchema);
-  if (valRes.valid) {
+  validation(req.body, vetRegisterSchema, res, async () => {
     res.send(await userService.registerVet(req.body));
-  } else {
-    res.sendStatus(400);
-  }
+  });
 });
 router.get("/img/:filename", async (req, res) => {
   const fileName = req.params.filename;
@@ -44,13 +36,9 @@ router.get("/img/:filename", async (req, res) => {
   }
 });
 router.post("/log", async (req, res) => {
-  let v = new Validator();
-  const valRes = v.validate(req.body, userLoginSchema);
-  if (valRes.valid) {
+  validation(req.body, userLoginSchema, res, async () => {
     res.send(await userService.loginUser(req.body));
-  } else {
-    res.sendStatus(400);
-  }
+  });
 });
 router.get("/getVets/:pageNum", authenticate, async (req, res) => {
   if (req.user.role !== roles.Vet) {
@@ -114,9 +102,7 @@ router.post("/edit/:property", authenticate, async (req, res) => {
     (prop == "typeAnimals" && req.user.role == roles.Vet)
   ) {
     if (req.body[prop] != undefined && req.body[prop] != "") {
-      let v = new Validator();
-      const valRes = v.validate(req.body, editProfileSchema.getSchema(prop));
-      if (valRes.valid) {
+      validation(req.body, editProfileSchema.getSchema(prop), res, async () => {
         const isEdit = await userService.edit(
           prop,
           req.body[prop],
@@ -124,9 +110,7 @@ router.post("/edit/:property", authenticate, async (req, res) => {
         );
         if (isEdit) res.send(isEdit);
         else res.sendStatus(401);
-      } else {
-        res.sendStatus(400);
-      }
+      });
     } else {
       res.sendStatus(400);
     }
@@ -143,9 +127,7 @@ router.get("/profile", authenticate, async (req, res) => {
   }
 });
 router.post("/changeEmail", authenticate, async (req, res) => {
-  let v = new Validator();
-  const valRes = v.validate(req.body, changeEmailSchema);
-  if (valRes.valid) {
+  validation(req.body, changeEmailSchema, res, async () => {
     res.send(
       await userService.changeEmail(
         req.body["newEmail"],
@@ -153,14 +135,10 @@ router.post("/changeEmail", authenticate, async (req, res) => {
         req.user.id
       )
     );
-  } else {
-    res.sendStatus(400);
-  }
+  });
 });
 router.post("/changePassword", authenticate, async (req, res) => {
-  let v = new Validator();
-  const valRes = v.validate(req.body, changePasswordSchema);
-  if (valRes.valid) {
+  validation(req.body, changePasswordSchema, res, async () => {
     res.send(
       await userService.changePassword(
         req.user["id"],
@@ -168,9 +146,7 @@ router.post("/changePassword", authenticate, async (req, res) => {
         req.body["newPassword"]
       )
     );
-  } else {
-    res.sendStatus(400);
-  }
+  });
 });
 router.get("/validateForgetPasswordToken/:token", async (req, res) => {
   const validation = await userService.validateForgotPasswordToken(
@@ -179,26 +155,18 @@ router.get("/validateForgetPasswordToken/:token", async (req, res) => {
   res.send(validation["isValid"]);
 });
 router.post("/requestForgotPassword", async (req, res) => {
-  let v = new Validator();
-  const valRes = v.validate(req.body, forgotPasswordSchema);
-  if (valRes.valid) {
+  validation(req.body, forgotPasswordSchema, res, async () => {
     res.send(await userService.requestForgotPassword(req.body["email"]));
-  } else {
-    res.sendStatus(400);
-  }
+  });
 });
 router.post("/forgotPasswordChange", async (req, res) => {
-  let v = new Validator();
-  const valRes = v.validate(req.body, forgotPasswordChangeSchema);
-  if (valRes.valid) {
+  validation(req.body, forgotPasswordChangeSchema, res, async () => {
     res.send(
       await userService.forgotPasswordChange(
         req.body["token"],
         req.body["newPassword"]
       )
     );
-  } else {
-    res.sendStatus(400);
-  }
+  });
 });
 module.exports = router;

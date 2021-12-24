@@ -1,3 +1,4 @@
+"use strict";
 const chatRepository = require("../repositories/chat");
 const userRepository = require("../repositories/user");
 class ChatService {

@@ -1,3 +1,4 @@
+"use strict";
 const Chat = require("../models/chat");
 const extMethods = require("../extensionMethods");
 class ChatRepository {

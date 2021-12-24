@@ -1,3 +1,4 @@
+"use strict";
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const roles = require("../models/roles");
@@ -153,6 +154,10 @@ class UserRepository {
     } else {
       return false;
     }
+  }
+  async getAllUsers() {
+    const users = await User.find().select(["-password"]).lean().exec();
+    return users;
   }
   async changeEmail(user, newEmail) {
     const u = await User.findById(user.id).exec();

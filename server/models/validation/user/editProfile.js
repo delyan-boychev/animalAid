@@ -1,4 +1,4 @@
-const animals = require("../typeAnimals");
+const animals = require("../../typeAnimals");
 const getSchema = (prop) => {
   return schemas[prop];
 };

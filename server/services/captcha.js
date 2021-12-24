@@ -1,3 +1,4 @@
+"use strict";
 const { createCanvas } = require("canvas");
 const ENCRYPTION_CAPTCHA = require("../config.json").CAPTCHA_ENCRYPTION_KEY;
 const Cryptr = require("cryptr");
@@ -21,7 +22,7 @@ class CaptchaService {
     ctx.clearRect(0, 0, width, height);
     ctx.rotate((Math.round(Math.random() * 20) * Math.PI) / 180);
     ctx.strokeStyle = "black";
-    ctx.font = "30px Arial";
+    ctx.font = "35px Times New Roman";
     ctx.textAlign = "center";
     ctx.lineWidth = 2;
     ctx.strokeStyle = "black";
