@@ -155,9 +155,12 @@ class UserRepository {
       return false;
     }
   }
-  async getAllUsers() {
-    const users = await User.find().select(["-password"]).lean().exec();
-    return users;
+  async getAllUsers(searchQuery) {
+    if (searchQuery !== undefined) {
+      return await User.find(searchQuery).select(["-password"]).lean().exec();
+    } else {
+      return await User.find().select(["-password"]).lean().exec();
+    }
   }
   async changeEmail(user, newEmail) {
     const u = await User.findById(user.id).exec();

@@ -14,6 +14,7 @@ io.on("connection", onConnection);
 const port = 4000;
 const userRoute = require("./routes/user");
 const captchaRoute = require("./routes/captcha");
+const adminRoute = require("./routes/admin");
 app.use(express.json({ limit: "10mb" }));
 app.use(cors());
 app.post("/newMessage", (req, res) => {
@@ -22,6 +23,7 @@ app.post("/newMessage", (req, res) => {
 });
 app.use("/user", userRoute);
 app.use("/captcha", captchaRoute);
+app.use("/admin", adminRoute);
 mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

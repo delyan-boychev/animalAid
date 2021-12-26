@@ -5,8 +5,8 @@ class AdminService {
   async moderationVerify(email) {
     return await this.#userRepository.moderationVerify(email);
   }
-  async getAllUsers() {
-    const users = await this.#userRepository.getAllUsers();
+  async getAllUsers(pageNum, searchQuery) {
+    const users = await this.#userRepository.getAllUsers(searchQuery);
     const startIndex = pageNum * 10 - 10;
     const endIndex = pageNum * 10;
     const numPages = Math.ceil(users.length / 10);
