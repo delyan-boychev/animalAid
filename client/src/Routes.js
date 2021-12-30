@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import RequestForgotPassword from "./pages/RequestForgotPassword";
 import ChangeForgotPassword from "./pages/ChangeForgotPassword";
+import AdminPanel from "./pages/AdminPanel";
 import { useRoutes } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -173,6 +174,19 @@ const routes = (isLoggedIn) => [
     element: !isLoggedIn ? (
       <div className="container mt-3">
         <ChangeForgotPassword />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NotFound></NotFound>
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/adminPanel",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <AdminPanel />
       </div>
     ) : (
       <div className="container mt-3">
