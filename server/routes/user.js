@@ -10,6 +10,7 @@ const changeEmailSchema = require("../models/validation/user/changeEmail");
 const changePasswordSchema = require("../models/validation/user/changePassword");
 const forgotPasswordSchema = require("../models/validation/user/forgotPassword");
 const forgotPasswordChangeSchema = require("../models/validation/user/forgotPasswordChange");
+const authenticateGET = require("../authentication/authenticateGET");
 const authenticate = require("../authentication/authenticate");
 const editProfileSchema = require("../models/validation/user/editProfile");
 const roles = require("../models/roles");
@@ -26,11 +27,11 @@ router.post("/regVet", async (req, res) => {
     res.send(await userService.registerVet(req.body));
   });
 });
-router.get("/img/:filename", async (req, res) => {
+router.get("/img/:filename", authenticateGET, async (req, res) => {
   const fileName = req.params.filename;
-  let dir = `${path.dirname(require.main.filename)}\\img`;
-  if (fs.existsSync(`${dir}\\${fileName}`)) {
-    res.sendFile(`${dir}\\${fileName}`);
+  let dir = `${path.dirname(require.main.filename)}/img`;
+  if (fs.existsSync(`${dir}/${fileName}`)) {
+    res.sendFile(`${dir}/${fileName}`);
   } else {
     res.sendStatus(404);
   }

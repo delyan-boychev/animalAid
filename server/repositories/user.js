@@ -10,7 +10,6 @@ class UserRepository {
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(user.password, salt);
       user.password = hash;
-      user.createdOn = new Date().getTime().toString();
       user.role = roles[user.role];
       if (user.role === roles.Vet) {
         const exists = await User.exists({ URN: user.URN });
@@ -21,8 +20,12 @@ class UserRepository {
       }
       user.verified = false;
       let u = new User(user);
-      u.save();
-      return true;
+      try {
+        await u.save();
+        return true;
+      } catch {
+        return false;
+      }
     }
   }
   async checkUserExists(userId) {
@@ -84,22 +87,30 @@ class UserRepository {
     }
   }
   async setLastRequestForgotPassword(email) {
-    let user = await User.findOne({ email: email }).exec();
-    if (user !== null) {
-      user.lastRequestForgotPassword = parseInt(new Date().getTime() / 1000);
-      user.save();
-      return true;
+    let u = await User.findOne({ email: email }).exec();
+    if (u !== null) {
+      u.lastRequestForgotPassword = parseInt(new Date().getTime() / 1000);
+      try {
+        await u.save();
+        return true;
+      } catch {
+        return false;
+      }
     } else {
       return false;
     }
   }
   async getProfile(id) {
-    let user = await User.findById(id).lean().exec();
-    if (user == null) {
+    try {
+      let user = await User.findById(id).lean().exec();
+      if (user == null) {
+        return false;
+      } else {
+        user.password = undefined;
+        return user;
+      }
+    } catch {
       return false;
-    } else {
-      user.password = undefined;
-      return user;
     }
   }
   async loginUser(user) {
@@ -121,8 +132,12 @@ class UserRepository {
     if (u != null) {
       if (!u.verified) {
         u.verified = true;
-        u.save();
-        return true;
+        try {
+          await u.save();
+          return true;
+        } catch {
+          return false;
+        }
       } else {
         return false;
       }
@@ -143,8 +158,12 @@ class UserRepository {
       if (u.role === roles.Vet) {
         if (!u.moderationVerified) {
           u.moderationVerified = true;
-          u.save();
-          return true;
+          try {
+            await u.save();
+            return true;
+          } catch {
+            return false;
+          }
         } else {
           return false;
         }
@@ -171,8 +190,12 @@ class UserRepository {
         if (u2 === null) {
           u.email = newEmail;
           u.verified = false;
-          u.save();
-          return true;
+          try {
+            await u.save();
+            return true;
+          } catch {
+            return false;
+          }
         } else {
           return "EXISTS";
         }
@@ -191,8 +214,12 @@ class UserRepository {
       u.password = hash;
       u.lastForgotPassword = parseInt(new Date().getTime() / 1000);
       u.lastRequestForgotPassword = u.lastForgotPassword;
-      u.save();
-      return true;
+      try {
+        await u.save();
+        return true;
+      } catch {
+        return false;
+      }
     } else {
       return false;
     }
@@ -205,8 +232,12 @@ class UserRepository {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(newPassword, salt);
         u.password = hash;
-        u.save();
-        return true;
+        try {
+          await u.save();
+          return true;
+        } catch {
+          return false;
+        }
       } else {
         return false;
       }
@@ -215,10 +246,14 @@ class UserRepository {
     }
   }
   async getRole(id) {
-    const u = await User.findById(id).exec();
-    if (u !== null) {
-      return u.role;
-    } else {
+    try {
+      const u = await User.findById(id).exec();
+      if (u !== null) {
+        return u.role;
+      } else {
+        return false;
+      }
+    } catch {
       return false;
     }
   }
@@ -262,8 +297,12 @@ class UserRepository {
         default:
           return false;
       }
-      u.save();
-      return true;
+      try {
+        await u.save();
+        return true;
+      } catch {
+        return false;
+      }
     } else {
       return false;
     }

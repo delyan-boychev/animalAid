@@ -83,7 +83,6 @@ export default class EditProfile extends React.Component {
     this.setState({ modal });
     window.location.reload();
   };
-  token = getCookie("authorization");
   async getInfo() {
     const res = await client.getRequestToken("/user/profile");
     this.setState({ profile: res });
@@ -271,7 +270,9 @@ export default class EditProfile extends React.Component {
             className="mb-3 rounded-circle"
             src={
               this.state.profile.imgFileName !== ""
-                ? `${API_URL}/user/img/${this.state.profile.imgFileName}`
+                ? `${API_URL}/user/img/${
+                    this.state.profile.imgFileName
+                  }?token=${getCookie("authorization")}`
                 : ""
             }
             height="150px"

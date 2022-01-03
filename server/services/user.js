@@ -39,7 +39,7 @@ class UserService {
       let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
         8
       )}.${match.groups["mime"].replace("image/", "")}`;
-      let dir = `${path.dirname(require.main.filename)}\\img`;
+      let dir = `${path.dirname(require.main.filename)}/img`;
       while (fs.existsSync(`${dir}\\${imgFileName}`)) {
         imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
           8
@@ -71,7 +71,7 @@ class UserService {
             width: user.imageCrop.width,
             height: user.imageCrop.height,
           })
-          .toFile(`${dir}\\${imgFileName}`, function (err) {
+          .toFile(`${dir}/${imgFileName}`, function (err) {
             if (err) console.log(err);
           });
       }
@@ -116,7 +116,7 @@ class UserService {
       let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
         8
       )}.${match.groups["mime"].replace("image/", "")}`;
-      let dir = `${path.dirname(require.main.filename)}\\img`;
+      let dir = `${path.dirname(require.main.filename)}/img`;
       while (fs.existsSync(`${dir}\\${imgFileName}`)) {
         imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
           8
@@ -148,7 +148,7 @@ class UserService {
             width: user.imageCrop.width,
             height: user.imageCrop.height,
           })
-          .toFile(`${dir}\\${imgFileName}`, function (err) {
+          .toFile(`${dir}/${imgFileName}`, function (err) {
             if (err) console.log(err);
           });
       }

@@ -22,5 +22,8 @@ class AdminService {
       return { users: users.slice(startIndex, endIndex), numPages };
     }
   }
+  async getUserInfo(id) {
+    return await this.#userRepository.getProfile(id);
+  }
 }
 module.exports = AdminService;

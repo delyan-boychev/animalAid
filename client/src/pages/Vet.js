@@ -14,6 +14,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
 import DialogModal from "../components/DialogModal";
+import { getCookie } from "../cookies";
 const client = require("../clientRequests");
 const API_URL = require("../config.json").API_URL;
 const animalsTranslate = require("../enums/animalsTranslate");
@@ -91,7 +92,9 @@ class Vet extends React.Component {
             className="mb-3 rounded-circle"
             src={
               this.state.vet.imgFileName !== ""
-                ? `${API_URL}/user/img/${this.state.vet.imgFileName}`
+                ? `${API_URL}/user/img/${
+                    this.state.vet.imgFileName
+                  }?token=${getCookie("authorization")}`
                 : ""
             }
             height="150px"

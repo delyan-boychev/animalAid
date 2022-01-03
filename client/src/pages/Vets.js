@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { ListGroup, Pagination, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import { getCookie } from "../cookies";
 import isNormalInteger from "../extensionFunctions/isNumber";
 const API_URL = require("../config.json").API_URL;
 const client = require("../clientRequests");
@@ -82,7 +83,9 @@ class Vets extends React.Component {
                 <Col xs={3} sm={2}>
                   <img
                     className="rounded-circle"
-                    src={`${API_URL}/user/img/${vet.imgFileName}`}
+                    src={`${API_URL}/user/img/${
+                      vet.imgFileName
+                    }?token=${getCookie("authorization")}`}
                     height="60px"
                     weight="60px"
                     alt="avatar"

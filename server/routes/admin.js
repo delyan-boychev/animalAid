@@ -8,58 +8,30 @@ const adminService = new AdminService();
 const roles = require("../models/roles");
 let router = express.Router();
 router.get(
-  "/getAllUsers/:pageNum/:searchParam?/:searchQuery?",
+  "/getAllUsers/:pageNum/:searchQuery?",
   authenticateAdmin,
   async (req, res) => {
     try {
       const pageNum = parseInt(req.params.pageNum);
       if (pageNum > 0) {
-        const searchParam = req.params.searchParam;
         const searchQuery = req.params.searchQuery;
-        let query = {};
-        if (searchQuery !== undefined && searchParam !== undefined) {
-          let valid = true;
-          switch (searchParam) {
-            case "name":
-              query = {
-                $or: [
-                  { "name.first": { $regex: searchQuery, $options: "i" } },
-                  { "name.last": { $regex: searchQuery, $options: "i" } },
-                ],
-              };
-              break;
-            case "email":
-              query = {
-                email: { $regex: searchQuery, $options: "i" },
-              };
-              break;
-            case "URN":
-              query = {
-                role: roles.Vet,
-                URN: { $regex: searchQuery, $options: "i" },
-              };
-              break;
-            case "address":
-              query = {
-                role: roles.Vet,
-                address: { $regex: searchQuery, $options: "i" },
-              };
-              break;
-            case "city":
-              query = {
-                city: { $regex: searchQuery, $options: "i" },
-              };
-              break;
-            default:
-              valid = false;
-              res.sendStatus(400);
-              break;
-          }
-          if (valid) {
-            res.send(await adminService.getAllUsers(pageNum, query));
-          }
+        if (searchQuery !== undefined) {
+          let query = {
+            role: { $in: [roles.Admin, roles.Moderator, roles.User] },
+            $or: [
+              { "name.first": { $regex: searchQuery, $options: "i" } },
+              { "name.last": { $regex: searchQuery, $options: "i" } },
+              { email: { $regex: searchQuery, $options: "i" } },
+              { city: { $regex: searchQuery, $options: "i" } },
+            ],
+          };
+          res.send(await adminService.getAllUsers(pageNum, query));
         } else {
-          res.send(await adminService.getAllUsers(pageNum, undefined));
+          res.send(
+            await adminService.getAllUsers(pageNum, {
+              role: { $in: [roles.Admin, roles.Moderator, roles.User] },
+            })
+          );
         }
       } else {
         res.sendStatus(400);
@@ -69,6 +41,54 @@ router.get(
     }
   }
 );
+router.get(
+  "/getAllVets/:pageNum/:searchQuery?",
+  authenticateAdmin,
+  async (req, res) => {
+    try {
+      const pageNum = parseInt(req.params.pageNum);
+      if (pageNum > 0) {
+        const searchQuery = req.params.searchQuery;
+        if (searchQuery !== undefined) {
+          let query = {
+            role: roles.Vet,
+            $or: [
+              { "name.first": { $regex: searchQuery, $options: "i" } },
+              { "name.last": { $regex: searchQuery, $options: "i" } },
+              { email: { $regex: searchQuery, $options: "i" } },
+              { address: { $regex: searchQuery, $options: "i" } },
+              { URN: { $regex: searchQuery, $options: "i" } },
+              { city: { $regex: searchQuery, $options: "i" } },
+            ],
+          };
+          res.send(await adminService.getAllUsers(pageNum, query));
+        } else {
+          res.send(
+            await adminService.getAllUsers(pageNum, {
+              role: roles.Vet,
+            })
+          );
+        }
+      } else {
+        res.sendStatus(400);
+      }
+    } catch {
+      res.sendStatus(400);
+    }
+  }
+);
+router.get("/getUserInfo/:id", authenticateAdmin, async (req, res) => {
+  if (req.params.id !== undefined && req.params.id !== "") {
+    const user = await adminService.getUserInfo(req.params.id);
+    if (user !== false) {
+      res.send(user);
+    } else {
+      res.sendStatus(404);
+    }
+  } else {
+    res.sendStatus(404);
+  }
+});
 router.post("/moderationVerifyVet", authenticateAdmin, async (req, res) => {
   validation(req.body, moderationVerifyVetSchema, res, async () => {
     res.send(await adminService.moderationVerify(req.body.email));

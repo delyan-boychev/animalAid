@@ -1,5 +1,4 @@
 import React from "react";
-import { getCookie } from "../cookies";
 import {
   Button,
   Col,
@@ -19,6 +18,7 @@ import {
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
 import { refreshToken } from "../clientRequests";
+import { getCookie } from "../cookies";
 const io = require("socket.io-client");
 const API_URL = require("../config.json").API_URL;
 class Chats extends React.Component {
@@ -296,7 +296,9 @@ class Chats extends React.Component {
                       <Col xs={3}>
                         <img
                           className="rounded-circle"
-                          src={`${API_URL}/user/img/${user.imgFileName}`}
+                          src={`${API_URL}/user/img/${
+                            user.imgFileName
+                          }?token=${getCookie("authorization")}`}
                           height="60px"
                           weight="60px"
                           alt="avatar"
@@ -331,7 +333,9 @@ class Chats extends React.Component {
                   <Col xs={3} md={2}>
                     <img
                       className="rounded-circle"
-                      src={`${API_URL}/user/img/${this.state.chatUserInfo.imgFileName}`}
+                      src={`${API_URL}/user/img/${
+                        this.state.chatUserInfo.imgFileName
+                      }?token=${getCookie("authorization")}`}
                       height="60px"
                       weight="60px"
                       alt="avatar"

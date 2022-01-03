@@ -10,7 +10,11 @@ const schema = new mongoose.Schema({
   phoneNumber: { type: String, required: true },
   city: { type: String, required: true },
   password: { type: String, required: true },
-  createdOn: { type: Number, required: true },
+  createdOn: {
+    type: Number,
+    required: true,
+    default: parseInt(new Date().getTime().toString()),
+  },
   role: {
     type: String,
     required: true,

@@ -57,6 +57,9 @@ async function postRequestToken(url, data, headers) {
           window.location.href = "/";
           return "";
         }
+      } else if (error.response.status === 403) {
+        window.location.href = "/";
+        return "";
       } else {
         return false;
       }
@@ -97,6 +100,9 @@ async function getRequestToken(url, headers) {
           window.location.href = "/";
           return "";
         }
+      } else if (error.response.status === 403) {
+        window.location.href = "/";
+        return "";
       } else {
         return false;
       }

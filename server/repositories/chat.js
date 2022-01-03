@@ -12,8 +12,12 @@ class ChatRepository {
       message: message,
       sender: userOne,
     });
-    chat.save();
-    return true;
+    try {
+      await chat.save();
+      return true;
+    } catch {
+      return false;
+    }
   }
   async sendMessage(senderId, recieveId, message, date) {
     let chat = await Chat.findOne({ userOne: senderId, userTwo: recieveId });
@@ -29,8 +33,12 @@ class ChatRepository {
       message: message,
       sender: senderId,
     });
-    chat.save();
-    return true;
+    try {
+      await chat.save();
+      return true;
+    } catch {
+      return false;
+    }
   }
   async checkChatExists(userOne, userTwo) {
     let exists = await Chat.exists({ userOne: userOne, userTwo: userTwo });
@@ -63,8 +71,12 @@ class ChatRepository {
         chat.messages[i]["seen"] = true;
       }
     });
-    chat.save();
-    return true;
+    try {
+      await chat.save();
+      return true;
+    } catch {
+      return false;
+    }
   }
   async getUsersChats(userId) {
     let chats = await Chat.find({ userOne: userId })
