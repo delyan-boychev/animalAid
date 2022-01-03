@@ -296,9 +296,7 @@ class Chats extends React.Component {
                       <Col xs={3}>
                         <img
                           className="rounded-circle"
-                          src={`${API_URL}/user/img/${
-                            user.imgFileName
-                          }?token=${getCookie("authorization")}`}
+                          src={`${API_URL}/user/img/${user.imgFileName}`}
                           height="60px"
                           weight="60px"
                           alt="avatar"
@@ -333,9 +331,7 @@ class Chats extends React.Component {
                   <Col xs={3} md={2}>
                     <img
                       className="rounded-circle"
-                      src={`${API_URL}/user/img/${
-                        this.state.chatUserInfo.imgFileName
-                      }?token=${getCookie("authorization")}`}
+                      src={`${API_URL}/user/img/${this.state.chatUserInfo.imgFileName}`}
                       height="60px"
                       weight="60px"
                       alt="avatar"

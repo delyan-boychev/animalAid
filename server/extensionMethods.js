@@ -14,6 +14,16 @@ function randomString(length) {
   }
   return result;
 }
+function randomStringWithSpecialSymbols(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 (function () {
   if (typeof Object.defineProperty === "function") {
     try {
@@ -39,4 +49,8 @@ function randomString(length) {
     return this;
   }
 })();
-module.exports = { getAllIndexes, randomString };
+module.exports = {
+  getAllIndexes,
+  randomString,
+  randomStringWithSpecialSymbols,
+};

@@ -14,7 +14,6 @@ import {
   faChevronCircleRight,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import { getCookie } from "../../cookies";
 const API_URL = require("../../config.json").API_URL;
 const client = require("../../clientRequests");
 export default class ViewAllUsers extends React.Component {
@@ -105,9 +104,7 @@ export default class ViewAllUsers extends React.Component {
                 <Col xs={3} sm={2}>
                   <img
                     className="rounded-circle"
-                    src={`${API_URL}/user/img/${
-                      user.imgFileName
-                    }?token=${getCookie("authorization")}`}
+                    src={`${API_URL}/user/img/${user.imgFileName}`}
                     height="60px"
                     weight="60px"
                     alt="avatar"

@@ -1,9 +1,11 @@
 "use strict";
 const userRepository = require("../repositories/user");
+const captchaRepository = require("../repositories/captcha");
 const path = require("path");
 const fs = require("fs");
 const sharp = require("sharp");
-const extenstionMethods = require("../extensionMethods");
+const extensionMethods = require("../extensionMethods");
+const encryptDecryptCaptcha = require("../captcha/encryptDecryptCaptcha");
 const config = require("../config.json");
 const nodemailer = require("nodemailer");
 const verifyTemplates = require("../models/emailTemplates/verifyProfile");
@@ -19,63 +21,70 @@ const Cryptr = require("cryptr");
 const fromSender = "Animal Aid <bganimalaid@gmail.com>";
 class UserService {
   #userRepository = new userRepository();
+  #captchaRepository = new captchaRepository();
   /**
    * Register user
    * @param {{}} user User info
    * @returns {Boolean|String}
    */
   async registerUser(user) {
-    const cryptr = new Cryptr(config.CAPTCHA_ENCRYPTION_KEY);
-    let captcha;
-    try {
-      captcha = cryptr.decrypt(user.captchaCode);
-    } catch {
-      return "INVALID_CAPTCHACODE";
-    }
+    const captcha = encryptDecryptCaptcha.decryptCaptcha(user.captchaCode);
     if (captcha === user.captcha) {
-      let regexImageUrl =
-        /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
-      const match = regexImageUrl.exec(user.imgDataURL);
-      let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
-        8
-      )}.${match.groups["mime"].replace("image/", "")}`;
-      let dir = `${path.dirname(require.main.filename)}/img`;
-      while (fs.existsSync(`${dir}\\${imgFileName}`)) {
-        imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+      const captchaExists = await this.#captchaRepository.captchaExists(
+        user.captcha,
+        user.captchaCode
+      );
+      if (!captchaExists) {
+        await this.#captchaRepository.saveCaptcha(
+          user.captcha,
+          user.captchaCode
+        );
+        let regexImageUrl =
+          /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
+        const match = regexImageUrl.exec(user.imgDataURL);
+        let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
           8
         )}.${match.groups["mime"].replace("image/", "")}`;
-      }
-      user.imgFileName = imgFileName;
-      user.role = "User";
-      const isReg = await this.#userRepository.register(user);
-      if (isReg === true) {
-        const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-        const key = cryptr.encrypt(user.email);
-        transportMail.sendMail({
-          from: fromSender,
-          to: user.email,
-          subject: "Успешна регистрация в Animal Aid",
-          html: verifyTemplates.verifyProfileUser(user.name.first, key),
-        });
-        let base64Data = user.imgDataURL.replace(
-          `data:${match.groups["mime"]};base64,`,
-          ""
-        );
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir);
+        let dir = `${path.dirname(require.main.filename)}/img`;
+        while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+          imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+            8
+          )}.${match.groups["mime"].replace("image/", "")}`;
         }
-        sharp(Buffer.from(base64Data, "base64"))
-          .extract({
-            top: user.imageCrop.y,
-            left: user.imageCrop.x,
-            width: user.imageCrop.width,
-            height: user.imageCrop.height,
-          })
-          .toFile(`${dir}/${imgFileName}`, function (err) {
-            if (err) console.log(err);
+        user.imgFileName = imgFileName;
+        user.role = "User";
+        const isReg = await this.#userRepository.register(user);
+        if (isReg === true) {
+          const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+          const key = cryptr.encrypt(user.email);
+          transportMail.sendMail({
+            from: fromSender,
+            to: user.email,
+            subject: "Успешна регистрация в Animal Aid",
+            html: verifyTemplates.verifyProfileUser(user.name.first, key),
           });
+          let base64Data = user.imgDataURL.replace(
+            `data:${match.groups["mime"]};base64,`,
+            ""
+          );
+          if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+          }
+          sharp(Buffer.from(base64Data, "base64"))
+            .extract({
+              top: user.imageCrop.y,
+              left: user.imageCrop.x,
+              width: user.imageCrop.width,
+              height: user.imageCrop.height,
+            })
+            .toFile(`${dir}/${imgFileName}`, function (err) {
+              if (err) console.log(err);
+            });
+        }
+        return isReg;
+      } else {
+        return "INVALID_CAPTCHA";
       }
-      return isReg;
     } else {
       return "INVALID_CAPTCHA";
     }
@@ -102,57 +111,63 @@ class UserService {
    * @returns {Boolean|String}
    */
   async registerVet(user) {
-    const cryptr = new Cryptr(config.CAPTCHA_ENCRYPTION_KEY);
-    let captcha;
-    try {
-      captcha = cryptr.decrypt(user.captchaCode);
-    } catch {
-      return "INVALID_CAPTCHACODE";
-    }
+    const captcha = encryptDecryptCaptcha.decryptCaptcha(user.captchaCode);
     if (captcha === user.captcha) {
-      let regexImageUrl =
-        /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
-      const match = regexImageUrl.exec(user.imgDataURL);
-      let imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
-        8
-      )}.${match.groups["mime"].replace("image/", "")}`;
-      let dir = `${path.dirname(require.main.filename)}/img`;
-      while (fs.existsSync(`${dir}\\${imgFileName}`)) {
-        imgFileName = `${new Date().getTime()}${extenstionMethods.randomString(
+      const captchaExists = await this.#captchaRepository.captchaExists(
+        user.captcha,
+        user.captchaCode
+      );
+      if (!captchaExists) {
+        await this.#captchaRepository.saveCaptcha(
+          user.captcha,
+          user.captchaCode
+        );
+        let regexImageUrl =
+          /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
+        const match = regexImageUrl.exec(user.imgDataURL);
+        let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
           8
         )}.${match.groups["mime"].replace("image/", "")}`;
-      }
-      user.imgFileName = imgFileName;
-      user.role = "Vet";
-      const isReg = await this.#userRepository.register(user);
-      if (isReg === true) {
-        const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-        const key = cryptr.encrypt(user.email);
-        transportMail.sendMail({
-          from: fromSender,
-          to: user.email,
-          subject: "Успешна регистрация в Animal Aid",
-          html: verifyTemplates.verifyProfileVet(user.name.first, key),
-        });
-        let base64Data = user.imgDataURL.replace(
-          `data:${match.groups["mime"]};base64,`,
-          ""
-        );
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir);
+        let dir = `${path.dirname(require.main.filename)}/img`;
+        while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+          imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+            8
+          )}.${match.groups["mime"].replace("image/", "")}`;
         }
-        sharp(Buffer.from(base64Data, "base64"))
-          .extract({
-            top: user.imageCrop.y,
-            left: user.imageCrop.x,
-            width: user.imageCrop.width,
-            height: user.imageCrop.height,
-          })
-          .toFile(`${dir}/${imgFileName}`, function (err) {
-            if (err) console.log(err);
+        user.imgFileName = imgFileName;
+        user.role = "Vet";
+        const isReg = await this.#userRepository.register(user);
+        if (isReg === true) {
+          const cryptr = new Cryptr(config.ENCRYPTION_KEY);
+          const key = cryptr.encrypt(user.email);
+          transportMail.sendMail({
+            from: fromSender,
+            to: user.email,
+            subject: "Успешна регистрация в Animal Aid",
+            html: verifyTemplates.verifyProfileVet(user.name.first, key),
           });
+          let base64Data = user.imgDataURL.replace(
+            `data:${match.groups["mime"]};base64,`,
+            ""
+          );
+          if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+          }
+          sharp(Buffer.from(base64Data, "base64"))
+            .extract({
+              top: user.imageCrop.y,
+              left: user.imageCrop.x,
+              width: user.imageCrop.width,
+              height: user.imageCrop.height,
+            })
+            .toFile(`${dir}/${imgFileName}`, function (err) {
+              if (err) console.log(err);
+            });
+        }
+        return isReg;
+      } else {
+        return "INVALID_CAPTCHA";
       }
-      return isReg;
     } else {
       return "INVALID_CAPTCHA";
     }
@@ -177,27 +192,33 @@ class UserService {
    * @returns {Boolean|String}
    */
   async loginUser(user) {
-    const cryptr = new Cryptr(config.CAPTCHA_ENCRYPTION_KEY);
-    let captcha;
-    try {
-      captcha = cryptr.decrypt(user.captchaCode);
-    } catch {
-      return "INVALID_CAPTCHACODE";
-    }
+    const captcha = encryptDecryptCaptcha.decryptCaptcha(user.captchaCode);
     if (captcha === user.captcha) {
-      const u = await this.#userRepository.loginUser(user);
-      if (u !== false) {
-        if (u.verified) {
-          const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
-          const token = cryptr.encrypt(
-            `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
-          );
-          return token;
+      const captchaExists = await this.#captchaRepository.captchaExists(
+        user.captcha,
+        user.captchaCode
+      );
+      if (!captchaExists) {
+        await this.#captchaRepository.saveCaptcha(
+          user.captcha,
+          user.captchaCode
+        );
+        const u = await this.#userRepository.loginUser(user);
+        if (u !== false) {
+          if (u.verified) {
+            const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
+            const token = cryptr.encrypt(
+              `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
+            );
+            return token;
+          } else {
+            return "PROFILE_NOT_VERIFIED";
+          }
         } else {
-          return "PROFILE_NOT_VERIFIED";
+          return false;
         }
       } else {
-        return false;
+        return "INVALID_CAPTCHA";
       }
     } else {
       return "INVALID_CAPTCHA";

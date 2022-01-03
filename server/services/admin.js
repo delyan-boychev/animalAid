@@ -25,5 +25,8 @@ class AdminService {
   async getUserInfo(id) {
     return await this.#userRepository.getProfile(id);
   }
+  async changeRole(id, newRole) {
+    return await this.#userRepository.changeRole(id, newRole);
+  }
 }
 module.exports = AdminService;

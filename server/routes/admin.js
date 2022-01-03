@@ -3,6 +3,7 @@ const express = require("express");
 const authenticateAdmin = require("../authentication/authenticateAdmin");
 const validation = require("../models/validation/validation");
 const moderationVerifyVetSchema = require("../models/validation/admin/moderationVerifyVet");
+const changeRoleSchema = require("../models/validation/admin/changeRole");
 const AdminService = require("../services/admin");
 const adminService = new AdminService();
 const roles = require("../models/roles");
@@ -88,6 +89,11 @@ router.get("/getUserInfo/:id", authenticateAdmin, async (req, res) => {
   } else {
     res.sendStatus(404);
   }
+});
+router.post("/changeRole", authenticateAdmin, async (req, res) => {
+  validation(req.body, changeRoleSchema, res, async () => {
+    res.send(await adminService.changeRole(req.body.id, req.body.newRole));
+  });
 });
 router.post("/moderationVerifyVet", authenticateAdmin, async (req, res) => {
   validation(req.body, moderationVerifyVetSchema, res, async () => {

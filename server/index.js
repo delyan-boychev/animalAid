@@ -3,6 +3,11 @@ const config = require("./config.json");
 const mongoose = require("mongoose");
 const app = express();
 var cors = require("cors");
+const updateCaptchaEncryption = require("./captcha/updateCaptchaEncryption");
+const port = 4000;
+const userRoute = require("./routes/user");
+const captchaRoute = require("./routes/captcha");
+const adminRoute = require("./routes/admin");
 const httpServer = require("http").Server(app);
 const io = require("socket.io")(httpServer, {
   cors: {
@@ -11,16 +16,8 @@ const io = require("socket.io")(httpServer, {
 });
 const onConnection = require("./chatSockets")(io);
 io.on("connection", onConnection);
-const port = 4000;
-const userRoute = require("./routes/user");
-const captchaRoute = require("./routes/captcha");
-const adminRoute = require("./routes/admin");
 app.use(express.json({ limit: "10mb" }));
 app.use(cors());
-app.post("/newMessage", (req, res) => {
-  io.to("testroom").emit("newMessage", req.body.mes);
-  res.sendStatus(200);
-});
 app.use("/user", userRoute);
 app.use("/captcha", captchaRoute);
 app.use("/admin", adminRoute);
@@ -28,6 +25,8 @@ mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+updateCaptchaEncryption();
+setInterval(updateCaptchaEncryption, 600000);
 httpServer.listen(port, () => {
   console.log(`Animal Aid server is running!`);
 });

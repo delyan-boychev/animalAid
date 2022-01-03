@@ -27,7 +27,7 @@ router.post("/regVet", async (req, res) => {
     res.send(await userService.registerVet(req.body));
   });
 });
-router.get("/img/:filename", authenticateGET, async (req, res) => {
+router.get("/img/:filename", async (req, res) => {
   const fileName = req.params.filename;
   let dir = `${path.dirname(require.main.filename)}/img`;
   if (fs.existsSync(`${dir}/${fileName}`)) {

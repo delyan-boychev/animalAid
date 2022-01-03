@@ -1,8 +1,9 @@
 "use strict";
+const captchaRepository = require("../repositories/captcha");
 const { createCanvas } = require("canvas");
-const ENCRYPTION_CAPTCHA = require("../config.json").CAPTCHA_ENCRYPTION_KEY;
-const Cryptr = require("cryptr");
+const encryptDecryptCaptcha = require("../captcha/encryptDecryptCaptcha");
 class CaptchaService {
+  #captchaRepository = new captchaRepository();
   getCaptcha() {
     const charsArray =
       "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*";
@@ -39,10 +40,9 @@ class CaptchaService {
     ctx.moveTo(200, 0);
     ctx.lineTo(0, 40);
     ctx.stroke();
-    const cryptr = new Cryptr(ENCRYPTION_CAPTCHA);
     return {
       dataUrl: canvas.toDataURL("image/png"),
-      code: cryptr.encrypt(captcha.join("")),
+      code: encryptDecryptCaptcha.encryptCaptcha(captcha.join("")),
     };
   }
 }

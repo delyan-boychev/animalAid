@@ -15,7 +15,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
-import { getCookie } from "../../cookies";
 const arrayCompare = require("../../extensionFunctions/arrayCompare");
 const client = require("../../clientRequests");
 const roles = require("../../enums/roles");
@@ -270,9 +269,7 @@ export default class EditProfile extends React.Component {
             className="mb-3 rounded-circle"
             src={
               this.state.profile.imgFileName !== ""
-                ? `${API_URL}/user/img/${
-                    this.state.profile.imgFileName
-                  }?token=${getCookie("authorization")}`
+                ? `${API_URL}/user/img/${this.state.profile.imgFileName}`
                 : ""
             }
             height="150px"

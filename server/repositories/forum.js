@@ -1,13 +1,13 @@
 "use strict";
-const Forum = require("../models/forum");
+const Thread = require("../models/thread");
 class ForumRepository {
   async createForum(topic, description, author) {
-    let forum = new Forum();
-    forum.topic = topic;
-    forum.description = description;
-    forum.author = author;
+    let thread = new Thread();
+    thread.topic = topic;
+    thread.description = description;
+    thread.author = author;
     try {
-      await forum.save();
+      await thread.save();
       return true;
     } catch {
       return false;
