@@ -22,6 +22,7 @@ const schema = new mongoose.Schema({
   },
   typeAnimals: {
     type: [String],
+    default: undefined,
     required: () => {
       return this.role === roles.Vet;
     },

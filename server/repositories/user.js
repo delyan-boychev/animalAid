@@ -257,6 +257,31 @@ class UserRepository {
       return false;
     }
   }
+  async changeRole(id, newRole) {
+    try {
+      const u = await User.findById(id).exec();
+      if (u !== null) {
+        if (u.role === roles.Vet) {
+          u.address = undefined;
+          u.URN = undefined;
+          u.typeAnimals = undefined;
+          u.vetDescription = undefined;
+          u.moderationVerified = undefined;
+        }
+        u.role = newRole;
+        try {
+          await u.save();
+          return true;
+        } catch {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
   async edit(prop, value, id) {
     const u = await User.findById(id).exec();
     if (u !== null) {
