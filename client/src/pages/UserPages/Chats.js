@@ -17,10 +17,10 @@ import {
   faExclamationTriangle,
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
-import { refreshToken } from "../clientRequests";
-import { getCookie } from "../cookies";
+import { refreshToken } from "../../clientRequests";
+import { getCookie } from "../../cookies";
 const io = require("socket.io-client");
-const API_URL = require("../config.json").API_URL;
+const API_URL = require("../../config.json").API_URL;
 class Chats extends React.Component {
   leavePage = false;
   page = 1;

@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs, Tab } from "react-bootstrap";
 import { faInfoCircle, faAt, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../extensionFunctions/formatNumber";
+import "../../extensionFunctions/formatNumber";
 import EditProfile from "./ProfileTabs/EditProfile";
 import ChangeEmail from "./ProfileTabs/ChangeEmail";
 import ChangePassword from "./ProfileTabs/ChangePassword";

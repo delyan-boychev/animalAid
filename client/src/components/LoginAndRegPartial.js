@@ -78,7 +78,7 @@ export default function LoginAndRegPartial(props) {
               style={{ fontSize: "19px" }}
               eventKey="1"
               as={Link}
-              to="/profile"
+              to="/user/profile"
               className="text-primary"
               onClick={props.onClick}
             >
@@ -89,7 +89,7 @@ export default function LoginAndRegPartial(props) {
                 style={{ fontSize: "19px" }}
                 eventKey="1"
                 as={Link}
-                to="/adminPanel"
+                to="/admin/adminPanel"
                 className="text-primary"
                 onClick={props.onClick}
               >
@@ -104,7 +104,7 @@ export default function LoginAndRegPartial(props) {
                 style={{ fontSize: "19px" }}
                 eventKey="1"
                 as={Link}
-                to="/vets?page=1"
+                to="/user/vets?page=1"
                 className="text-primary"
                 onClick={props.onClick}
               >
@@ -118,7 +118,7 @@ export default function LoginAndRegPartial(props) {
               style={{ fontSize: "19px" }}
               eventKey="1"
               as={Link}
-              to="/chats"
+              to="/user/chats"
               className="text-primary"
               onClick={props.onClick}
             >

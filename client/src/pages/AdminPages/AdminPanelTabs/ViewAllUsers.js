@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ListGroup,
@@ -14,9 +15,9 @@ import {
   faChevronCircleRight,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-const API_URL = require("../../config.json").API_URL;
-const client = require("../../clientRequests");
-export default class ViewAllUsers extends React.Component {
+const API_URL = require("../../../config.json").API_URL;
+const client = require("../../../clientRequests");
+class ViewAllUsers extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,6 +54,9 @@ export default class ViewAllUsers extends React.Component {
       this.setState({ search: true, lastSearchQuery: this.state.searchQuery });
       this.getUsers(1, true);
     }
+  };
+  openUser = async (id) => {
+    this.props.navigate(`/admin/editUser?id=${id}`);
   };
   render() {
     const pagination = (
@@ -99,7 +103,13 @@ export default class ViewAllUsers extends React.Component {
         </h4>
         <ListGroup>
           {this.state.users.map((user) => (
-            <ListGroup.Item key={user._id} id={user._id}>
+            <ListGroup.Item
+              key={user._id}
+              id={user._id}
+              onClick={() => {
+                this.openUser(user._id);
+              }}
+            >
               <Row>
                 <Col xs={3} sm={2}>
                   <img
@@ -125,4 +135,8 @@ export default class ViewAllUsers extends React.Component {
       </div>
     );
   }
+}
+export default function WithNavigate(props) {
+  let navigate = useNavigate();
+  return <ViewAllUsers {...props} navigate={navigate} />;
 }

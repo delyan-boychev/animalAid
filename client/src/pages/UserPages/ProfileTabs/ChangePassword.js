@@ -1,7 +1,7 @@
 import React from "react";
-import InfoModal from "../../components/InfoModal";
+import InfoModal from "../../../components/InfoModal";
 import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
-const client = require("../../clientRequests");
+const client = require("../../../clientRequests");
 
 export default class ChangePassword extends React.Component {
   constructor(props) {

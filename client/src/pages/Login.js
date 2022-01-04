@@ -108,7 +108,7 @@ export default class Login extends React.Component {
     modal.show = false;
     this.setState({ modal });
     if (this.loginComplete) {
-      window.location.href = "/profile";
+      window.location.href = "/user/profile";
     }
   };
   handleOnChangeValue = (event) => {

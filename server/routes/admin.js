@@ -4,6 +4,7 @@ const authenticateAdmin = require("../authentication/authenticateAdmin");
 const validation = require("../models/validation/validation");
 const moderationVerifyVetSchema = require("../models/validation/admin/moderationVerifyVet");
 const changeRoleSchema = require("../models/validation/admin/changeRole");
+const editProfileSchema = require("../models/validation/admin/editProfile");
 const AdminService = require("../services/admin");
 const adminService = new AdminService();
 const roles = require("../models/roles");
@@ -88,6 +89,32 @@ router.get("/getUserInfo/:id", authenticateAdmin, async (req, res) => {
     }
   } else {
     res.sendStatus(404);
+  }
+});
+router.post("/editUser/:property", authenticateAdmin, async (req, res) => {
+  const prop = req.params.property;
+  if (
+    prop == "fName" ||
+    prop == "lName" ||
+    prop == "email" ||
+    prop == "city" ||
+    prop == "phoneNumber" ||
+    prop == "address" ||
+    prop == "vetDescription" ||
+    prop == "URN" ||
+    prop == "typeAnimals"
+  ) {
+    if (req.body[prop] != undefined && req.body[prop] != "") {
+      validation(req.body, editProfileSchema.getSchema(prop), res, async () => {
+        res.send(
+          await adminService.editUser(prop, req.body[prop], req.body.id)
+        );
+      });
+    } else {
+      res.sendStatus(400);
+    }
+  } else {
+    res.sendStatus(400);
   }
 });
 router.post("/changeRole", authenticateAdmin, async (req, res) => {

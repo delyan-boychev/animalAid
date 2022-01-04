@@ -1,12 +1,12 @@
 "use strict";
-const UserRepository = require("../repositories/user");
+const AdminRepository = require("../repositories/admin");
 class AdminService {
-  #userRepository = new UserRepository();
+  #adminRepository = new AdminRepository();
   async moderationVerify(email) {
-    return await this.#userRepository.moderationVerify(email);
+    return await this.#adminRepository.moderationVerify(email);
   }
   async getAllUsers(pageNum, searchQuery) {
-    const users = await this.#userRepository.getAllUsers(searchQuery);
+    const users = await this.#adminRepository.getAllUsers(searchQuery);
     const startIndex = pageNum * 10 - 10;
     const endIndex = pageNum * 10;
     const numPages = Math.ceil(users.length / 10);
@@ -23,10 +23,13 @@ class AdminService {
     }
   }
   async getUserInfo(id) {
-    return await this.#userRepository.getProfile(id);
+    return await this.#adminRepository.getProfile(id);
   }
   async changeRole(id, newRole) {
-    return await this.#userRepository.changeRole(id, newRole);
+    return await this.#adminRepository.changeRole(id, newRole);
+  }
+  async editUser(prop, value, id) {
+    return await this.#adminRepository.editUser(prop, value, id);
   }
 }
 module.exports = AdminService;

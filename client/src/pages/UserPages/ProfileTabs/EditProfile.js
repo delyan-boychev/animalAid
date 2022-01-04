@@ -1,5 +1,5 @@
 import React from "react";
-import InfoModal from "../../components/InfoModal";
+import InfoModal from "../../../components/InfoModal";
 import { ListGroup, Button, Row, Col, Form } from "react-bootstrap";
 import {
   faAt,
@@ -14,12 +14,12 @@ import {
   faPaw,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../../extensionFunctions/formatNumber";
-const arrayCompare = require("../../extensionFunctions/arrayCompare");
-const client = require("../../clientRequests");
-const roles = require("../../enums/roles");
-const API_URL = require("../../config.json").API_URL;
-const rolesTranslate = require("../../enums/rolesTranslate");
+import "../../../extensionFunctions/formatNumber";
+const arrayCompare = require("../../../extensionFunctions/arrayCompare");
+const client = require("../../../clientRequests");
+const roles = require("../../../enums/roles");
+const API_URL = require("../../../config.json").API_URL;
+const rolesTranslate = require("../../../enums/rolesTranslate");
 export default class EditProfile extends React.Component {
   constructor(props) {
     super(props);

@@ -1,8 +1,8 @@
 import React from "react";
-import InfoModal from "../../components/InfoModal";
+import InfoModal from "../../../components/InfoModal";
 import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
-import { setCookie } from "../../cookies";
-const client = require("../../clientRequests");
+import { setCookie } from "../../../cookies";
+const client = require("../../../clientRequests");
 
 export default class ChangeEmail extends React.Component {
   changeEmailComplete = false;

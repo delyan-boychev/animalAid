@@ -13,10 +13,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
-import DialogModal from "../components/DialogModal";
-const client = require("../clientRequests");
-const API_URL = require("../config.json").API_URL;
-const animalsTranslate = require("../enums/animalsTranslate");
+import DialogModal from "../../components/DialogModal";
+const client = require("../../clientRequests");
+const API_URL = require("../../config.json").API_URL;
+const animalsTranslate = require("../../enums/animalsTranslate");
 class Vet extends React.Component {
   constructor(props) {
     super(props);
@@ -80,7 +80,7 @@ class Vet extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
           task={() =>
-            this.props.navigate(`/chats?chatId=${this.state.vet._id}`)
+            this.props.navigate(`/user/chats?chatId=${this.state.vet._id}`)
           }
         ></DialogModal>
         <h3 className="text-center">

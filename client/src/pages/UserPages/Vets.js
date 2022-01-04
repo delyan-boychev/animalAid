@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { ListGroup, Pagination, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router";
-import isNormalInteger from "../extensionFunctions/isNumber";
-const API_URL = require("../config.json").API_URL;
-const client = require("../clientRequests");
-const animalsTranslate = require("../enums/animalsTranslate");
+import isNormalInteger from "../../extensionFunctions/isNumber";
+const API_URL = require("../../config.json").API_URL;
+const client = require("../../clientRequests");
+const animalsTranslate = require("../../enums/animalsTranslate");
 class Vets extends React.Component {
   constructor(props) {
     super(props);
@@ -20,7 +20,7 @@ class Vets extends React.Component {
     };
   }
   changePage = (page) => {
-    this.props.navigate(`/vets?page=${page}`);
+    this.props.navigate(`/user/vets?page=${page}`);
   };
 
   getVets = async (page) => {
@@ -32,7 +32,7 @@ class Vets extends React.Component {
     }
   };
   openVet = async (id) => {
-    this.props.navigate(`/vet?id=${id}`);
+    this.props.navigate(`/user/vet?id=${id}`);
   };
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);

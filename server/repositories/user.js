@@ -152,35 +152,6 @@ class UserRepository {
       .exec();
     return vets;
   }
-  async moderationVerify(email) {
-    const u = await User.findOne({ email: email }).exec();
-    if (u != null) {
-      if (u.role === roles.Vet) {
-        if (!u.moderationVerified) {
-          u.moderationVerified = true;
-          try {
-            await u.save();
-            return true;
-          } catch {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-  async getAllUsers(searchQuery) {
-    if (searchQuery !== undefined) {
-      return await User.find(searchQuery).select(["-password"]).lean().exec();
-    } else {
-      return await User.find().select(["-password"]).lean().exec();
-    }
-  }
   async changeEmail(user, newEmail) {
     const u = await User.findById(user.id).exec();
     if (u !== null) {
@@ -250,31 +221,6 @@ class UserRepository {
       const u = await User.findById(id).exec();
       if (u !== null) {
         return u.role;
-      } else {
-        return false;
-      }
-    } catch {
-      return false;
-    }
-  }
-  async changeRole(id, newRole) {
-    try {
-      const u = await User.findById(id).exec();
-      if (u !== null) {
-        if (u.role === roles.Vet) {
-          u.address = undefined;
-          u.URN = undefined;
-          u.typeAnimals = undefined;
-          u.vetDescription = undefined;
-          u.moderationVerified = undefined;
-        }
-        u.role = newRole;
-        try {
-          await u.save();
-          return true;
-        } catch {
-          return false;
-        }
       } else {
         return false;
       }
