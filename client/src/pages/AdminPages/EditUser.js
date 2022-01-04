@@ -258,7 +258,6 @@ export default class EditUser extends React.Component {
     }
     body["id"] = this.state.id;
     let res = await client.postRequestToken(`/admin/editUser/${button}`, body);
-    console.log(res);
     if (res === true) {
       this.openModal("Редакцията е успешна!");
     } else if (res === "EMAIL_EXISTS") {
