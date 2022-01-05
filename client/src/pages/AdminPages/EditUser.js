@@ -89,7 +89,7 @@ export default class EditUser extends React.Component {
     let modal = this.state.modal;
     modal.show = false;
     this.setState({ modal });
-    window.location.reload();
+    this.getInfo(this.state.id);
   };
   async getInfo(id) {
     const res = await client.getRequestToken(`/admin/getUserInfo/${id}`);

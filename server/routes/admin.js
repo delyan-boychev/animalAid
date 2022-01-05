@@ -19,6 +19,7 @@ router.get(
         const searchQuery = req.params.searchQuery;
         if (searchQuery !== undefined) {
           let query = {
+            _id: { $ne: req.user.id },
             role: { $in: [roles.Admin, roles.Moderator, roles.User] },
             $or: [
               { "name.first": { $regex: searchQuery, $options: "i" } },
@@ -32,6 +33,7 @@ router.get(
           res.send(
             await adminService.getAllUsers(pageNum, {
               role: { $in: [roles.Admin, roles.Moderator, roles.User] },
+              _id: { $ne: req.user.id },
             })
           );
         }
@@ -83,7 +85,11 @@ router.get("/getUserInfo/:id", authenticateAdmin, async (req, res) => {
   if (req.params.id !== undefined && req.params.id !== "") {
     const user = await adminService.getUserInfo(req.params.id);
     if (user !== false) {
-      res.send(user);
+      if (user._id !== req.user.id) {
+        res.send(user);
+      } else {
+        res.sendStatus(404);
+      }
     } else {
       res.sendStatus(404);
     }
@@ -106,9 +112,13 @@ router.post("/editUser/:property", authenticateAdmin, async (req, res) => {
   ) {
     if (req.body[prop] != undefined && req.body[prop] != "") {
       validation(req.body, editProfileSchema.getSchema(prop), res, async () => {
-        res.send(
-          await adminService.editUser(prop, req.body[prop], req.body.id)
-        );
+        if (req.body.id !== res.user.id) {
+          res.send(
+            await adminService.editUser(prop, req.body[prop], req.body.id)
+          );
+        } else {
+          res.sendStatus(403);
+        }
       });
     } else {
       res.sendStatus(400);
