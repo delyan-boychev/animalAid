@@ -1,9 +1,10 @@
 import React from "react";
 import { Tab, Row, Nav, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaw, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faPaw, faUserCheck, faUsers } from "@fortawesome/free-solid-svg-icons";
 import ViewAllUsers from "./AdminPanelTabs/ViewAllUsers";
 import ViewAllVets from "./AdminPanelTabs/ViewAllVets";
+import ViewVetsForModerationVerify from "./AdminPanelTabs/ViewVetsForModerationVerify";
 export default class AdminPanel extends React.Component {
   render() {
     return (
@@ -23,6 +24,12 @@ export default class AdminPanel extends React.Component {
                   ветеринарни лекари
                 </Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="third">
+                  <FontAwesomeIcon icon={faUserCheck}></FontAwesomeIcon> Преглед
+                  на ветеринарни лекари за одоборение
+                </Nav.Link>
+              </Nav.Item>
             </Nav>
           </Col>
           <Col sm={9}>
@@ -32,6 +39,9 @@ export default class AdminPanel extends React.Component {
               </Tab.Pane>
               <Tab.Pane eventKey="second">
                 <ViewAllVets></ViewAllVets>
+              </Tab.Pane>
+              <Tab.Pane eventKey="third">
+                <ViewVetsForModerationVerify></ViewVetsForModerationVerify>
               </Tab.Pane>
             </Tab.Content>
           </Col>

@@ -97,6 +97,27 @@ router.get("/getUserInfo/:id", authenticateAdmin, async (req, res) => {
     res.sendStatus(404);
   }
 });
+router.get(
+  "/getVetsForModerationVerify/:pageNum",
+  authenticateAdmin,
+  async (req, res) => {
+    try {
+      const pageNum = parseInt(req.params.pageNum);
+      if (pageNum > 0) {
+        res.send(
+          await adminService.getAllUsers(pageNum, {
+            role: roles.Vet,
+            moderationVerified: false,
+          })
+        );
+      } else {
+        res.sendStatus(400);
+      }
+    } catch {
+      res.sendStatus(400);
+    }
+  }
+);
 router.post("/editUser/:property", authenticateAdmin, async (req, res) => {
   const prop = req.params.property;
   if (
