@@ -703,9 +703,7 @@ export default class EditUser extends React.Component {
                   <Row>
                     <Col md={2} xs={3}>
                       <Form.Label className="fw-bold col-form-label">
-                        <FontAwesomeIcon
-                          icon={faMapMarkedAlt}
-                        ></FontAwesomeIcon>{" "}
+                        <FontAwesomeIcon icon={faUniversity}></FontAwesomeIcon>{" "}
                         УРН
                       </Form.Label>
                     </Col>
