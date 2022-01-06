@@ -133,7 +133,7 @@ router.post("/editUser/:property", authenticateAdmin, async (req, res) => {
   ) {
     if (req.body[prop] != undefined && req.body[prop] != "") {
       validation(req.body, editProfileSchema.getSchema(prop), res, async () => {
-        if (req.body.id !== res.user.id) {
+        if (req.body.id !== req.user.id) {
           res.send(
             await adminService.editUser(prop, req.body[prop], req.body.id)
           );
