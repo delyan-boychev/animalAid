@@ -23,7 +23,7 @@ class ViewAllUsers extends React.Component {
     this.state = {
       page: 1,
       users: [],
-      numPages: 1,
+      numPages: 0,
       searchQuery: "",
       lastSearchQuery: "",
       search: false,
@@ -32,7 +32,8 @@ class ViewAllUsers extends React.Component {
   }
   getUsers = async (page, search) => {
     let url = `/admin/getAllUsers/${page}`;
-    if (search === true) url += `/${this.state.searchQuery}`;
+    if (search === true)
+      url += `/${encodeURIComponent(this.state.searchQuery)}`;
     else if (search === undefined && this.state.search === true)
       url += `/${this.state.lastSearchQuery}`;
     const data = await client.getRequestToken(url);
@@ -98,7 +99,10 @@ class ViewAllUsers extends React.Component {
           </Form>
         </Row>
         {pagination}
-        <h4 className="text-center mt-3" hidden={this.state.users.length !== 0}>
+        <h4
+          className="text-center mt-3"
+          hidden={this.state.users.length !== 0 || this.state.numPages === 0}
+        >
           Няма намерени потребители!
         </h4>
         <ListGroup>

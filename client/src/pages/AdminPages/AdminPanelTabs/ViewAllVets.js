@@ -23,7 +23,7 @@ class ViewAllVets extends React.Component {
     this.state = {
       page: 1,
       vets: [],
-      numPages: 1,
+      numPages: 0,
       searchQuery: "",
       lastSearchQuery: "",
       search: false,
@@ -32,7 +32,8 @@ class ViewAllVets extends React.Component {
   }
   getVets = async (page, search) => {
     let url = `/admin/getAllVets/${page}`;
-    if (search === true) url += `/${this.state.searchQuery}`;
+    if (search === true)
+      url += `/${encodeURIComponent(this.state.searchQuery)}`;
     else if (search === undefined && this.state.search === true)
       url += `/${this.state.lastSearchQuery}`;
     const data = await client.getRequestToken(url);
@@ -98,7 +99,10 @@ class ViewAllVets extends React.Component {
           </Form>
         </Row>
         {pagination}
-        <h4 className="text-center mt-3" hidden={this.state.vets.length !== 0}>
+        <h4
+          className="text-center mt-3"
+          hidden={this.state.vets.length !== 0 || this.state.numPages === 0}
+        >
           Няма намерени ветеринарни лекари!
         </h4>
         <ListGroup>

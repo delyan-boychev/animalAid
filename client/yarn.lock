@@ -8522,10 +8522,10 @@
   "resolved" "https://registry.npmjs.org/smart-buffer/-/smart-buffer-4.2.0.tgz"
   "version" "4.2.0"
 
-"socket.io-client@^4.4.0":
-  "integrity" "sha512-g7riSEJXi7qCFImPow98oT8X++MSsHz6MMFRXkWNJ6uEROSHOa3kxdrsYWMq85dO+09CFMkcqlpjvbVXQl4z6g=="
-  "resolved" "https://registry.npmjs.org/socket.io-client/-/socket.io-client-4.4.0.tgz"
-  "version" "4.4.0"
+"socket.io-client@^4.4.1":
+  "integrity" "sha512-N5C/L5fLNha5Ojd7Yeb/puKcPWWcoB/A09fEjjNsg91EDVr5twk/OEyO6VT9dlLSUNY85NpW6KBhVMvaLKQ3vQ=="
+  "resolved" "https://registry.npmjs.org/socket.io-client/-/socket.io-client-4.4.1.tgz"
+  "version" "4.4.1"
   dependencies:
     "@socket.io/component-emitter" "~3.0.0"
     "backo2" "~1.0.2"
