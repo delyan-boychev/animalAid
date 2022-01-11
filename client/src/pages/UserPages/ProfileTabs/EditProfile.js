@@ -517,7 +517,7 @@ export default class EditProfile extends React.Component {
                   <Col md={3} xs={4}>
                     <Form.Label className="fw-bold col-form-label">
                       <FontAwesomeIcon icon={faPaw}></FontAwesomeIcon> Животни,
-                      с които вертеринарния лекар практикува
+                      с които ветеринарният лекар практикува
                     </Form.Label>
                   </Col>
                   <Col md={7} xs={6}>

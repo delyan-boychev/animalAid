@@ -486,7 +486,7 @@ class RegisterVet extends React.Component {
           <Row className="mb-3">
             <Form.Group as={Col} controlId="image">
               <Form.Label>
-                Животни, с които вертеринарния лекар практикува
+                Животни, с които ветеринарният лекар практикува
               </Form.Label>
               <br />
               <div key="inline-checkbox" className="mb-3">

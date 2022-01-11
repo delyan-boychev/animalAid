@@ -608,7 +608,7 @@ export default class EditUser extends React.Component {
                     <Col md={3} xs={4}>
                       <Form.Label className="fw-bold col-form-label">
                         <FontAwesomeIcon icon={faPaw}></FontAwesomeIcon>{" "}
-                        Животни, с които вертеринарния лекар практикува
+                        Животни, с които ветеринарният лекар практикува
                       </Form.Label>
                     </Col>
                     <Col md={7} xs={6}>

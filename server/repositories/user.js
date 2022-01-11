@@ -56,7 +56,11 @@ class UserRepository {
   }
   async getVet(id) {
     try {
-      const user = await User.findOne({ _id: id, role: roles.Vet }).lean();
+      const user = await User.findOne({
+        _id: id,
+        role: roles.Vet,
+        moderationVerified: true,
+      }).lean();
       if (user !== null) {
         user.password = undefined;
         return user;
@@ -146,7 +150,7 @@ class UserRepository {
     }
   }
   async getVets() {
-    const vets = await User.find({ role: roles.Vet })
+    const vets = await User.find({ role: roles.Vet, moderationVerified: true })
       .select(["-password"])
       .lean()
       .exec();

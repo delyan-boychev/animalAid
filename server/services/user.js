@@ -10,6 +10,7 @@ const config = require("../config.json");
 const nodemailer = require("nodemailer");
 const verifyTemplates = require("../models/emailTemplates/verifyProfile");
 const forgotPasswordTemplates = require("../models/emailTemplates/forgotPassword");
+const roles = require("../models/roles");
 const transportMail = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -206,6 +207,11 @@ class UserService {
         const u = await this.#userRepository.loginUser(user);
         if (u !== false) {
           if (u.verified) {
+            if (u.role === roles.Vet) {
+              if (u.moderationVerified === false) {
+                return "PROFILE_NOT_MODERATION_VERIFIED";
+              }
+            }
             const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
             const token = cryptr.encrypt(
               `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
