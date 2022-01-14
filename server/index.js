@@ -15,7 +15,10 @@ const io = require("socket.io")(httpServer, {
   },
 });
 const onConnection = require("./chatSockets")(io);
+const helmet = require("helmet");
+app.use(helmet());
 io.on("connection", onConnection);
+app.disable("x-powered-by");
 app.use(express.json({ limit: "10mb" }));
 app.use(cors());
 app.use("/user", userRoute);

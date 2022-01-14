@@ -56,8 +56,14 @@ export default class Login extends React.Component {
         this.getCaptcha();
         this.openModal("Въвели сте невалиден код за потвърждение!");
       } else if (response === "PROFILE_NOT_VERIFIED") {
+        this.getCaptcha();
         this.openModal(
           "Моля проверете имейл адреса си и потвърдете профила си!"
+        );
+      } else if (response === "PROFILE_NOT_MODERATION_VERIFIED") {
+        this.getCaptcha();
+        this.openModal(
+          "Пофилът Ви като ветеринар все още не е одобрен от модераторите! Това обикновено отнема няколко дни!"
         );
       } else {
         this.openModal("Вие влязохте успешно в профила си!");

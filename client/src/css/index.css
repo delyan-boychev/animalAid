@@ -188,3 +188,7 @@ a.text-secondary:focus {
   -o-animation: fadein 0.2s; /* Opera < 12.1 */
   animation: fadein 0.2s;
 }
+.row-flex {
+  display: flex;
+  flex-wrap: wrap;
+}

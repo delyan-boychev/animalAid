@@ -4,7 +4,9 @@ const schema = new mongoose.Schema({
   expireAt: {
     type: Date,
     required: true,
-    default: new Date(new Date().valueOf() + 1209600000),
+    default: () => {
+      return new Date(new Date().valueOf() + 1209600000);
+    },
   },
   userOne: { type: mongoose.SchemaTypes.ObjectId, ref: "User", required: true },
   userTwo: { type: mongoose.SchemaTypes.ObjectId, ref: "User", required: true },

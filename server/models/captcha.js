@@ -3,7 +3,9 @@ const schema = new mongoose.Schema({
   expireAt: {
     type: Date,
     required: true,
-    default: new Date(new Date().valueOf() + 600000),
+    default: () => {
+      return new Date(new Date().valueOf() + 600000);
+    },
   },
   captcha: { type: String, required: true },
   captchaCode: { type: String, required: true },

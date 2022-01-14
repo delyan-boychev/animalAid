@@ -12,12 +12,14 @@ import {
   faPen,
   faInfoCircle,
   faPaw,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
 const arrayCompare = require("../../extensionFunctions/arrayCompare");
 const client = require("../../clientRequests");
 const roles = require("../../enums/roles");
+const translateTrueFalse = require("../../enums/translateTrueFalse");
 const API_URL = require("../../config.json").API_URL;
 const rolesTranslate = require("../../enums/rolesTranslate");
 export default class EditUser extends React.Component {
@@ -38,6 +40,7 @@ export default class EditUser extends React.Component {
         typeAnimals: [],
         imgFileName: "",
         createdOn: 0,
+        verified: false,
         role: "",
         phoneNumber: "",
       },
@@ -694,6 +697,15 @@ export default class EditUser extends React.Component {
                 <FontAwesomeIcon icon={faUserTag}></FontAwesomeIcon> Роля:{" "}
                 <span className="fw-normal">
                   {rolesTranslate[this.state.profile.role]}
+                </span>
+              </span>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <span className="fw-bold">
+                <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon> Потвърждение
+                на профила:{" "}
+                <span className="fw-normal">
+                  {translateTrueFalse[this.state.profile.verified]}
                 </span>
               </span>
             </ListGroup.Item>
