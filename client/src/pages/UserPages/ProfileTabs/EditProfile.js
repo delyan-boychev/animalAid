@@ -1,6 +1,6 @@
 import React from "react";
 import InfoModal from "../../../components/InfoModal";
-import { ListGroup, Button, Row, Col, Form } from "react-bootstrap";
+import { ListGroup, Button, Row, Col, Form, Spinner } from "react-bootstrap";
 import {
   faAt,
   faPhoneSquareAlt,
@@ -264,198 +264,55 @@ export default class EditProfile extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
         ></InfoModal>
-        <div className="d-flex justify-content-center mb-3">
-          <img
-            className="mb-3 rounded-circle"
-            src={
-              this.state.profile.imgFileName !== ""
-                ? `${API_URL}/user/img/${this.state.profile.imgFileName}`
-                : ""
-            }
-            height="150px"
-            width="150px"
-            alt="profilePicture"
-          />
+        <div
+          className="text-center"
+          hidden={this.state.lastProfile.name.first !== ""}
+        >
+          <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
-        <ListGroup className="shadow">
-          <ListGroup.Item>
-            <Form.Group controlId="fName">
-              <Row>
-                <Col md={2} xs={3}>
-                  <Form.Label className="fw-bold col-form-label">
-                    Име
-                  </Form.Label>
-                </Col>
-                <Col md={8} xs={7}>
-                  <Form.Control
-                    type="text"
-                    value={this.state.profile.name.first}
-                    onChange={this.onChangeValue}
-                  />
-                  <span className="text-danger">
-                    {this.state.errors.name.first}
-                  </span>
-                </Col>
-                <Col xs={2}>
-                  <Button
-                    variant="primary"
-                    className="float-end"
-                    id="fName_button"
-                    onClick={this.onEditButtonClick}
-                    disabled={
-                      this.state.errors.name.first !== "" ||
-                      this.state.lastProfile.name.first ===
-                        this.state.profile.name.first
-                    }
-                  >
-                    <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
-                  </Button>
-                </Col>
-              </Row>
-            </Form.Group>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <Form.Group controlId="lName">
-              <Row>
-                <Col md={2} xs={3}>
-                  <Form.Label className="fw-bold col-form-label">
-                    Фамилия
-                  </Form.Label>
-                </Col>
-                <Col md={8} xs={7}>
-                  <Form.Control
-                    type="text"
-                    value={this.state.profile.name.last}
-                    onChange={this.onChangeValue}
-                  />
-                  <span className="text-danger">
-                    {this.state.errors.name.last}
-                  </span>
-                </Col>
-                <Col xs={2}>
-                  <Button
-                    variant="primary"
-                    className="float-end"
-                    id="lName_button"
-                    onClick={this.onEditButtonClick}
-                    disabled={
-                      this.state.errors.name.last !== "" ||
-                      this.state.lastProfile.name.last ===
-                        this.state.profile.name.last
-                    }
-                  >
-                    <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
-                  </Button>
-                </Col>
-              </Row>
-            </Form.Group>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <span className="fw-bold">
-              <FontAwesomeIcon icon={faAt}></FontAwesomeIcon> Имейл адрес:{" "}
-              <span className="fw-normal">{this.state.profile.email}</span>
-            </span>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <Form.Group controlId="phoneNumber">
-              <Row>
-                <Col md={2} xs={3}>
-                  <Form.Label className="fw-bold col-form-label">
-                    <FontAwesomeIcon icon={faPhoneSquareAlt}></FontAwesomeIcon>{" "}
-                    Тел.
-                  </Form.Label>
-                </Col>
-                <Col md={8} xs={7}>
-                  <Form.Control
-                    type="text"
-                    value={this.state.profile.phoneNumber}
-                    onChange={this.onChangeValue}
-                  />
-                  <span className="text-danger">
-                    {this.state.errors.phoneNumber}
-                  </span>
-                </Col>
-                <Col xs={2}>
-                  <Button
-                    variant="primary"
-                    className="float-end"
-                    id="phoneNumber_button"
-                    onClick={this.onEditButtonClick}
-                    disabled={
-                      this.state.errors.phoneNumber !== "" ||
-                      this.state.lastProfile.phoneNumber ===
-                        this.state.profile.phoneNumber
-                    }
-                  >
-                    <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
-                  </Button>
-                </Col>
-              </Row>
-            </Form.Group>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <Form.Group controlId="city">
-              <Row>
-                <Col md={2} xs={3}>
-                  <Form.Label className="fw-bold col-form-label">
-                    <FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Град
-                  </Form.Label>
-                </Col>
-                <Col md={8} xs={7}>
-                  <Form.Control
-                    type="text"
-                    value={this.state.profile.city}
-                    onChange={this.onChangeValue}
-                  />
-                  <span className="text-danger">{this.state.errors.city}</span>
-                </Col>
-                <Col xs={2}>
-                  <Button
-                    variant="primary"
-                    className="float-end"
-                    id="city_button"
-                    onClick={this.onEditButtonClick}
-                    disabled={
-                      this.state.errors.city !== "" ||
-                      this.state.lastProfile.city === this.state.profile.city
-                    }
-                  >
-                    <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
-                  </Button>
-                </Col>
-              </Row>
-            </Form.Group>
-          </ListGroup.Item>
-          {this.state.profile.role === roles.Vet ? (
+        <div hidden={this.state.lastProfile.name.first === ""}>
+          <div className="d-flex justify-content-center mb-3">
+            <img
+              className="mb-3 rounded-circle"
+              src={
+                this.state.profile.imgFileName !== ""
+                  ? `${API_URL}/user/img/${this.state.profile.imgFileName}`
+                  : ""
+              }
+              height="150px"
+              width="150px"
+              alt="profilePicture"
+            />
+          </div>
+          <ListGroup className="shadow">
             <ListGroup.Item>
-              <Form.Group controlId="address">
+              <Form.Group controlId="fName">
                 <Row>
                   <Col md={2} xs={3}>
                     <Form.Label className="fw-bold col-form-label">
-                      <FontAwesomeIcon icon={faMapMarkedAlt}></FontAwesomeIcon>{" "}
-                      Адрес
+                      Име
                     </Form.Label>
                   </Col>
                   <Col md={8} xs={7}>
                     <Form.Control
                       type="text"
-                      value={this.state.profile.address}
+                      value={this.state.profile.name.first}
                       onChange={this.onChangeValue}
                     />
                     <span className="text-danger">
-                      {this.state.errors.address}
+                      {this.state.errors.name.first}
                     </span>
                   </Col>
                   <Col xs={2}>
                     <Button
                       variant="primary"
                       className="float-end"
-                      id="address_button"
+                      id="fName_button"
                       onClick={this.onEditButtonClick}
                       disabled={
-                        this.state.errors.address !== "" ||
-                        this.state.lastProfile.address ===
-                          this.state.profile.address
+                        this.state.errors.name.first !== "" ||
+                        this.state.lastProfile.name.first ===
+                          this.state.profile.name.first
                       }
                     >
                       <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
@@ -464,41 +321,34 @@ export default class EditProfile extends React.Component {
                 </Row>
               </Form.Group>
             </ListGroup.Item>
-          ) : (
-            ""
-          )}
-          {this.state.profile.role === roles.Vet ? (
             <ListGroup.Item>
-              <Form.Group controlId="vetDescription">
+              <Form.Group controlId="lName">
                 <Row>
                   <Col md={2} xs={3}>
                     <Form.Label className="fw-bold col-form-label">
-                      <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>{" "}
-                      Описание на ветеринарния лекар
+                      Фамилия
                     </Form.Label>
                   </Col>
                   <Col md={8} xs={7}>
                     <Form.Control
-                      as="textarea"
-                      placeholder="Описание на вертеринарния лекар"
+                      type="text"
+                      value={this.state.profile.name.last}
                       onChange={this.onChangeValue}
-                      value={this.state.profile.vetDescription}
-                      style={{ resize: "none", height: "200px" }}
                     />
                     <span className="text-danger">
-                      {this.state.errors.vetDescription}
+                      {this.state.errors.name.last}
                     </span>
                   </Col>
                   <Col xs={2}>
                     <Button
                       variant="primary"
                       className="float-end"
-                      id="vetDescription_button"
+                      id="lName_button"
                       onClick={this.onEditButtonClick}
                       disabled={
-                        this.state.errors.vetDescription !== "" ||
-                        this.state.lastProfile.vetDescription ===
-                          this.state.profile.vetDescription
+                        this.state.errors.name.last !== "" ||
+                        this.state.lastProfile.name.last ===
+                          this.state.profile.name.last
                       }
                     >
                       <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
@@ -507,122 +357,289 @@ export default class EditProfile extends React.Component {
                 </Row>
               </Form.Group>
             </ListGroup.Item>
-          ) : (
-            ""
-          )}
-          {this.state.profile.role === roles.Vet ? (
-            <ListGroup.Item>
-              <Form.Group controlId="typeAnimals">
-                <Row>
-                  <Col md={3} xs={4}>
-                    <Form.Label className="fw-bold col-form-label">
-                      <FontAwesomeIcon icon={faPaw}></FontAwesomeIcon> Животни,
-                      с които ветеринарният лекар практикува
-                    </Form.Label>
-                  </Col>
-                  <Col md={7} xs={6}>
-                    <div key="inline-checkbox" className="mb-3">
-                      <Form.Check
-                        inline
-                        label="Кучета"
-                        name="typeAnimals"
-                        type="checkbox"
-                        id="checkbox-dogs"
-                        value="DOGS"
-                        checked={this.state.profile.typeAnimals.includes(
-                          "DOGS"
-                        )}
-                        onChange={this.onCheckUncheck}
-                      />
-                      <Form.Check
-                        inline
-                        label="Котки"
-                        name="typeAnimals"
-                        type="checkbox"
-                        id="checkbox-cats"
-                        value="CATS"
-                        checked={this.state.profile.typeAnimals.includes(
-                          "CATS"
-                        )}
-                        onChange={this.onCheckUncheck}
-                      />
-                      <Form.Check
-                        inline
-                        label="Птици"
-                        name="typeAnimals"
-                        type="checkbox"
-                        id="checkbox-birds"
-                        value="BIRDS"
-                        checked={this.state.profile.typeAnimals.includes(
-                          "BIRDS"
-                        )}
-                        onChange={this.onCheckUncheck}
-                      />
-                      <Form.Check
-                        inline
-                        label="Екзотични животни"
-                        name="typeAnimals"
-                        type="checkbox"
-                        id="checkbox-exoticanimals"
-                        value="EXOTICANIMALS"
-                        checked={this.state.profile.typeAnimals.includes(
-                          "EXOTICANIMALS"
-                        )}
-                        onChange={this.onCheckUncheck}
-                      />
-                    </div>
-                    <span className="text-danger">
-                      {this.state.errors.typeAnimals}
-                    </span>
-                  </Col>
-                  <Col xs={2}>
-                    <Button
-                      variant="primary"
-                      className="float-end"
-                      id="typeAnimals_button"
-                      onClick={this.onEditButtonClick}
-                      disabled={
-                        this.state.errors.typeAnimals !== "" ||
-                        arrayCompare(
-                          this.state.profile.typeAnimals,
-                          this.state.lastProfile.typeAnimals
-                        )
-                      }
-                    >
-                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
-                    </Button>
-                  </Col>
-                </Row>
-              </Form.Group>
-            </ListGroup.Item>
-          ) : (
-            ""
-          )}
-          <ListGroup.Item>
-            <span className="fw-bold">
-              <FontAwesomeIcon icon={faUserTag}></FontAwesomeIcon> Роля:{" "}
-              <span className="fw-normal">
-                {rolesTranslate[this.state.profile.role]}
-              </span>
-            </span>
-          </ListGroup.Item>
-          {this.state.profile.role === roles.Vet ? (
             <ListGroup.Item>
               <span className="fw-bold">
-                <FontAwesomeIcon icon={faUniversity}></FontAwesomeIcon> УРН:{" "}
-                <span className="fw-normal ml-1">{this.state.profile.URN}</span>
+                <FontAwesomeIcon icon={faAt}></FontAwesomeIcon> Имейл адрес:{" "}
+                <span className="fw-normal">{this.state.profile.email}</span>
               </span>
             </ListGroup.Item>
-          ) : (
-            ""
-          )}
-          <ListGroup.Item>
-            <span className="fw-bold">
-              <FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon> Профилът
-              е създаден на: <span className="fw-normal">{createdOn}</span>
-            </span>
-          </ListGroup.Item>
-        </ListGroup>
+            <ListGroup.Item>
+              <Form.Group controlId="phoneNumber">
+                <Row>
+                  <Col md={2} xs={3}>
+                    <Form.Label className="fw-bold col-form-label">
+                      <FontAwesomeIcon
+                        icon={faPhoneSquareAlt}
+                      ></FontAwesomeIcon>{" "}
+                      Тел.
+                    </Form.Label>
+                  </Col>
+                  <Col md={8} xs={7}>
+                    <Form.Control
+                      type="text"
+                      value={this.state.profile.phoneNumber}
+                      onChange={this.onChangeValue}
+                    />
+                    <span className="text-danger">
+                      {this.state.errors.phoneNumber}
+                    </span>
+                  </Col>
+                  <Col xs={2}>
+                    <Button
+                      variant="primary"
+                      className="float-end"
+                      id="phoneNumber_button"
+                      onClick={this.onEditButtonClick}
+                      disabled={
+                        this.state.errors.phoneNumber !== "" ||
+                        this.state.lastProfile.phoneNumber ===
+                          this.state.profile.phoneNumber
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Form.Group controlId="city">
+                <Row>
+                  <Col md={2} xs={3}>
+                    <Form.Label className="fw-bold col-form-label">
+                      <FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Град
+                    </Form.Label>
+                  </Col>
+                  <Col md={8} xs={7}>
+                    <Form.Control
+                      type="text"
+                      value={this.state.profile.city}
+                      onChange={this.onChangeValue}
+                    />
+                    <span className="text-danger">
+                      {this.state.errors.city}
+                    </span>
+                  </Col>
+                  <Col xs={2}>
+                    <Button
+                      variant="primary"
+                      className="float-end"
+                      id="city_button"
+                      onClick={this.onEditButtonClick}
+                      disabled={
+                        this.state.errors.city !== "" ||
+                        this.state.lastProfile.city === this.state.profile.city
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
+            </ListGroup.Item>
+            {this.state.profile.role === roles.Vet ? (
+              <ListGroup.Item>
+                <Form.Group controlId="address">
+                  <Row>
+                    <Col md={2} xs={3}>
+                      <Form.Label className="fw-bold col-form-label">
+                        <FontAwesomeIcon
+                          icon={faMapMarkedAlt}
+                        ></FontAwesomeIcon>{" "}
+                        Адрес
+                      </Form.Label>
+                    </Col>
+                    <Col md={8} xs={7}>
+                      <Form.Control
+                        type="text"
+                        value={this.state.profile.address}
+                        onChange={this.onChangeValue}
+                      />
+                      <span className="text-danger">
+                        {this.state.errors.address}
+                      </span>
+                    </Col>
+                    <Col xs={2}>
+                      <Button
+                        variant="primary"
+                        className="float-end"
+                        id="address_button"
+                        onClick={this.onEditButtonClick}
+                        disabled={
+                          this.state.errors.address !== "" ||
+                          this.state.lastProfile.address ===
+                            this.state.profile.address
+                        }
+                      >
+                        <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              </ListGroup.Item>
+            ) : (
+              ""
+            )}
+            {this.state.profile.role === roles.Vet ? (
+              <ListGroup.Item>
+                <Form.Group controlId="vetDescription">
+                  <Row>
+                    <Col md={2} xs={3}>
+                      <Form.Label className="fw-bold col-form-label">
+                        <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>{" "}
+                        Описание на ветеринарния лекар
+                      </Form.Label>
+                    </Col>
+                    <Col md={8} xs={7}>
+                      <Form.Control
+                        as="textarea"
+                        placeholder="Описание на вертеринарния лекар"
+                        onChange={this.onChangeValue}
+                        value={this.state.profile.vetDescription}
+                        style={{ resize: "none", height: "200px" }}
+                      />
+                      <span className="text-danger">
+                        {this.state.errors.vetDescription}
+                      </span>
+                    </Col>
+                    <Col xs={2}>
+                      <Button
+                        variant="primary"
+                        className="float-end"
+                        id="vetDescription_button"
+                        onClick={this.onEditButtonClick}
+                        disabled={
+                          this.state.errors.vetDescription !== "" ||
+                          this.state.lastProfile.vetDescription ===
+                            this.state.profile.vetDescription
+                        }
+                      >
+                        <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              </ListGroup.Item>
+            ) : (
+              ""
+            )}
+            {this.state.profile.role === roles.Vet ? (
+              <ListGroup.Item>
+                <Form.Group controlId="typeAnimals">
+                  <Row>
+                    <Col md={3} xs={4}>
+                      <Form.Label className="fw-bold col-form-label">
+                        <FontAwesomeIcon icon={faPaw}></FontAwesomeIcon>{" "}
+                        Животни, с които ветеринарният лекар практикува
+                      </Form.Label>
+                    </Col>
+                    <Col md={7} xs={6}>
+                      <div key="inline-checkbox" className="mb-3">
+                        <Form.Check
+                          inline
+                          label="Кучета"
+                          name="typeAnimals"
+                          type="checkbox"
+                          id="checkbox-dogs"
+                          value="DOGS"
+                          checked={this.state.profile.typeAnimals.includes(
+                            "DOGS"
+                          )}
+                          onChange={this.onCheckUncheck}
+                        />
+                        <Form.Check
+                          inline
+                          label="Котки"
+                          name="typeAnimals"
+                          type="checkbox"
+                          id="checkbox-cats"
+                          value="CATS"
+                          checked={this.state.profile.typeAnimals.includes(
+                            "CATS"
+                          )}
+                          onChange={this.onCheckUncheck}
+                        />
+                        <Form.Check
+                          inline
+                          label="Птици"
+                          name="typeAnimals"
+                          type="checkbox"
+                          id="checkbox-birds"
+                          value="BIRDS"
+                          checked={this.state.profile.typeAnimals.includes(
+                            "BIRDS"
+                          )}
+                          onChange={this.onCheckUncheck}
+                        />
+                        <Form.Check
+                          inline
+                          label="Екзотични животни"
+                          name="typeAnimals"
+                          type="checkbox"
+                          id="checkbox-exoticanimals"
+                          value="EXOTICANIMALS"
+                          checked={this.state.profile.typeAnimals.includes(
+                            "EXOTICANIMALS"
+                          )}
+                          onChange={this.onCheckUncheck}
+                        />
+                      </div>
+                      <span className="text-danger">
+                        {this.state.errors.typeAnimals}
+                      </span>
+                    </Col>
+                    <Col xs={2}>
+                      <Button
+                        variant="primary"
+                        className="float-end"
+                        id="typeAnimals_button"
+                        onClick={this.onEditButtonClick}
+                        disabled={
+                          this.state.errors.typeAnimals !== "" ||
+                          arrayCompare(
+                            this.state.profile.typeAnimals,
+                            this.state.lastProfile.typeAnimals
+                          )
+                        }
+                      >
+                        <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              </ListGroup.Item>
+            ) : (
+              ""
+            )}
+            <ListGroup.Item>
+              <span className="fw-bold">
+                <FontAwesomeIcon icon={faUserTag}></FontAwesomeIcon> Роля:{" "}
+                <span className="fw-normal">
+                  {rolesTranslate[this.state.profile.role]}
+                </span>
+              </span>
+            </ListGroup.Item>
+            {this.state.profile.role === roles.Vet ? (
+              <ListGroup.Item>
+                <span className="fw-bold">
+                  <FontAwesomeIcon icon={faUniversity}></FontAwesomeIcon> УРН:{" "}
+                  <span className="fw-normal ml-1">
+                    {this.state.profile.URN}
+                  </span>
+                </span>
+              </ListGroup.Item>
+            ) : (
+              ""
+            )}
+            <ListGroup.Item>
+              <span className="fw-bold">
+                <FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon>{" "}
+                Профилът е създаден на:{" "}
+                <span className="fw-normal">{createdOn}</span>
+              </span>
+            </ListGroup.Item>
+          </ListGroup>
+        </div>
       </div>
     );
   }
