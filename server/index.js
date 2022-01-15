@@ -15,16 +15,12 @@ const adminRoute = require("./routes/admin");
 const credentials = {
   key: privateKey,
   cert: certificate,
-  passphrase: "delyan050710!@#$%^&*()",
+  passphrase: config.SSL_CERTIFICATE_PASS,
 };
 const httpServer = require("https").createServer(credentials, app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: [
-      "http://animalaidbg.com:8080",
-      "https://animalaidbg.com",
-      "http://animalaidbg.com",
-    ],
+    origin: ["https://animalaidbg.com"],
   },
 });
 const onConnection = require("./chatSockets")(io);
