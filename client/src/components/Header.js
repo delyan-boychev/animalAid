@@ -1,6 +1,6 @@
 import { Navbar, Nav } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
-import logo from "../images/logo.png";
+import logo from "../images/logo.webp";
 import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoginAndRegPartial from "./LoginAndRegPartial";

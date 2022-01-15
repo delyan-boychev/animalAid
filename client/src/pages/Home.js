@@ -1,6 +1,6 @@
-import homeFirst from "../images/home1.png";
-import homeSecond from "../images/home2.png";
-import homeThird from "../images/home3.png";
+import homeFirst from "../images/home1.webp";
+import homeSecond from "../images/home2.webp";
+import homeThird from "../images/home3.webp";
 import { Carousel } from "react-bootstrap";
 import "../css/alignCarouselTop.css";
 import { NavLink } from "react-router-dom";
