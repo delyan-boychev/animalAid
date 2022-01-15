@@ -1,6 +1,7 @@
 const express = require("express");
 const config = require("./config.json");
 const mongoose = require("mongoose");
+const compression = require("compression");
 const app = express();
 const fs = require("fs");
 var cors = require("cors");
@@ -29,6 +30,7 @@ const io = require("socket.io")(httpServer, {
 const onConnection = require("./chatSockets")(io);
 io.on("connection", onConnection);
 app.disable("x-powered-by");
+app.use(compression());
 app.use(express.json({ limit: "10mb" }));
 app.use(cors());
 app.use("/user", userRoute);
