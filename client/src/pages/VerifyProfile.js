@@ -13,7 +13,7 @@ export default class VerifyProfile extends React.Component {
       fields: {
         key: urlParams.get("key") ?? "",
       },
-      verificationComplete: false,
+      verificationComplete: null,
     };
     this.verifyProfile();
   }
@@ -29,29 +29,20 @@ export default class VerifyProfile extends React.Component {
   render() {
     return (
       <div>
-        {this.state.verificationComplete === true ? (
-          <div>
-            <h1 className="text-center">Профилът е потвърден успешно!</h1>
-            <p
-              style={{ fontSize: "150px" }}
-              className="text-center text-primary"
-            >
-              <FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon>
-            </p>
-          </div>
-        ) : (
-          <div>
-            <h1 className="text-center">
-              Линкът за потвърждаване на профила е невалиден!
-            </h1>
-            <p
-              style={{ fontSize: "150px" }}
-              className="text-center text-primary"
-            >
-              <FontAwesomeIcon icon={faTimesCircle}></FontAwesomeIcon>
-            </p>
-          </div>
-        )}
+        <div hidden={this.state.verificationComplete !== true}>
+          <h1 className="text-center">Профилът е потвърден успешно!</h1>
+          <p style={{ fontSize: "150px" }} className="text-center text-primary">
+            <FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon>
+          </p>
+        </div>
+        <div hidden={this.state.verificationComplete !== null}>
+          <h1 className="text-center">
+            Линкът за потвърждаване на профила е невалиден!
+          </h1>
+          <p style={{ fontSize: "150px" }} className="text-center text-primary">
+            <FontAwesomeIcon icon={faTimesCircle}></FontAwesomeIcon>
+          </p>
+        </div>
       </div>
     );
   }
