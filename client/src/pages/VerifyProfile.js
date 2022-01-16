@@ -21,9 +21,9 @@ export default class VerifyProfile extends React.Component {
     const key = this.state.fields.key;
     if (key !== "") {
       const verified = await postRequest("/user/verifyProfile", { key: key });
-      if (verified) {
-        this.setState({ verificationComplete: true });
-      }
+      this.setState({ verificationComplete: verified });
+    } else {
+      this.setState({ verificationComplete: false });
     }
   };
   render() {
@@ -35,7 +35,7 @@ export default class VerifyProfile extends React.Component {
             <FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon>
           </p>
         </div>
-        <div hidden={this.state.verificationComplete !== null}>
+        <div hidden={this.state.verificationComplete === null}>
           <h1 className="text-center">
             Линкът за потвърждаване на профила е невалиден!
           </h1>
