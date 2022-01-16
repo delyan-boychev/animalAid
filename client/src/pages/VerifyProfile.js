@@ -19,12 +19,8 @@ export default class VerifyProfile extends React.Component {
   }
   verifyProfile = async () => {
     const key = this.state.fields.key;
-    if (key !== "") {
-      const verified = await postRequest("/user/verifyProfile", { key: key });
-      this.setState({ verificationComplete: verified });
-    } else {
-      this.setState({ verificationComplete: false });
-    }
+    const verified = await postRequest("/user/verifyProfile", { key: key });
+    this.setState({ verificationComplete: verified });
   };
   render() {
     return (
