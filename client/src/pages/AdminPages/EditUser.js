@@ -76,6 +76,8 @@ export default class EditUser extends React.Component {
         body: "",
       },
     };
+  }
+  componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     if (id !== null) {

@@ -15,6 +15,8 @@ export default class VerifyProfile extends React.Component {
       },
       verificationComplete: null,
     };
+  }
+  componentDidMount() {
     this.verifyProfile();
   }
   verifyProfile = async () => {

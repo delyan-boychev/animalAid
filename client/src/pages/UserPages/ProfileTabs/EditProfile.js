@@ -68,6 +68,8 @@ export default class EditProfile extends React.Component {
         body: "",
       },
     };
+  }
+  componentDidMount() {
     this.getInfo();
   }
   openModal = (body) => {
