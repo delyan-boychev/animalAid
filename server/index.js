@@ -20,7 +20,7 @@ const credentials = {
 const httpServer = require("https").createServer(credentials, app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: ["https://animalaidbg.com"],
+    origin: [config.BASE_URL],
   },
 });
 const onConnection = require("./chatSockets")(io);

@@ -94,7 +94,11 @@ class ViewVetsForModerationVerify extends React.Component {
         >
           <FontAwesomeIcon icon={faChevronCircleLeft}></FontAwesomeIcon>
         </Pagination.Item>
-        <Pagination.Item active={true}>{this.state.page}</Pagination.Item>
+        <li className="page-item">
+          <span className="page-link bg-primary text-secondary">
+            {this.state.page}
+          </span>
+        </li>
         <Pagination.Item
           onClick={() => this.getVets(this.state.page + 1)}
           disabled={this.state.page === this.state.numPages}
