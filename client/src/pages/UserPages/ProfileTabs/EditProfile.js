@@ -15,6 +15,8 @@ import {
   faInfoCircle,
   faPaw,
   faImage,
+  faUpload,
+  faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../../extensionFunctions/formatNumber";
@@ -741,9 +743,7 @@ export default class EditProfile extends React.Component {
               <ListGroup.Item>
                 <span className="fw-bold">
                   <FontAwesomeIcon icon={faUniversity}></FontAwesomeIcon> УРН:{" "}
-                  <span className="fw-normal ml-1">
-                    {this.state.profile.URN}
-                  </span>
+                  <span className="fw-normal">{this.state.profile.URN}</span>
                 </span>
               </ListGroup.Item>
             ) : (
@@ -774,21 +774,23 @@ export default class EditProfile extends React.Component {
                         isDragging,
                         dragProps,
                       }) => (
-                        <div className="upload__image-wrapper">
+                        <div className="upload__image-wrapper d-flex">
                           <Button
                             style={
                               isDragging
                                 ? { backgroundColor: "red" }
                                 : undefined
                             }
+                            className="mt-3 me-3"
                             onClick={onImageUpload}
                             {...dragProps}
                           >
-                            Качване на снимка
+                            <FontAwesomeIcon icon={faUpload}></FontAwesomeIcon>
                           </Button>
-                          <br />
                           <Button className="mt-3" onClick={onImageRemoveAll}>
-                            Премахване на снимка
+                            <FontAwesomeIcon
+                              icon={faTrashAlt}
+                            ></FontAwesomeIcon>
                           </Button>
                         </div>
                       )}

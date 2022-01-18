@@ -16,6 +16,8 @@ import {
   faPaw,
   faCheck,
   faImage,
+  faUpload,
+  faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
@@ -893,21 +895,23 @@ export default class EditUser extends React.Component {
                         isDragging,
                         dragProps,
                       }) => (
-                        <div className="upload__image-wrapper">
+                        <div className="upload__image-wrapper d-flex">
                           <Button
                             style={
                               isDragging
                                 ? { backgroundColor: "red" }
                                 : undefined
                             }
+                            className="mt-3 me-3"
                             onClick={onImageUpload}
                             {...dragProps}
                           >
-                            Качване на снимка
+                            <FontAwesomeIcon icon={faUpload}></FontAwesomeIcon>
                           </Button>
-                          <br />
                           <Button className="mt-3" onClick={onImageRemoveAll}>
-                            Премахване на снимка
+                            <FontAwesomeIcon
+                              icon={faTrashAlt}
+                            ></FontAwesomeIcon>
                           </Button>
                         </div>
                       )}

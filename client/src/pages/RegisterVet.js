@@ -2,7 +2,11 @@ import React from "react";
 import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import InfoModal from "../components/InfoModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSyncAlt,
+  faUpload,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
 import ImageUploading from "react-images-uploading";
 import Cropper from "react-easy-crop";
@@ -557,19 +561,19 @@ class RegisterVet extends React.Component {
                   isDragging,
                   dragProps,
                 }) => (
-                  <div className="upload__image-wrapper">
+                  <div className="upload__image-wrapper d-flex">
                     <Button
                       style={
                         isDragging ? { backgroundColor: "red" } : undefined
                       }
+                      className="mt-3 me-3"
                       onClick={onImageUpload}
                       {...dragProps}
                     >
-                      Качване на снимка
+                      <FontAwesomeIcon icon={faUpload}></FontAwesomeIcon>
                     </Button>
-                    <br />
                     <Button className="mt-3" onClick={onImageRemoveAll}>
-                      Премахване на снимка
+                      <FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon>
                     </Button>
                   </div>
                 )}
