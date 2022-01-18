@@ -1,6 +1,8 @@
 import React from "react";
 import InfoModal from "../../../components/InfoModal";
 import { ListGroup, Button, Row, Col, Form, Spinner } from "react-bootstrap";
+import ImageUploading from "react-images-uploading";
+import Cropper from "react-easy-crop";
 import {
   faAt,
   faPhoneSquareAlt,
@@ -12,6 +14,7 @@ import {
   faPen,
   faInfoCircle,
   faPaw,
+  faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../../extensionFunctions/formatNumber";
@@ -33,6 +36,13 @@ export default class EditProfile extends React.Component {
         city: "",
         address: "",
         URN: "",
+        image: null,
+        imageCrop: {
+          x: null,
+          y: null,
+          width: null,
+          height: null,
+        },
         vetDescription: "",
         typeAnimals: [],
         imgFileName: "",
@@ -56,6 +66,7 @@ export default class EditProfile extends React.Component {
           first: "",
           last: "",
         },
+        image: "",
         city: "",
         phoneNumber: "",
         address: "",
@@ -67,6 +78,13 @@ export default class EditProfile extends React.Component {
         title: "Съобщение",
         body: "",
       },
+      modal2: {
+        show: false,
+        title: "Изрязване на изображение",
+        body: "",
+      },
+      crop: { x: 0, y: 0 },
+      zoom: 1,
     };
   }
   componentDidMount() {
@@ -86,6 +104,8 @@ export default class EditProfile extends React.Component {
   };
   async getInfo() {
     const res = await client.getRequestToken("/user/profile");
+    res.image = null;
+    res.imageCrop = { x: null, y: null, width: null, height: null };
     this.setState({ profile: res });
     this.setState({
       lastProfile: {
@@ -122,6 +142,7 @@ export default class EditProfile extends React.Component {
         last: "",
       },
       city: "",
+      image: this.state.errors.image,
       phoneNumber: "",
       address: "",
       vetDescription: "",
@@ -140,6 +161,12 @@ export default class EditProfile extends React.Component {
     if (fields["city"].length < 2 || fields["city"].length > 45) {
       errors["city"] =
         "Името на града трябва да е поне 2 символа и да е максимум 45 символа!";
+    }
+    if (errors["image"] !== "") {
+      errors["isValid"] = false;
+    } else if (fields["image"] === null || fields["image"] === undefined) {
+      errors["image"] = "Не сте прикачили изображение!";
+      errors["isValid"] = false;
     }
     if (fields["role"] === roles.Vet) {
       if (fields["address"].length < 2 || fields["address"].length > 90) {
@@ -227,6 +254,21 @@ export default class EditProfile extends React.Component {
       );
     }
   };
+  changeProfilePhoto = async () => {
+    if (this.state.errors.image === "") {
+      const res = await client.postRequestToken(`/user/changeProfilePhoto`, {
+        imgDataURL: this.state.profile.image.data_url,
+        imageCrop: this.state.profile.imageCrop,
+      });
+      if (res === true) {
+        this.openModal("Профилната снимка е сменена успешно!");
+      } else {
+        this.openModal(
+          "Възникна грешка при промяната на профилна снимка! Моля опитайте отново!"
+        );
+      }
+    }
+  };
   onCheckUncheck = (event) => {
     let checkbox = document.getElementById(event.target.id);
     if (
@@ -249,6 +291,58 @@ export default class EditProfile extends React.Component {
     }
     this.validateEditProfile();
   };
+  openModal2 = () => {
+    let modal2 = this.state.modal2;
+    modal2.show = true;
+    this.setState({ modal2 });
+  };
+  closeModal2 = () => {
+    let modal2 = this.state.modal2;
+    modal2.show = false;
+    this.setState({ modal2 });
+  };
+  onImageChange = (image) => {
+    if (image[0] !== undefined) {
+      let profile = this.state.profile;
+      profile["image"] = image[0];
+      let errors = this.state.errors;
+      errors["image"] = "";
+      this.setState({ profile, errors });
+    } else {
+      let profile = this.state.profile;
+      profile["image"] = null;
+      this.setState({ profile });
+    }
+    this.validateEditProfile();
+    if (this.state.profile.image !== null) {
+      this.openModal2();
+    }
+  };
+  onCropChange = (crop) => {
+    this.setState({ crop });
+  };
+
+  onCropComplete = (croppedArea, croppedAreaPixels) => {
+    let profile = this.state.profile;
+    profile.imageCrop = croppedAreaPixels;
+    this.setState({ profile });
+  };
+
+  onZoomChange = (zoom) => {
+    this.setState({ zoom });
+  };
+  onError = (error) => {
+    if (error["acceptType"]) {
+      let errors = this.state.errors;
+      errors["image"] = "Неподдържан файлов формат!";
+      this.setState({ errors });
+    } else if (error["maxFileSize"]) {
+      let errors = this.state.errors;
+      errors["image"] = "Файлът трябва да е по-малък от 1MB!";
+      this.setState({ errors });
+    }
+    this.validateEditProfile();
+  };
   render() {
     let createdOn = new Date(this.state.profile.createdOn);
     createdOn = `${createdOn.getDate().pad()}-${(
@@ -265,6 +359,28 @@ export default class EditProfile extends React.Component {
           title={this.state.modal.title}
           body={this.state.modal.body}
           closeModal={this.closeModal}
+        ></InfoModal>
+        <InfoModal
+          body={
+            <div style={{ height: "500px" }}>
+              <Cropper
+                image={
+                  this.state.profile.image !== null
+                    ? this.state.profile.image.data_url
+                    : null
+                }
+                crop={this.state.crop}
+                zoom={this.state.zoom}
+                aspect={1 / 1}
+                onCropChange={this.onCropChange}
+                onCropComplete={this.onCropComplete}
+                onZoomChange={this.onZoomChange}
+              />
+            </div>
+          }
+          show={this.state.modal2.show}
+          title={this.state.modal2.title}
+          closeModal={this.closeModal2}
         ></InfoModal>
         <div
           className="text-center"
@@ -633,6 +749,70 @@ export default class EditProfile extends React.Component {
             ) : (
               ""
             )}
+            <ListGroup.Item>
+              <Form.Group controlId="image">
+                <Row>
+                  <Col md={2} xs={3}>
+                    <Form.Label className="fw-bold col-form-label">
+                      <FontAwesomeIcon icon={faImage}></FontAwesomeIcon> Смяна
+                      на профилна снимка:
+                    </Form.Label>
+                  </Col>
+                  <Col md={8} xs={7}>
+                    <ImageUploading
+                      className="mt-3"
+                      maxNumber={1}
+                      maxFileSize={1048576}
+                      onError={this.onError}
+                      acceptType={["png", "jpg", "jpeg"]}
+                      onChange={this.onImageChange}
+                      dataURLKey="data_url"
+                    >
+                      {({
+                        onImageUpload,
+                        onImageRemoveAll,
+                        isDragging,
+                        dragProps,
+                      }) => (
+                        <div className="upload__image-wrapper">
+                          <Button
+                            style={
+                              isDragging
+                                ? { backgroundColor: "red" }
+                                : undefined
+                            }
+                            onClick={onImageUpload}
+                            {...dragProps}
+                          >
+                            Качване на снимка
+                          </Button>
+                          <br />
+                          <Button className="mt-3" onClick={onImageRemoveAll}>
+                            Премахване на снимка
+                          </Button>
+                        </div>
+                      )}
+                    </ImageUploading>
+                    <span className="text-danger">
+                      {this.state.errors.image}
+                    </span>
+                  </Col>
+                  <Col xs={2}>
+                    <Button
+                      variant="primary"
+                      className="float-end"
+                      onClick={this.changeProfilePhoto}
+                      disabled={
+                        this.state.errors.image !== "" ||
+                        this.state.profile.image === null
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
+            </ListGroup.Item>
             <ListGroup.Item>
               <span className="fw-bold">
                 <FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon>{" "}

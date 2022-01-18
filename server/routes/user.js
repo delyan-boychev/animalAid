@@ -170,9 +170,9 @@ router.post("/forgotPasswordChange", async (req, res) => {
     );
   });
 });
-router.post("/changeProfilePhoto", async (req, res) => {
+router.post("/changeProfilePhoto", authenticate, async (req, res) => {
   validation(req.body, changeProfilePhotoSchema, res, async () => {
-    res.send(await userService.changeProfilePhoto(req.user.id, res.body));
+    res.send(await userService.changeProfilePhoto(req.user.id, req.body));
   });
 });
 module.exports = router;
