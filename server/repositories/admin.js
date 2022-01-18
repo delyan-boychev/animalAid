@@ -3,6 +3,11 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const roles = require("../models/roles");
 class AdminRepository {
+  /**
+   * Moderation verify vet
+   * @param {String} email Vet email
+   * @returns {Boolean}
+   */
   async moderationVerify(email) {
     const u = await User.findOne({ email: email }).exec();
     if (u != null) {
@@ -25,6 +30,11 @@ class AdminRepository {
       return false;
     }
   }
+  /**
+   * Get all users
+   * @param {String} searchQuery Search query
+   * @returns {[]}
+   */
   async getAllUsers(searchQuery) {
     if (searchQuery !== undefined) {
       return await User.find(searchQuery).select(["-password"]).lean().exec();
@@ -32,6 +42,12 @@ class AdminRepository {
       return await User.find().select(["-password"]).lean().exec();
     }
   }
+  /**
+   * Change user role
+   * @param {String} id User id
+   * @param {String} newRole New role
+   * @returns {Boolean}
+   */
   async changeRole(id, newRole) {
     try {
       const u = await User.findById(id).exec();
@@ -57,6 +73,11 @@ class AdminRepository {
       return false;
     }
   }
+  /**
+   * Get user profile
+   * @param {String} id User id
+   * @returns {}
+   */
   async getProfile(id) {
     try {
       let user = await User.findById(id).lean().exec();
@@ -70,6 +91,13 @@ class AdminRepository {
       return false;
     }
   }
+  /**
+   * Edit property profile
+   * @param {String} prop Name of the property for edit
+   * @param {String} value New value of the property
+   * @param {String} id User id
+   * @returns {Boolean}
+   */
   async editUser(prop, value, id) {
     const u = await User.findById(id).exec();
     if (u !== null) {
@@ -134,6 +162,23 @@ class AdminRepository {
       } catch {
         return false;
       }
+    } else {
+      return false;
+    }
+  }
+  /**
+   * Change profile photo
+   * @param {String} id User id
+   * @param {String} imgFileName File name image
+   * @returns {String|Boolean}
+   */
+  async changeProfilePhoto(id, imgFileName) {
+    const u = await User.findById(id).exec();
+    if (u !== null) {
+      const oldImgFileName = u.imgFileName;
+      u.imgFileName = imgFileName;
+      u.save();
+      return oldImgFileName;
     } else {
       return false;
     }

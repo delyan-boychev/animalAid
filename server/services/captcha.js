@@ -4,6 +4,10 @@ const { createCanvas } = require("canvas");
 const encryptDecryptCaptcha = require("../captcha/encryptDecryptCaptcha");
 class CaptchaService {
   #captchaRepository = new captchaRepository();
+  /**
+   * Get captcha
+   * @returns {{}} Captcha
+   */
   getCaptcha() {
     const charsArray =
       "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*";

@@ -5,6 +5,7 @@ const validation = require("../models/validation/validation");
 const moderationVerifyVetSchema = require("../models/validation/admin/moderationVerifyVet");
 const changeRoleSchema = require("../models/validation/admin/changeRole");
 const editProfileSchema = require("../models/validation/admin/editProfile");
+const changeProfilePhotoSchema = require("../models/validation/admin/changeProfilePhoto");
 const AdminService = require("../services/admin");
 const adminService = new AdminService();
 const roles = require("../models/roles");
@@ -156,6 +157,11 @@ router.post("/changeRole", authenticateAdmin, async (req, res) => {
 router.post("/moderationVerifyVet", authenticateAdmin, async (req, res) => {
   validation(req.body, moderationVerifyVetSchema, res, async () => {
     res.send(await adminService.moderationVerify(req.body.email));
+  });
+});
+router.post("/changeProfilePhoto", authenticateAdmin, async (req, res) => {
+  validation(req.body, changeProfilePhotoSchema, res, async () => {
+    res.send(await adminService.changeProfilePhoto(req.body));
   });
 });
 module.exports = router;

@@ -407,6 +407,12 @@ class UserService {
       newPassword
     );
   }
+  /**
+   * Change profile photo
+   * @param {String} id User id
+   * @param {{}} img Data url img and crop
+   * @returns {Boolean}
+   */
   async changeProfilePhoto(id, img) {
     let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
       8
