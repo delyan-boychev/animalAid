@@ -10,7 +10,7 @@ const changeEmailSchema = require("../models/validation/user/changeEmail");
 const changePasswordSchema = require("../models/validation/user/changePassword");
 const forgotPasswordSchema = require("../models/validation/user/forgotPassword");
 const forgotPasswordChangeSchema = require("../models/validation/user/forgotPasswordChange");
-const authenticateGET = require("../authentication/authenticateGET");
+const changeProfilePhotoSchema = require("../models/validation/user/changeProfilePhoto");
 const authenticate = require("../authentication/authenticate");
 const editProfileSchema = require("../models/validation/user/editProfile");
 const roles = require("../models/roles");
@@ -168,6 +168,11 @@ router.post("/forgotPasswordChange", async (req, res) => {
         req.body["newPassword"]
       )
     );
+  });
+});
+router.post("/changeProfilePhoto", async (req, res) => {
+  validation(req.body, changeProfilePhotoSchema, res, async () => {
+    res.send(await userService.changeProfilePhoto(req.user.id, res.body));
   });
 });
 module.exports = router;

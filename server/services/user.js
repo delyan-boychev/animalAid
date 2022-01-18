@@ -40,17 +40,14 @@ class UserService {
           user.captcha,
           user.captchaCode
         );
-        let regexImageUrl =
-          /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
-        const match = regexImageUrl.exec(user.imgDataURL);
         let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
           8
-        )}.${match.groups["mime"].replace("image/", "")}`;
+        )}.webp`;
         let dir = `${path.dirname(require.main.filename)}/img`;
         while (fs.existsSync(`${dir}\\${imgFileName}`)) {
           imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
             8
-          )}.${match.groups["mime"].replace("image/", "")}`;
+          )}.webp}`;
         }
         user.imgFileName = imgFileName;
         user.role = "User";
@@ -64,10 +61,7 @@ class UserService {
             subject: "Успешна регистрация в Animal Aid",
             html: verifyTemplates.verifyProfileUser(user.name.first, key),
           });
-          let base64Data = user.imgDataURL.replace(
-            `data:${match.groups["mime"]};base64,`,
-            ""
-          );
+          let base64Data = user.imgDataURL.split("base64,")[1];
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
           }
@@ -78,6 +72,7 @@ class UserService {
               width: user.imageCrop.width,
               height: user.imageCrop.height,
             })
+            .webp()
             .toFile(`${dir}/${imgFileName}`, function (err) {
               if (err) console.log(err);
             });
@@ -123,17 +118,14 @@ class UserService {
           user.captcha,
           user.captchaCode
         );
-        let regexImageUrl =
-          /data:(?<mime>[\w/\-\.]+);(?<encoding>\w+),(?<data>.*)/;
-        const match = regexImageUrl.exec(user.imgDataURL);
         let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
           8
-        )}.${match.groups["mime"].replace("image/", "")}`;
+        )}.webp`;
         let dir = `${path.dirname(require.main.filename)}/img`;
         while (fs.existsSync(`${dir}\\${imgFileName}`)) {
           imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
             8
-          )}.${match.groups["mime"].replace("image/", "")}`;
+          )}.webp`;
         }
         user.imgFileName = imgFileName;
         user.role = "Vet";
@@ -147,10 +139,7 @@ class UserService {
             subject: "Успешна регистрация в Animal Aid",
             html: verifyTemplates.verifyProfileVet(user.name.first, key),
           });
-          let base64Data = user.imgDataURL.replace(
-            `data:${match.groups["mime"]};base64,`,
-            ""
-          );
+          let base64Data = user.imgDataURL.split("base64,")[1];
           if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
           }
@@ -161,6 +150,7 @@ class UserService {
               width: user.imageCrop.width,
               height: user.imageCrop.height,
             })
+            .webp()
             .toFile(`${dir}/${imgFileName}`, function (err) {
               if (err) console.log(err);
             });
@@ -416,6 +406,42 @@ class UserService {
       oldPassword,
       newPassword
     );
+  }
+  async changeProfilePhoto(id, img) {
+    let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+      8
+    )}.webp`;
+    let dir = `${path.dirname(require.main.filename)}/img`;
+    while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+      imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+        8
+      )}.webp`;
+    }
+    const oldImgFileName = await this.#userRepository.changeProfilePhoto(
+      id,
+      imgFileName
+    );
+    if (oldImgFileName !== false) {
+      let base64Data = img.imgDataURL.split("base64,")[1];
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+      }
+      sharp(Buffer.from(base64Data, "base64"))
+        .extract({
+          top: img.imageCrop.y,
+          left: img.imageCrop.x,
+          width: img.imageCrop.width,
+          height: img.imageCrop.height,
+        })
+        .webp()
+        .toFile(`${dir}/${imgFileName}`, function (err) {
+          if (err) console.log(err);
+        });
+      fs.unlinkSync(`${dir}/${oldImgFileName}`);
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 module.exports = UserService;

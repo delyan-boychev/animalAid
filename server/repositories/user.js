@@ -282,5 +282,16 @@ class UserRepository {
       return false;
     }
   }
+  async changeProfilePhoto(id, imgFileName) {
+    const u = await User.findById(id).exec();
+    if (u !== null) {
+      const oldImgFileName = u.imgFileName;
+      u.imgFileName = imgFileName;
+      u.save();
+      return oldImgFileName;
+    } else {
+      return false;
+    }
+  }
 }
 module.exports = UserRepository;
