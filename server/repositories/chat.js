@@ -84,6 +84,15 @@ class ChatRepository {
       return false;
     }
   }
+  async deleteChat(userId) {
+    try {
+      return await Chat.deleteMany({
+        $or: [{ userOne: userId }, { userTwo: userId }],
+      });
+    } catch {
+      return false;
+    }
+  }
   async getUsersChats(userId) {
     let chats = await Chat.find({ userOne: userId })
       .populate("userTwo")

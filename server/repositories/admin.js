@@ -2,7 +2,9 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const roles = require("../models/roles");
+const ChatRepository = require("./chat");
 class AdminRepository {
+  #chatRepository = new ChatRepository();
   /**
    * Moderation verify vet
    * @param {String} email Vet email
@@ -58,6 +60,7 @@ class AdminRepository {
           u.typeAnimals = undefined;
           u.vetDescription = undefined;
           u.moderationVerified = undefined;
+          await this.#chatRepository.deleteChat(id);
         }
         u.role = newRole;
         try {

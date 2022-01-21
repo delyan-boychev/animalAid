@@ -228,7 +228,7 @@ class RegisterVet extends React.Component {
       errors["isValid"] = false;
     }
     if (!checkURN.test(fields["URN"])) {
-      errors["URN"] = "Навалиден УРН!";
+      errors["URN"] = "Невалиден УРН!";
       errors["isValid"] = false;
     }
     if (
@@ -338,8 +338,8 @@ class RegisterVet extends React.Component {
         ></InfoModal>
         <Form onSubmit={this.submitForm}>
           <Row>
-            <Form.Group as={Col} sm>
-              <FloatingLabel controlId="firstName" label="Име" className="mb-3">
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="firstName" label="Име">
                 <Form.Control
                   placeholder="Име"
                   type="text"
@@ -350,12 +350,8 @@ class RegisterVet extends React.Component {
               <span className="text-danger">{this.state.errors.firstName}</span>
             </Form.Group>
 
-            <Form.Group as={Col} sm>
-              <FloatingLabel
-                controlId="lastName"
-                label="Фамилия"
-                className="mb-3"
-              >
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="lastName" label="Фамилия">
                 <Form.Control
                   placeholder="Фамилия"
                   type="text"
@@ -367,12 +363,8 @@ class RegisterVet extends React.Component {
             </Form.Group>
           </Row>
           <Row>
-            <Form.Group as={Col} sm>
-              <FloatingLabel
-                controlId="email"
-                label="Имейл адрес"
-                className="mb-3"
-              >
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="email" label="Имейл адрес">
                 <Form.Control
                   placeholder="Имейл адрес"
                   type="text"
@@ -382,12 +374,8 @@ class RegisterVet extends React.Component {
               </FloatingLabel>
               <span className="text-danger">{this.state.errors.email}</span>
             </Form.Group>
-            <Form.Group as={Col} sm>
-              <FloatingLabel
-                controlId="phoneNumber"
-                label="Телефонен номер"
-                className="mb-3"
-              >
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="phoneNumber" label="Телефонен номер">
                 <Form.Control
                   placeholder="Телефонен номер"
                   type="text"
@@ -401,8 +389,8 @@ class RegisterVet extends React.Component {
             </Form.Group>
           </Row>
           <Row>
-            <Form.Group as={Col} sm>
-              <FloatingLabel controlId="city" label="Град" className="mb-3">
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="city" label="Град">
                 <Form.Control
                   placeholder="Град"
                   type="text"
@@ -412,8 +400,8 @@ class RegisterVet extends React.Component {
               </FloatingLabel>
               <span className="text-danger">{this.state.errors.city}</span>
             </Form.Group>
-            <Form.Group as={Col} sm>
-              <FloatingLabel controlId="address" label="Адрес" className="mb-3">
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="address" label="Адрес">
                 <Form.Control
                   placeholder="Адрес"
                   type="text"

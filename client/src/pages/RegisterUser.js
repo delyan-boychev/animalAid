@@ -274,8 +274,8 @@ class RegisterUser extends React.Component {
         ></InfoModal>
         <Form onSubmit={this.submitForm}>
           <Row>
-            <Form.Group as={Col} sm>
-              <FloatingLabel controlId="firstName" label="Име" className="mb-3">
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="firstName" label="Име">
                 <Form.Control
                   placeholder="Име"
                   type="text"
@@ -286,12 +286,8 @@ class RegisterUser extends React.Component {
               <span className="text-danger">{this.state.errors.firstName}</span>
             </Form.Group>
 
-            <Form.Group as={Col} sm>
-              <FloatingLabel
-                controlId="lastName"
-                label="Фамилия"
-                className="mb-3"
-              >
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="lastName" label="Фамилия">
                 <Form.Control
                   placeholder="Фамилия"
                   type="text"
@@ -303,12 +299,8 @@ class RegisterUser extends React.Component {
             </Form.Group>
           </Row>
           <Row>
-            <Form.Group as={Col} sm>
-              <FloatingLabel
-                controlId="email"
-                label="Имейл адрес"
-                className="mb-3"
-              >
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="email" label="Имейл адрес">
                 <Form.Control
                   placeholder="Имейл адрес"
                   type="text"
@@ -319,8 +311,8 @@ class RegisterUser extends React.Component {
               <span className="text-danger">{this.state.errors.email}</span>
             </Form.Group>
 
-            <Form.Group as={Col} sm>
-              <FloatingLabel controlId="city" label="Град" className="mb-3">
+            <Form.Group as={Col} sm className="mb-3">
+              <FloatingLabel controlId="city" label="Град">
                 <Form.Control
                   placeholder="Град"
                   type="text"
