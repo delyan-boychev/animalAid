@@ -20,13 +20,12 @@ class ChatRepository {
     }
   }
   async sendMessage(senderId, recieveId, message, date) {
-    let chat = await Chat.findOne({ userOne: senderId, userTwo: recieveId });
-    if (chat === null) {
-      chat = await Chat.findOne({ userTwo: senderId, userOne: recieveId });
-      if (chat === null) {
-        return false;
-      }
-    }
+    let chat = await Chat.findOne({
+      $and: [
+        { $or: [{ userOne: senderId }, { userOne: recieveId }] },
+        { $or: [{ userTwo: senderId }, { userTwo: recieveId }] },
+      ],
+    });
     chat.messages.push({
       date: date,
       seen: false,
@@ -41,40 +40,47 @@ class ChatRepository {
     }
   }
   async checkChatExists(userOne, userTwo) {
-    let exists = await Chat.exists({ userOne: userOne, userTwo: userTwo });
-    if (!exists) {
-      exists = await Chat.exists({ userOne: userTwo, userTwo: userOne });
-    }
-    return exists;
+    return await Chat.exists({
+      $and: [
+        { $or: [{ userOne: userOne }, { userOne: userTwo }] },
+        { $or: [{ userTwo: userOne }, { userTwo: userTwo }] },
+      ],
+    });
   }
   async getMessages(userOne, userTwo) {
-    let chat = await Chat.findOne({ userOne: userOne, userTwo: userTwo });
-    if (chat === null) {
-      chat = await Chat.findOne({ userOne: userTwo, userTwo: userOne });
-      if (chat === null) {
-        return false;
-      }
+    let chat = await Chat.findOne({
+      $and: [
+        { $or: [{ userOne: userOne }, { userOne: userTwo }] },
+        { $or: [{ userTwo: userOne }, { userTwo: userTwo }] },
+      ],
+    });
+    if (chat !== null) {
+      return chat.messages;
+    } else {
+      return false;
     }
-    return chat.messages;
   }
   async seenMessages(userOne, userTwo) {
-    let chat = await Chat.findOne({ userOne: userOne, userTwo: userTwo });
-    if (chat === null) {
-      chat = await Chat.findOne({ userOne: userTwo, userTwo: userOne });
-      if (chat === null) {
+    let chat = await Chat.findOne({
+      $and: [
+        { $or: [{ userOne: userOne }, { userOne: userTwo }] },
+        { $or: [{ userTwo: userOne }, { userTwo: userTwo }] },
+      ],
+    });
+    if (chat !== null) {
+      let indexes = extMethods.getAllIndexes(chat.messages, "seen", false);
+      indexes.forEach((i) => {
+        if (chat.messages[i]["sender"] != userOne) {
+          chat.messages[i]["seen"] = true;
+        }
+      });
+      try {
+        await chat.save();
+        return true;
+      } catch {
         return false;
       }
-    }
-    let indexes = extMethods.getAllIndexes(chat.messages, "seen", false);
-    indexes.forEach((i) => {
-      if (chat.messages[i]["sender"] != userOne) {
-        chat.messages[i]["seen"] = true;
-      }
-    });
-    try {
-      await chat.save();
-      return true;
-    } catch {
+    } else {
       return false;
     }
   }
