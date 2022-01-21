@@ -18,6 +18,7 @@ import {
   faImage,
   faUpload,
   faTrashAlt,
+  faTags,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
@@ -64,6 +65,7 @@ export default class EditUser extends React.Component {
         email: "",
         city: "",
         address: "",
+        role: "",
         phoneNumber: "",
         URN: "",
         vetDescription: "",
@@ -121,8 +123,8 @@ export default class EditUser extends React.Component {
     if (res !== false) {
       res.image = null;
       res.imageCrop = { x: null, y: null, width: null, height: null };
-      this.setState({ profile: res, id });
       this.setState({
+        profile: res,
         id,
         lastProfile: {
           name: { first: res.name.first, last: res.name.last },
@@ -130,12 +132,18 @@ export default class EditUser extends React.Component {
           email: res.email,
           address: res.address,
           URN: res.URN,
+          role: res.role,
           phoneNumber: res.phoneNumber,
           vetDescription: res.vetDescription,
           typeAnimals:
             res.typeAnimals !== undefined ? [...res.typeAnimals] : undefined,
         },
       });
+      if (this.state.profile.role === roles.Vet) {
+        let profile = this.state.profile;
+        profile.role = roles.Admin;
+        this.setState({ profile });
+      }
     } else {
       this.setState({ id });
     }
@@ -318,6 +326,19 @@ export default class EditUser extends React.Component {
           "Възникна грешка при промяната на профилна снимка! Моля опитайте отново!"
         );
       }
+    }
+  };
+  changeRole = async () => {
+    const res = await client.postRequestToken("/admin/changeRole", {
+      id: this.state.id,
+      newRole: this.state.profile.role,
+    });
+    if (res === true) {
+      this.openModal("Ролята е сменена успешно!");
+    } else {
+      this.openModal(
+        "Възникна грешка при смяната на роля! Моля опитайте отново!"
+      );
     }
   };
   onCheckUncheck = (event) => {
@@ -639,7 +660,7 @@ export default class EditUser extends React.Component {
                 </Row>
               </Form.Group>
             </ListGroup.Item>
-            {this.state.profile.role === roles.Vet ? (
+            {this.state.lastProfile.role === roles.Vet ? (
               <ListGroup.Item>
                 <Form.Group controlId="address">
                   <Row>
@@ -682,7 +703,7 @@ export default class EditUser extends React.Component {
             ) : (
               ""
             )}
-            {this.state.profile.role === roles.Vet ? (
+            {this.state.lastProfile.role === roles.Vet ? (
               <ListGroup.Item>
                 <Form.Group controlId="vetDescription">
                   <Row>
@@ -725,7 +746,7 @@ export default class EditUser extends React.Component {
             ) : (
               ""
             )}
-            {this.state.profile.role === roles.Vet ? (
+            {this.state.lastProfile.role === roles.Vet ? (
               <ListGroup.Item>
                 <Form.Group controlId="typeAnimals">
                   <Row>
@@ -817,9 +838,40 @@ export default class EditUser extends React.Component {
               <span className="fw-bold">
                 <FontAwesomeIcon icon={faUserTag}></FontAwesomeIcon> Роля:{" "}
                 <span className="fw-normal">
-                  {rolesTranslate[this.state.profile.role]}
+                  {rolesTranslate[this.state.lastProfile.role]}
                 </span>
               </span>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Form.Group controlId="role" onChange={this.onChangeValue}>
+                <Row>
+                  <Col md={2} xs={3}>
+                    <Form.Label className="fw-bold col-form-label">
+                      <FontAwesomeIcon icon={faTags}></FontAwesomeIcon> Промяна
+                      на роля
+                    </Form.Label>
+                  </Col>
+                  <Col md={8} xs={7}>
+                    <Form.Select value={this.state.profile.role}>
+                      <option value="ADMIN">Администратор</option>
+                      <option value="MODERATOR">Модератор</option>
+                      <option value="USER">Потребител</option>
+                    </Form.Select>
+                  </Col>
+                  <Col xs={2}>
+                    <Button
+                      variant="primary"
+                      className="float-end"
+                      onClick={this.changeRole}
+                      disabled={
+                        this.state.lastProfile.role === this.state.profile.role
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
             </ListGroup.Item>
             <ListGroup.Item>
               <span className="fw-bold">
@@ -830,7 +882,7 @@ export default class EditUser extends React.Component {
                 </span>
               </span>
             </ListGroup.Item>
-            {this.state.profile.role === roles.Vet ? (
+            {this.state.lastProfile.role === roles.Vet ? (
               <ListGroup.Item>
                 <Form.Group controlId="URN">
                   <Row>
@@ -936,6 +988,7 @@ export default class EditUser extends React.Component {
                 </Row>
               </Form.Group>
             </ListGroup.Item>
+
             <ListGroup.Item>
               <span className="fw-bold">
                 <FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon>{" "}
