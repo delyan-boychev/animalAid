@@ -8,7 +8,7 @@ const schema = new mongoose.Schema({
   },
   email: { type: String, required: true },
   phoneNumber: { type: String, required: true },
-  city: { type: String, required: true },
+  city: { type: mongoose.SchemaTypes.ObjectId, ref: "City", required: true },
   password: { type: String, required: true },
   createdOn: {
     type: Number,

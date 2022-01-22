@@ -12,6 +12,7 @@ const port = 8443;
 const userRoute = require("./routes/user");
 const captchaRoute = require("./routes/captcha");
 const adminRoute = require("./routes/admin");
+const cityRoute = require("./routes/city");
 const credentials = {
   key: privateKey,
   cert: certificate,
@@ -32,10 +33,11 @@ app.use(cors());
 app.use("/user", userRoute);
 app.use("/captcha", captchaRoute);
 app.use("/admin", adminRoute);
-mongoose.connect(config.CONNECTION_STRING, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+app.use("/city", cityRoute),
+  mongoose.connect(config.CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 updateCaptchaEncryption();
 setInterval(updateCaptchaEncryption, 600000);
 httpServer.listen(port, () => {

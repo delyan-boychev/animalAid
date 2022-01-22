@@ -32,6 +32,9 @@ class RegisterUser extends React.Component {
         confirmPassword: "",
         captcha: "",
       },
+      regions: [],
+      municipalities: [],
+      cities: [],
       errors: {
         firstName: "",
         lastName: "",
@@ -62,8 +65,40 @@ class RegisterUser extends React.Component {
       zoom: 1,
     };
     this.getCaptcha();
+    this.getRegions();
   }
   registerComplete = false;
+  getRegions = async () => {
+    const regions = await client.getRequest(`/city/getAllRegions`);
+    this.setState({ regions });
+  };
+  onChangeRegion = async (event) => {
+    const municipalities = await client.getRequest(
+      `/city/getMunicipalitiesByRegion/${event.target.value}`
+    );
+    const fields = this.state.fields;
+    fields["city"] = "";
+    this.setState({ municipalities, cities: [], fields });
+    this.validate();
+    document.getElementById("municipalitySelect").options[0].selected = true;
+    document.getElementById("citySelect").options[0].selected = true;
+  };
+  onChangeMunicipality = async (event) => {
+    const cities = await client.getRequest(
+      `/city/getCitiesByMunicipality/${event.target.value}`
+    );
+    const fields = this.state.fields;
+    fields["city"] = "";
+    this.setState({ cities, fields });
+    this.validate();
+    document.getElementById("citySelect").options[0].selected = true;
+  };
+  changeCity = (event) => {
+    const fields = this.state.fields;
+    fields["city"] = event.target.value;
+    this.setState({ fields });
+    this.validate();
+  };
   submitForm = async (event) => {
     event.preventDefault();
     this.validate();
@@ -174,9 +209,8 @@ class RegisterUser extends React.Component {
       errors["email"] = "Имейл адресът е невалиден!";
       errors["isValid"] = false;
     }
-    if (fields["city"].length < 2 || fields["city"].length > 45) {
-      errors["city"] =
-        "Името на града трябва да е поне 2 символа и да е максимум 45 символа!!";
+    if (fields["city"] === "") {
+      errors["city"] = "Не сте избрали град!";
       errors["isValid"] = false;
     }
     if (errors["image"] !== "") {
@@ -310,18 +344,63 @@ class RegisterUser extends React.Component {
               </FloatingLabel>
               <span className="text-danger">{this.state.errors.email}</span>
             </Form.Group>
-
-            <Form.Group as={Col} sm className="mb-3">
-              <FloatingLabel controlId="city" label="Град">
-                <Form.Control
-                  placeholder="Град"
-                  type="text"
-                  value={this.state.fields.city}
-                  onChange={this.handleOnChangeValue}
-                />
+          </Row>
+          <Row>
+            <Col sm className="mb-3">
+              <FloatingLabel label="Област">
+                <Form.Select onChange={this.onChangeRegion} id="regionSelect">
+                  <option value="" selected disabled hidden>
+                    Избери област
+                  </option>
+                  {this.state.regions.map((region) => {
+                    return (
+                      <option key={region._id} value={region.region}>
+                        {region.name}
+                      </option>
+                    );
+                  })}
+                </Form.Select>
               </FloatingLabel>
               <span className="text-danger">{this.state.errors.city}</span>
-            </Form.Group>
+            </Col>
+            <Col sm className="mb-3">
+              <FloatingLabel label="Община">
+                <Form.Select
+                  onChange={this.onChangeMunicipality}
+                  id="municipalitySelect"
+                >
+                  <option value="" selected disabled hidden>
+                    Избери община
+                  </option>
+                  {this.state.municipalities.map((municipality) => {
+                    return (
+                      <option
+                        key={municipality._id}
+                        value={municipality.municipality}
+                      >
+                        {municipality.name}
+                      </option>
+                    );
+                  })}
+                </Form.Select>
+              </FloatingLabel>
+            </Col>
+            <Col sm className="mb-3">
+              <FloatingLabel label="Населено място">
+                <Form.Select onChange={this.changeCity} id="citySelect">
+                  <option value="" selected disabled hidden>
+                    Избери населено място
+                  </option>
+                  {this.state.cities.map((city) => {
+                    return (
+                      <option key={city._id} value={city._id}>
+                        {city.type} {city.name}
+                      </option>
+                    );
+                  })}
+                </Form.Select>
+              </FloatingLabel>
+            </Col>
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col}>

@@ -60,7 +60,9 @@ class UserRepository {
         _id: id,
         role: roles.Vet,
         moderationVerified: true,
-      }).lean();
+      })
+        .populate("city")
+        .lean();
       if (user !== null) {
         user.password = undefined;
         return user;
@@ -106,7 +108,7 @@ class UserRepository {
   }
   async getProfile(id) {
     try {
-      let user = await User.findById(id).lean().exec();
+      let user = await User.findById(id).populate("city").lean().exec();
       if (user == null) {
         return false;
       } else {
@@ -151,6 +153,7 @@ class UserRepository {
   }
   async getVets() {
     const vets = await User.find({ role: roles.Vet, moderationVerified: true })
+      .populate("city")
       .select(["-password"])
       .lean()
       .exec();

@@ -35,7 +35,11 @@ export default class EditProfile extends React.Component {
           last: "",
         },
         email: "",
-        city: "",
+        city: {
+          type: "",
+          name: "",
+          region: "",
+        },
         address: "",
         URN: "",
         image: null,
@@ -57,7 +61,11 @@ export default class EditProfile extends React.Component {
           first: "",
           last: "",
         },
-        city: "",
+        city: {
+          type: "",
+          name: "",
+          region: "",
+        },
         address: "",
         phoneNumber: "",
         vetDescription: "",
@@ -109,10 +117,15 @@ export default class EditProfile extends React.Component {
     res.image = null;
     res.imageCrop = { x: null, y: null, width: null, height: null };
     this.setState({ profile: res });
+    console.log(res.city);
     this.setState({
       lastProfile: {
         name: { first: res.name.first, last: res.name.last },
-        city: res.city,
+        city: {
+          type: res.city.type,
+          name: res.city.name,
+          region: res.city.region,
+        },
         address: res.address,
         phoneNumber: res.phoneNumber,
         vetDescription: res.vetDescription,
@@ -523,39 +536,14 @@ export default class EditProfile extends React.Component {
               </Form.Group>
             </ListGroup.Item>
             <ListGroup.Item>
-              <Form.Group controlId="city">
-                <Row>
-                  <Col md={2} xs={3}>
-                    <Form.Label className="fw-bold col-form-label">
-                      <FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Град
-                    </Form.Label>
-                  </Col>
-                  <Col md={8} xs={7}>
-                    <Form.Control
-                      type="text"
-                      value={this.state.profile.city}
-                      onChange={this.onChangeValue}
-                    />
-                    <span className="text-danger">
-                      {this.state.errors.city}
-                    </span>
-                  </Col>
-                  <Col xs={2}>
-                    <Button
-                      variant="primary"
-                      className="float-end"
-                      id="city_button"
-                      onClick={this.onEditButtonClick}
-                      disabled={
-                        this.state.errors.city !== "" ||
-                        this.state.lastProfile.city === this.state.profile.city
-                      }
-                    >
-                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
-                    </Button>
-                  </Col>
-                </Row>
-              </Form.Group>
+              <span className="fw-bold">
+                <FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Населено
+                място:{" "}
+                <span className="fw-normal">
+                  {this.state.profile.city.type} {this.state.profile.city.name},{" "}
+                  {this.state.profile.city.region}
+                </span>
+              </span>
             </ListGroup.Item>
             {this.state.profile.role === roles.Vet ? (
               <ListGroup.Item>

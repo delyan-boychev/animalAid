@@ -33,7 +33,7 @@ const vetRegisterSchema = {
         ],
       },
     },
-    city: { type: "string", minLength: 2, maxLength: 45 },
+    city: { type: "string", pattern: "^[a-f\\d]{24}$" },
     password: { type: "string", minLength: 8, maxLength: 98 },
     email: { type: "string", format: "email" },
     phoneNumber: { type: "string", pattern: "^\\+(?:[0-9]●?){6,14}[0-9]$" },
