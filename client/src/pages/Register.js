@@ -1,65 +1,55 @@
-import { Card, Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { faPaw, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faPaw, faUser, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Register() {
   return (
-    <div>
-      <h3 className="text-center">Регистрация</h3>
-      <Row className="justify-content-center">
-        <Col className="mb-3" md>
-          <Card>
-            <Card.Header as="h4" className="text-primary">
-              <FontAwesomeIcon icon={faUser} size="lg"></FontAwesomeIcon>{" "}
-              Регистрация като потребител
-            </Card.Header>
-            <Card.Body>
-              <Card.Text style={{ fontSize: "18px" }}>
-                При регистрация като потребител ще имате възможност да се
-                консуктирате с ветеринари и да запазвате часове при тях, за да
-                помогнете на Вашият домашен любимец!
-              </Card.Text>
-              <div className="d-flex justify-content-center">
-                <Button
-                  variant="primary"
-                  className=""
-                  as={Link}
-                  to="/registerUser"
-                  style={{ fontSize: "18px" }}
-                >
-                  Регистрация
-                </Button>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md>
-          <Card>
-            <Card.Header as="h4" className="text-primary">
-              <FontAwesomeIcon icon={faPaw} size="lg"></FontAwesomeIcon>{" "}
-              Регистрация като ветеринар
-            </Card.Header>
-            <Card.Body>
-              <Card.Text style={{ fontSize: "18px" }}>
-                При регистрация като ветеринар Вие можете да си намерите работа
-                и да я организирате, чрез нашата платформа. Може да правите
-                консултации дори онлайн и да давате съвети на Вашите клиенти!
-              </Card.Text>
-              <div className="d-flex justify-content-center">
-                <Button
-                  variant="primary"
-                  className=""
-                  as={Link}
-                  to="/registerVet"
-                  style={{ fontSize: "18px" }}
-                >
-                  Регистрация
-                </Button>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+    <div className="container px-4 py-5" id="hanging-icons">
+      <h2 className="pb-2 border-bottom text-center">
+        <FontAwesomeIcon
+          className="text-primary"
+          icon={faUserPlus}
+        ></FontAwesomeIcon>{" "}
+        Регистрация
+      </h2>
+      <div className="row g-4 py-5 row-cols-1 row-cols-lg-2">
+        <div className="col d-flex align-items-start">
+          <div className="icon-square text-primary flex-shrink-0 me-3">
+            <h2>
+              <FontAwesomeIcon icon={faUser} size="lg"></FontAwesomeIcon>
+            </h2>
+          </div>
+          <div>
+            <h2>Регистрация като потребител</h2>
+            <p>
+              При регистрация като потребител ще имате възможност да се
+              консуктирате с ветеринари, за да помогнете на Вашият домашен
+              любимец! Може да се възползвате и от нашия форум - лесен начин за
+              комуникация между потрбителите!
+            </p>
+            <Link to="/registerUser" className="btn btn-primary">
+              Регистрация
+            </Link>
+          </div>
+        </div>
+        <div className="col d-flex align-items-start">
+          <div className="icon-square text-primary flex-shrink-0 me-3">
+            <h2>
+              <FontAwesomeIcon icon={faPaw} size="lg"></FontAwesomeIcon>
+            </h2>
+          </div>
+          <div>
+            <h2>Регистрация като ветеринар</h2>
+            <p>
+              При регистрация като ветеринар Вие можете да си намерите работа и
+              да я организирате, чрез нашата платформа. Може да правите
+              консултации дори онлайн и да давате съвети на Вашите клиенти!
+            </p>
+            <Link to="/registerVet" className="btn btn-primary">
+              Регистрация
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
