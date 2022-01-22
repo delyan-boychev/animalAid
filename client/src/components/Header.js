@@ -1,6 +1,5 @@
 import { Navbar, Nav } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
-import logo from "../images/logo.webp";
 import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoginAndRegPartial from "./LoginAndRegPartial";
@@ -10,6 +9,7 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+const BASE_URL = require("../config.json").BASE_URL;
 export default function Header() {
   const [open, setOpen] = useState(false);
   let autoCloseCollapse = () => {
@@ -24,7 +24,7 @@ export default function Header() {
     >
       <Navbar.Brand as={Link} to="/" className="text-secondary ms-3">
         <img
-          src={logo}
+          src={`${BASE_URL}/images/logo.webp`}
           alt="logo"
           style={{ maxHeight: "70px" }}
           className="logo-shadow"

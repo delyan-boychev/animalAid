@@ -1,9 +1,5 @@
-import homeFirst from "../images/home1.webp";
-import homeSecond from "../images/home2.webp";
-import homeThird from "../images/home3.webp";
 import { Carousel } from "react-bootstrap";
 import "../css/alignCarouselTop.css";
-import logoReverse from "../images/logoReverse.webp";
 import { NavLink, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,6 +13,7 @@ import {
   faTachometerAlt,
   faCogs,
 } from "@fortawesome/free-solid-svg-icons";
+const BASE_URL = require("../config.json").BASE_URL;
 export default function Home() {
   return (
     <div>
@@ -24,7 +21,7 @@ export default function Home() {
         <Carousel.Item
           style={{
             height: "500px",
-            backgroundImage: `url(${homeFirst})`,
+            backgroundImage: `url(${BASE_URL}/images/home1.webp)`,
             backgroundPosition: "50% 20%",
             backgroundSize: "cover",
           }}
@@ -59,7 +56,7 @@ export default function Home() {
         <Carousel.Item
           style={{
             height: "500px",
-            backgroundImage: `url(${homeSecond})`,
+            backgroundImage: `url(${BASE_URL}/images/home2.webp)`,
             backgroundPosition: "50% 20%",
             backgroundSize: "cover",
           }}
@@ -90,7 +87,7 @@ export default function Home() {
         <Carousel.Item
           style={{
             height: "500px",
-            backgroundImage: `url(${homeThird})`,
+            backgroundImage: `url(${BASE_URL}/images/home3.webp)`,
             backgroundPosition: "50% 80%",
             backgroundSize: "cover",
           }}
@@ -181,7 +178,7 @@ export default function Home() {
         <div className="row flex-lg-row-reverse align-items-center g-5 py-5">
           <div className="col-10 col-sm-8 col-lg-6">
             <img
-              src={logoReverse}
+              src={`${BASE_URL}/images/logoReverse.webp`}
               className="d-block mx-lg-auto img-fluid"
               alt="Bootstrap Themes"
               style={{ width: "310px" }}

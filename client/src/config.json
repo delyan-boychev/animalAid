@@ -1,3 +1,4 @@
 {
-  "API_URL": "https://animalaidbg.com:8443"
+  "API_URL": "https://animalaidbg.com:8443",
+  "BASE_URL": "https://animalaidbg.com"
 }
