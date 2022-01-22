@@ -117,7 +117,6 @@ export default class EditProfile extends React.Component {
     res.image = null;
     res.imageCrop = { x: null, y: null, width: null, height: null };
     this.setState({ profile: res });
-    console.log(res.city);
     this.setState({
       lastProfile: {
         name: { first: res.name.first, last: res.name.last },
