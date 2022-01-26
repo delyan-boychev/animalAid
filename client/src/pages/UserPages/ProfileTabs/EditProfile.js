@@ -1,6 +1,14 @@
 import React from "react";
 import InfoModal from "../../../components/InfoModal";
-import { ListGroup, Button, Row, Col, Form, Spinner } from "react-bootstrap";
+import {
+  ListGroup,
+  Button,
+  Row,
+  Col,
+  Form,
+  Spinner,
+  FloatingLabel,
+} from "react-bootstrap";
 import ImageUploading from "react-images-uploading";
 import Cropper from "react-easy-crop";
 import {
@@ -35,11 +43,7 @@ export default class EditProfile extends React.Component {
           last: "",
         },
         email: "",
-        city: {
-          type: "",
-          name: "",
-          region: "",
-        },
+        city: "",
         address: "",
         URN: "",
         image: null,
@@ -62,6 +66,7 @@ export default class EditProfile extends React.Component {
           last: "",
         },
         city: {
+          _id: "",
           type: "",
           name: "",
           region: "",
@@ -95,10 +100,14 @@ export default class EditProfile extends React.Component {
       },
       crop: { x: 0, y: 0 },
       zoom: 1,
+      regions: [],
+      municipalities: [],
+      cities: [],
     };
   }
   componentDidMount() {
     this.getInfo();
+    this.getRegions();
   }
   openModal = (body) => {
     let modal = this.state.modal;
@@ -121,6 +130,7 @@ export default class EditProfile extends React.Component {
       lastProfile: {
         name: { first: res.name.first, last: res.name.last },
         city: {
+          _id: res.city._id,
           type: res.city.type,
           name: res.city.name,
           region: res.city.region,
@@ -132,6 +142,9 @@ export default class EditProfile extends React.Component {
           res.typeAnimals !== undefined ? [...res.typeAnimals] : undefined,
       },
     });
+    const profile = this.state.profile;
+    profile["city"] = res.city._id;
+    this.setState({ profile });
   }
   onChangeValue = (event) => {
     let profile = this.state.profile;
@@ -172,9 +185,8 @@ export default class EditProfile extends React.Component {
       errors.name.last =
         "Фамилията трябва да е поне 2 символа и да е максимум 50 символа!";
     }
-    if (fields["city"].length < 2 || fields["city"].length > 45) {
-      errors["city"] =
-        "Името на града трябва да е поне 2 символа и да е максимум 45 символа!";
+    if (fields["city"] === "") {
+      errors["city"] = "Не сте избрали град!";
     }
     if (errors["image"] !== "") {
       errors["isValid"] = false;
@@ -267,6 +279,37 @@ export default class EditProfile extends React.Component {
         "Възникна грешка при редакция! Извиняваме се за неудобството!"
       );
     }
+  };
+  getRegions = async () => {
+    const regions = await client.getRequest(`/city/getAllRegions`);
+    this.setState({ regions });
+  };
+  onChangeRegion = async (event) => {
+    const municipalities = await client.getRequest(
+      `/city/getMunicipalitiesByRegion/${event.target.value}`
+    );
+    const profile = this.state.profile;
+    profile["city"] = this.state.lastProfile.city._id;
+    this.setState({ municipalities, cities: [], profile });
+    this.validate();
+    document.getElementById("municipalitySelect").options[0].selected = true;
+    document.getElementById("citySelect").options[0].selected = true;
+  };
+  onChangeMunicipality = async (event) => {
+    const cities = await client.getRequest(
+      `/city/getCitiesByMunicipality/${event.target.value}`
+    );
+    const profile = this.state.profile;
+    profile["city"] = this.state.lastProfile.city._id;
+    this.setState({ cities, profile });
+    this.validate();
+    document.getElementById("citySelect").options[0].selected = true;
+  };
+  changeCity = (event) => {
+    const profile = this.state.profile;
+    profile["city"] = event.target.value;
+    this.setState({ profile });
+    this.validate();
   };
   changeProfilePhoto = async () => {
     if (this.state.errors.image === "") {
@@ -539,10 +582,105 @@ export default class EditProfile extends React.Component {
                 <FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Населено
                 място:{" "}
                 <span className="fw-normal">
-                  {this.state.profile.city.type} {this.state.profile.city.name},{" "}
-                  {this.state.profile.city.region}
+                  {this.state.lastProfile.city.type}{" "}
+                  {this.state.lastProfile.city.name},{" "}
+                  {this.state.lastProfile.city.region}
                 </span>
               </span>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Form.Group controlId="city">
+                <Row>
+                  <Col md={2} xs={3}>
+                    <Form.Label className="fw-bold col-form-label">
+                      <FontAwesomeIcon icon={faMapMarkedAlt}></FontAwesomeIcon>{" "}
+                      Промяна на населено място:
+                    </Form.Label>
+                  </Col>
+                  <Col md={8} xs={7}>
+                    <Row>
+                      <Col lg className="mb-3">
+                        <FloatingLabel label="Област">
+                          <Form.Select
+                            onChange={this.onChangeRegion}
+                            id="regionSelect"
+                          >
+                            <option value="" selected disabled hidden>
+                              Избери област
+                            </option>
+                            {this.state.regions.map((region) => {
+                              return (
+                                <option key={region._id} value={region.region}>
+                                  {region.name}
+                                </option>
+                              );
+                            })}
+                          </Form.Select>
+                        </FloatingLabel>
+                        <span className="text-danger">
+                          {this.state.errors.city}
+                        </span>
+                      </Col>
+                      <Col lg className="mb-3">
+                        <FloatingLabel label="Община">
+                          <Form.Select
+                            onChange={this.onChangeMunicipality}
+                            id="municipalitySelect"
+                          >
+                            <option value="" selected disabled hidden>
+                              Избери община
+                            </option>
+                            {this.state.municipalities.map((municipality) => {
+                              return (
+                                <option
+                                  key={municipality._id}
+                                  value={municipality.municipality}
+                                >
+                                  {municipality.name}
+                                </option>
+                              );
+                            })}
+                          </Form.Select>
+                        </FloatingLabel>
+                      </Col>
+                      <Col lg className="mb-3">
+                        <FloatingLabel label="Населено място">
+                          <Form.Select
+                            onChange={this.changeCity}
+                            id="citySelect"
+                          >
+                            <option value="" selected disabled hidden>
+                              Избери населено място
+                            </option>
+                            {this.state.cities.map((city) => {
+                              return (
+                                <option key={city._id} value={city._id}>
+                                  {city.type} {city.name}
+                                </option>
+                              );
+                            })}
+                          </Form.Select>
+                        </FloatingLabel>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col xs={2}>
+                    <Button
+                      variant="primary"
+                      className="float-end"
+                      id="city_button"
+                      onClick={this.onEditButtonClick}
+                      disabled={
+                        this.state.errors.city !== "" ||
+                        this.state.lastProfile.city._id ===
+                          this.state.profile.city
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                    </Button>
+                  </Col>
+                </Row>
+              </Form.Group>
             </ListGroup.Item>
             {this.state.profile.role === roles.Vet ? (
               <ListGroup.Item>
