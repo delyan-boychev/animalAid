@@ -28,7 +28,11 @@ class Vet extends React.Component {
           last: "",
         },
         email: "",
-        city: "",
+        city: {
+          type: "",
+          name: "",
+          region: "",
+        },
         address: "",
         URN: "",
         vetDescription: "",
@@ -170,8 +174,11 @@ class Vet extends React.Component {
           </ListGroup.Item>
           <ListGroup.Item>
             <span className="fw-bold">
-              <FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Град:{" "}
-              <span className="fw-normal">{this.state.vet.city}</span>
+              <FontAwesomeIcon icon={faCity}></FontAwesomeIcon> Населено място:{" "}
+              <span className="fw-normal">
+                {this.state.vet.city.type} {this.state.vet.city.name},{" "}
+                {this.state.vet.city.region}
+              </span>
             </span>
           </ListGroup.Item>
           <ListGroup.Item>

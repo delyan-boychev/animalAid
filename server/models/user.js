@@ -62,4 +62,9 @@ const schema = new mongoose.Schema({
   lastForgotPassword: Number,
   lastRequestForgotPassword: Number,
 });
+schema.virtual("cityVirtual", {
+  ref: "City",
+  localField: "city",
+  foreignField: "_id",
+});
 module.exports = mongoose.model("User", schema);

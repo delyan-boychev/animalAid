@@ -1,6 +1,7 @@
 "use strict";
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
+const City = require("../models/city");
 const roles = require("../models/roles");
 const ChatRepository = require("./chat");
 class AdminRepository {
@@ -39,9 +40,31 @@ class AdminRepository {
    */
   async getAllUsers(searchQuery) {
     if (searchQuery !== undefined) {
-      return await User.find(searchQuery).select(["-password"]).lean().exec();
+      if (searchQuery["$or"] !== undefined) {
+        if (searchQuery["$or"][3]["city"] !== undefined) {
+          const cities = await City.find({
+            $or: [
+              { name: { $regex: searchQuery["$or"][3]["city"]["$regex"] } },
+              { region: { $regex: searchQuery["$or"][3]["city"]["$regex"] } },
+            ],
+          });
+          const cityIds = cities.map((city) => {
+            return city._id;
+          });
+          searchQuery["$or"][3]["city"] = cityIds;
+        }
+      }
+      return await User.find(searchQuery)
+        .populate("city")
+        .select(["-password"])
+        .lean()
+        .exec();
     } else {
-      return await User.find().select(["-password"]).lean().exec();
+      return await User.find()
+        .populate("city")
+        .select(["-password"])
+        .lean()
+        .exec();
     }
   }
   /**
@@ -83,11 +106,14 @@ class AdminRepository {
    */
   async getProfile(id) {
     try {
-      let user = await User.findById(id).lean().exec();
+      let user = await User.findById(id)
+        .populate("city")
+        .select(["-password"])
+        .lean()
+        .exec();
       if (user == null) {
         return false;
       } else {
-        user.password = undefined;
         return user;
       }
     } catch {

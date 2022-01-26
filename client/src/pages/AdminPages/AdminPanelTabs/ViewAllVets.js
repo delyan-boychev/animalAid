@@ -132,8 +132,8 @@ class ViewAllVets extends React.Component {
                   {vet.name.first} {vet.name.last}
                   <br />
                   <span className="text-muted">
-                    {vet.email}, {vet.city}, {vet.address}, {vet.URN},
-                    {vet.phoneNumber}
+                    {vet.email}, {vet.address}, {vet.URN},{vet.phoneNumber},{" "}
+                    {vet.city.type} {vet.city.name}, {vet.city.region}
                   </span>
                 </Col>
               </Row>

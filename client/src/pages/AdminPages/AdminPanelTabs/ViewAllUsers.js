@@ -132,7 +132,8 @@ class ViewAllUsers extends React.Component {
                   {user.name.first} {user.name.last}
                   <br />
                   <span className="text-muted">
-                    {user.email}, {user.city}, {user.phoneNumber}
+                    {user.email}, {user.phoneNumber}, {user.city.type}{" "}
+                    {user.city.name}, {user.city.region}
                   </span>
                 </Col>
               </Row>

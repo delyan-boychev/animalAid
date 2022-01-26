@@ -33,7 +33,7 @@ const city = {
   id: "/city",
   type: "object",
   properties: {
-    city: { type: "string", minLength: 2, maxLength: 45 },
+    city: { type: "string", pattern: "^[a-f\\d]{24}$" },
   },
   additionalProperties: false,
   required: ["city"],
