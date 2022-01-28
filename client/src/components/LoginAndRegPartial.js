@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from "../cookies";
+import Cookies from "universal-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getRequestToken } from "../clientRequests";
 import {
@@ -14,12 +14,11 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 const roles = require("../enums/roles");
 export default function LoginAndRegPartial(props) {
+  const cookies = new Cookies();
+  const token = cookies.get("authorization");
   const [profile, setProfile] = useState("");
   let getProfile = async () => {
-    if (
-      getCookie("authorization") !== "" ||
-      getCookie("authorization") !== null
-    ) {
+    if (token !== undefined) {
       let profile = await getRequestToken("/user/profile");
       setProfile(profile);
     }
@@ -30,13 +29,11 @@ export default function LoginAndRegPartial(props) {
     }
   });
   let logout = () => {
-    setCookie("authorization", "", 1);
+    cookies.remove("authorization", { path: "/" });
+    cookies.remove("validity", { path: "/" });
     window.location.href = "/";
   };
-  if (
-    getCookie("authorization") === "" ||
-    getCookie("authorization") === null
-  ) {
+  if (token === undefined) {
     return (
       <div style={{ fontSize: "20px" }}>
         <Nav.Link

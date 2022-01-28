@@ -348,8 +348,12 @@ class RegisterUser extends React.Component {
           <Row>
             <Col sm className="mb-3">
               <FloatingLabel label="Област">
-                <Form.Select onChange={this.onChangeRegion} id="regionSelect">
-                  <option value="" selected disabled hidden>
+                <Form.Select
+                  onChange={this.onChangeRegion}
+                  defaultValue=""
+                  id="regionSelect"
+                >
+                  <option value="" disabled hidden>
                     Избери област
                   </option>
                   {this.state.regions.map((region) => {
@@ -368,8 +372,9 @@ class RegisterUser extends React.Component {
                 <Form.Select
                   onChange={this.onChangeMunicipality}
                   id="municipalitySelect"
+                  defaultValue=""
                 >
-                  <option value="" selected disabled hidden>
+                  <option value="" disabled hidden>
                     Избери община
                   </option>
                   {this.state.municipalities.map((municipality) => {
@@ -387,8 +392,12 @@ class RegisterUser extends React.Component {
             </Col>
             <Col sm className="mb-3">
               <FloatingLabel label="Населено място">
-                <Form.Select onChange={this.changeCity} id="citySelect">
-                  <option value="" selected disabled hidden>
+                <Form.Select
+                  onChange={this.changeCity}
+                  id="citySelect"
+                  defaultValue=""
+                >
+                  <option value="" disabled hidden>
                     Избери населено място
                   </option>
                   {this.state.cities.map((city) => {

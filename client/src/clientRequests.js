@@ -1,10 +1,11 @@
 //*Functions for making post or get requests to api application
-import { getCookie, setCookie } from "./cookies";
+import Cookies from "universal-cookie";
 const API_URL = require("./config.json").API_URL;
 const axios = require("axios");
 //*Refresh token after expiration
 async function refreshToken() {
-  const token = getCookie("authorization");
+  const cookies = new Cookies();
+  const token = cookies.get("authorization");
   if (token !== "" && token !== null) {
     let headers = { Authorization: `animalAidAuthorization ${token}` };
     const res = await axios.post(
@@ -13,10 +14,15 @@ async function refreshToken() {
       { headers: headers }
     );
     if (res.data !== false) {
-      setCookie("authorization", res.data, 4444444);
+      cookies.set("authorization", res.data, { maxAge: 3153600000, path: "/" });
+      cookies.set("validity", parseInt(new Date().getTime() / 1000) + 1800, {
+        maxAge: 3153600000,
+        path: "/",
+      });
       return res.data;
     } else {
-      setCookie("authorization", "", 1);
+      cookies.remove("authorization", { path: "/" });
+      cookies.remove("validity", { path: "/" });
       return false;
     }
   } else {
@@ -36,8 +42,9 @@ async function postRequestToken(url, data, headers) {
   if (!headers) {
     headers = {};
   }
-  let token = getCookie("authorization");
-  if (token !== "" && token !== null) {
+  const cookies = new Cookies();
+  let token = cookies.get("authorization");
+  if (token !== undefined) {
     headers["Authorization"] = `animalAidAuthorization ${token}`;
     let URL = API_URL + url;
     if (url.includes(API_URL)) URL = url;
@@ -79,32 +86,47 @@ async function getRequestToken(url, headers) {
   if (!headers) {
     headers = {};
   }
-  let token = getCookie("authorization");
-  if (token !== "" && token !== null) {
-    headers["Authorization"] = `animalAidAuthorization ${token}`;
-    let URL = API_URL + url;
-    if (url.includes(API_URL)) URL = url;
-    try {
-      const res = await axios.get(URL, { headers: headers });
-      return res.data;
-    } catch (error) {
-      console.clear();
-      if (error.response.status === 401) {
-        const refreshedToken = await refreshToken();
-        if (refreshedToken !== false) {
-          token = refreshedToken;
-          headers["Authorization"] = `animalAidAuthorization ${token}`;
-          const res2 = await axios.get(URL, { headers: headers });
-          return res2.data;
-        } else {
+  const cookies = new Cookies();
+  let token = cookies.get("authorization");
+  const validity = cookies.get("validity");
+  let URL = API_URL + url;
+  if (url.includes(API_URL)) URL = url;
+  if (token !== undefined) {
+    if (validity > parseInt(new Date().getTime()) / 1000) {
+      headers["Authorization"] = `animalAidAuthorization ${token}`;
+      try {
+        const res = await axios.get(URL, { headers: headers });
+        return res.data;
+      } catch (error) {
+        console.clear();
+        if (error.response.status === 401) {
+          const refreshedToken = await refreshToken();
+          if (refreshedToken !== false) {
+            token = refreshedToken;
+            headers["Authorization"] = `animalAidAuthorization ${token}`;
+            const res2 = await axios.get(URL, { headers: headers });
+            return res2.data;
+          } else {
+            window.location.href = "/";
+            return "";
+          }
+        } else if (error.response.status === 403) {
           window.location.href = "/";
           return "";
+        } else {
+          return false;
         }
-      } else if (error.response.status === 403) {
+      }
+    } else {
+      const refreshedToken = await refreshToken();
+      if (refreshedToken !== false) {
+        token = refreshedToken;
+        headers["Authorization"] = `animalAidAuthorization ${token}`;
+        const res2 = await axios.get(URL, { headers: headers });
+        return res2.data;
+      } else {
         window.location.href = "/";
         return "";
-      } else {
-        return false;
       }
     }
   }

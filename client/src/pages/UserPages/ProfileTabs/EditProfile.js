@@ -604,8 +604,9 @@ export default class EditProfile extends React.Component {
                           <Form.Select
                             onChange={this.onChangeRegion}
                             id="regionSelect"
+                            defaultValue=""
                           >
-                            <option value="" selected disabled hidden>
+                            <option value="" disabled hidden>
                               Избери област
                             </option>
                             {this.state.regions.map((region) => {
@@ -626,8 +627,9 @@ export default class EditProfile extends React.Component {
                           <Form.Select
                             onChange={this.onChangeMunicipality}
                             id="municipalitySelect"
+                            defaultValue=""
                           >
-                            <option value="" selected disabled hidden>
+                            <option value="" disabled hidden>
                               Избери община
                             </option>
                             {this.state.municipalities.map((municipality) => {
@@ -648,8 +650,9 @@ export default class EditProfile extends React.Component {
                           <Form.Select
                             onChange={this.changeCity}
                             id="citySelect"
+                            defaultValue=""
                           >
-                            <option value="" selected disabled hidden>
+                            <option value="" disabled hidden>
                               Избери населено място
                             </option>
                             {this.state.cities.map((city) => {

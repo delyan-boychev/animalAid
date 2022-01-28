@@ -18,7 +18,7 @@ import {
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
 import { refreshToken } from "../../clientRequests";
-import { getCookie } from "../../cookies";
+import Cookies from "universal-cookie";
 const io = require("socket.io-client");
 const API_URL = require("../../config.json").API_URL;
 class Chats extends React.Component {
@@ -26,10 +26,11 @@ class Chats extends React.Component {
   page = 1;
   pages = 1;
   listenerSet = false;
+  cookies = new Cookies();
   constructor(props) {
     super(props);
     this.state = {
-      token: getCookie("authorization"),
+      token: this.cookies.get("authorization"),
       chatUsers: [],
       messages: [],
       id: "",

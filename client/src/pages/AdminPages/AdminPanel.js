@@ -8,7 +8,11 @@ import ViewVetsForModerationVerify from "./AdminPanelTabs/ViewVetsForModerationV
 export default class AdminPanel extends React.Component {
   render() {
     return (
-      <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+      <Tab.Container
+        id="left-tabs-example"
+        defaultActiveKey="first"
+        unmountOnExit={true}
+      >
         <Row>
           <Col sm={3}>
             <Nav variant="pills" className="flex-column">

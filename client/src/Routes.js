@@ -14,7 +14,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./css/animations.css";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
-import { getCookie } from "./cookies";
+import Cookies from "universal-cookie";
 import Chats from "./pages/UserPages/Chats";
 import Contacts from "./pages/Contacts";
 import Vets from "./pages/UserPages/Vets";
@@ -220,8 +220,9 @@ const routes = (isLoggedIn) => [
 ];
 export default function Routes() {
   const location = useLocation();
-  const token = getCookie("authorization");
-  const loggedIn = token !== null && token !== "";
+  const cookies = new Cookies();
+  const token = cookies.get("authorization");
+  const loggedIn = token !== undefined;
   const routeComponents = useRoutes(routes(loggedIn));
   return (
     <TransitionGroup component={null}>

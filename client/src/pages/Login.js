@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Button, FloatingLabel, Row, Col } from "react-bootstrap";
 import InfoModal from "../components/InfoModal";
-import { setCookie } from "../cookies";
+import Cookies from "universal-cookie";
 import { Link } from "react-router-dom";
 import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,6 +41,7 @@ export default class Login extends React.Component {
   submitForm = async (event) => {
     event.preventDefault();
     this.validate();
+    const cookies = new Cookies();
     if (this.state.errors.isValid) {
       const user = this.state.fields;
       const response = await client.postRequest("/user/log", {
@@ -67,7 +68,15 @@ export default class Login extends React.Component {
         );
       } else {
         this.openModal("Вие влязохте успешно в профила си!");
-        setCookie("authorization", response, 4444444);
+
+        cookies.set("authorization", response, {
+          maxAge: 3153600000,
+          path: "/",
+        });
+        cookies.set("validity", parseInt(new Date().getTime() / 1000) + 1800, {
+          maxAge: 3153600000,
+          path: "/",
+        });
         this.loginComplete = true;
       }
     }

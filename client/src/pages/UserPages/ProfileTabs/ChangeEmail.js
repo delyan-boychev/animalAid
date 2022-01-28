@@ -1,7 +1,7 @@
 import React from "react";
 import InfoModal from "../../../components/InfoModal";
 import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
-import { setCookie } from "../../../cookies";
+import Cookies from "universal-cookie";
 const client = require("../../../clientRequests");
 
 export default class ChangeEmail extends React.Component {
@@ -29,6 +29,7 @@ export default class ChangeEmail extends React.Component {
   submitForm = async (event) => {
     event.preventDefault();
     this.validate();
+    const cookies = new Cookies();
     if (this.state.errors.isValid) {
       const fields = this.state.fields;
       let res = await client.postRequestToken("/user/changeEmail", fields);
@@ -36,7 +37,8 @@ export default class ChangeEmail extends React.Component {
         this.openModal(
           "Имейл адресът е променен успешно! Моля проверете новата си поща и след това влезте в профила с новия имейл адрес!"
         );
-        setCookie("authorization", "", 1);
+        cookies.remove("authorization", { path: "/" });
+        cookies.remove("validity", { path: "/" });
         this.changeEmailComplete = true;
       } else if (res === "EXISTS") {
         this.openModal("Вече съществува профил с този имейл адрес!");
