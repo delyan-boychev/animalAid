@@ -5,7 +5,9 @@ const schema = new mongoose.Schema({
   date: {
     type: Number,
     required: true,
-    default: parseInt(new Date().getTime().toString()),
+    default: () => {
+      return parseInt(new Date().getTime().toString());
+    },
   },
 });
 module.exports = schema;

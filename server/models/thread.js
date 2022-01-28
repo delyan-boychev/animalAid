@@ -9,14 +9,14 @@ const schema = new mongoose.Schema({
     type: Number,
     required: true,
     default: () => {
-      return new Date().getTime();
+      return parseInt(new Date().getTime().toString());
     },
   },
   dateLastActivity: {
     type: Number,
     required: true,
     default: () => {
-      return new Date().getTime();
+      return parseInt(new Date().getTime().toString());
     },
   },
 });
