@@ -2,6 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 const BASE_URL = require("../config.json").BASE_URL;
 export default function About() {
+  document.title = "За нас";
   return (
     <div>
       <Row>

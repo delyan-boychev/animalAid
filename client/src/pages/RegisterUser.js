@@ -64,10 +64,13 @@ class RegisterUser extends React.Component {
       crop: { x: 0, y: 0 },
       zoom: 1,
     };
-    this.getCaptcha();
-    this.getRegions();
   }
   registerComplete = false;
+  componentDidMount() {
+    this.getCaptcha();
+    this.getRegions();
+    document.title = "Регистрация като потребител";
+  }
   getRegions = async () => {
     const regions = await client.getRequest(`/city/getAllRegions`);
     this.setState({ regions });

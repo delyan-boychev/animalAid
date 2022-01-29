@@ -42,6 +42,9 @@ class Chats extends React.Component {
       chatUserInfo: {},
       lastMessageId: "",
     };
+  }
+  componentDidMount() {
+    document.title = "Чатове";
     this.startSocket(this.state.token);
   }
   setListener = () => {

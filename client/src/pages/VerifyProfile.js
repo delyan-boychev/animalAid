@@ -18,6 +18,7 @@ export default class VerifyProfile extends React.Component {
   }
   componentDidMount() {
     this.verifyProfile();
+    document.title = "Потвърждаване на профила";
   }
   verifyProfile = async () => {
     const key = this.state.fields.key;

@@ -6,6 +6,9 @@ import ViewAllUsers from "./AdminPanelTabs/ViewAllUsers";
 import ViewAllVets from "./AdminPanelTabs/ViewAllVets";
 import ViewVetsForModerationVerify from "./AdminPanelTabs/ViewVetsForModerationVerify";
 export default class AdminPanel extends React.Component {
+  componentDidMount() {
+    document.title = "Администраторски панел";
+  }
   render() {
     return (
       <Tab.Container

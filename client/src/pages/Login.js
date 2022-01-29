@@ -36,7 +36,10 @@ export default class Login extends React.Component {
         body: "",
       },
     };
+  }
+  componentDidMount() {
     this.getCaptcha();
+    document.title = "Влизане";
   }
   submitForm = async (event) => {
     event.preventDefault();

@@ -35,6 +35,7 @@ class Vets extends React.Component {
     this.props.navigate(`/user/vet?id=${id}`);
   };
   componentDidMount() {
+    document.title = "Ветеринарни лекари";
     const urlParams = new URLSearchParams(window.location.search);
     let page = urlParams.get("page");
     if (isNormalInteger(page)) {

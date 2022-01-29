@@ -25,6 +25,9 @@ export default class ChangeForgotPassword extends React.Component {
       },
       tokenValid: false,
     };
+  }
+  componentDidMount() {
+    document.title = "Промяна на забравена парола";
     this.checkToken();
   }
   checkToken = async () => {

@@ -7,6 +7,9 @@ import EditProfile from "./ProfileTabs/EditProfile";
 import ChangeEmail from "./ProfileTabs/ChangeEmail";
 import ChangePassword from "./ProfileTabs/ChangePassword";
 export default class Profile extends React.Component {
+  componentDidMount() {
+    document.title = "Моят профил";
+  }
   render() {
     return (
       <div>

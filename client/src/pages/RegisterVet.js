@@ -72,10 +72,13 @@ class RegisterVet extends React.Component {
       crop: { x: 0, y: 0 },
       zoom: 1,
     };
-    this.getCaptcha();
-    this.getRegions();
   }
   registrationComplete = false;
+  componentDidMount() {
+    this.getCaptcha();
+    this.getRegions();
+    document.title = "Регистрация като ветеринарен лекар";
+  }
   submitForm = async (event) => {
     event.preventDefault();
     this.validate();
@@ -341,7 +344,7 @@ class RegisterVet extends React.Component {
   render() {
     return (
       <div>
-        <h3 className="text-center">Регистрация на ветеринар</h3>
+        <h3 className="text-center">Регистрация на ветеринарен лекар</h3>
         <InfoModal
           show={this.state.modal.show}
           title={this.state.modal.title}

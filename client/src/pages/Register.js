@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { faPaw, faUser, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Register() {
+  document.title = "Регистрация";
   return (
     <div className="container px-4 py-5" id="hanging-icons">
       <h2 className="pb-2 border-bottom text-center">
@@ -38,7 +39,7 @@ export default function Register() {
             </h2>
           </div>
           <div>
-            <h2>Регистрация като ветеринар</h2>
+            <h2>Регистрация като ветеринарен лекар</h2>
             <p>
               При регистрация като ветеринар Вие можете да си намерите работа и
               да я организирате, чрез нашата платформа. Може да правите

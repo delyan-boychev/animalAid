@@ -21,6 +21,9 @@ export default class RequestForgotPassword extends React.Component {
       },
     };
   }
+  componentDidMount() {
+    document.title = "Забравена парола";
+  }
   submitForm = async (event) => {
     event.preventDefault();
     this.validate();

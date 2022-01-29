@@ -115,6 +115,8 @@ export default class EditUser extends React.Component {
     };
   }
   componentDidMount() {
+    document.title = "Редактиране на потребител";
+
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     if (id !== null) {

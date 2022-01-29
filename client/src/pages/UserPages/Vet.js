@@ -48,6 +48,9 @@ class Vet extends React.Component {
         body: "",
       },
     };
+  }
+  componentDidMount() {
+    document.title = "Преглед на ветеринарен лекар";
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     if (id !== null) {

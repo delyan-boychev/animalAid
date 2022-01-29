@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 const BASE_URL = require("../config.json").BASE_URL;
 export default function Home() {
+  document.title = "Начална страница";
   return (
     <div>
       <Carousel style={{ height: "500px" }}>
