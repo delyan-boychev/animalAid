@@ -2,7 +2,7 @@ import React from "react";
 import Header from "./components/Header";
 import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "./Routes";
-import CookieConsent, { Cookies } from "react-cookie-consent";
+import CookieConsent from "react-cookie-consent";
 function App() {
   return (
     <Router>
