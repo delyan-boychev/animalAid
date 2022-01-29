@@ -15,9 +15,9 @@ function App() {
         buttonClasses="btn btn-primary"
         buttonText="Съгласявам се"
         containerClasses="alert alert-primary fixed-bottom d-flex justify-content-between mb-0"
-        contentClasses="col"
+        contentClasses="mt-2"
       >
-        <p>Този сайт използва бисквитки.</p>
+        Този сайт използва бисквитки.
       </CookieConsent>
     </Router>
   );
