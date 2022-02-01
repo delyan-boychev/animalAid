@@ -13,9 +13,12 @@ import {
   faTachometerAlt,
   faCogs,
 } from "@fortawesome/free-solid-svg-icons";
+import Cookies from "universal-cookie";
 const BASE_URL = require("../config.json").BASE_URL;
 export default function Home() {
+  const cookies = new Cookies();
   document.title = "Начална страница";
+  const token = cookies.get("authorization");
   return (
     <div>
       <Carousel style={{ height: "500px" }}>
@@ -42,7 +45,7 @@ export default function Home() {
                   style={{ fontSize: "70px" }}
                 ></FontAwesomeIcon>
               </h2>
-              <NavLink to="/register">
+              <NavLink to={token === undefined ? "/register" : "/user/profile"}>
                 <div
                   className="btn btn-primary mt-5 fw-bold"
                   style={{ fontSize: "18px" }}

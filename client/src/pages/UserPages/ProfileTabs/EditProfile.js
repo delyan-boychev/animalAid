@@ -191,7 +191,7 @@ export default class EditProfile extends React.Component {
     if (errors["image"] !== "") {
       errors["isValid"] = false;
     } else if (fields["image"] === null || fields["image"] === undefined) {
-      errors["image"] = "Не сте прикачили изображение!";
+      errors["image"] = "NOT_UPLOADED";
       errors["isValid"] = false;
     }
     if (fields["role"] === roles.Vet) {
@@ -291,7 +291,7 @@ export default class EditProfile extends React.Component {
     const profile = this.state.profile;
     profile["city"] = this.state.lastProfile.city._id;
     this.setState({ municipalities, cities: [], profile });
-    this.validate();
+    this.validateEditProfile();
     document.getElementById("municipalitySelect").options[0].selected = true;
     document.getElementById("citySelect").options[0].selected = true;
   };
@@ -302,14 +302,14 @@ export default class EditProfile extends React.Component {
     const profile = this.state.profile;
     profile["city"] = this.state.lastProfile.city._id;
     this.setState({ cities, profile });
-    this.validate();
+    this.validateEditProfile();
     document.getElementById("citySelect").options[0].selected = true;
   };
   changeCity = (event) => {
     const profile = this.state.profile;
     profile["city"] = event.target.value;
     this.setState({ profile });
-    this.validate();
+    this.validateEditProfile();
   };
   changeProfilePhoto = async () => {
     if (this.state.errors.image === "") {
@@ -923,7 +923,10 @@ export default class EditProfile extends React.Component {
                         </div>
                       )}
                     </ImageUploading>
-                    <span className="text-danger">
+                    <span
+                      className="text-danger"
+                      hidden={this.state.errors.image === "NOT_UPLOADED"}
+                    >
                       {this.state.errors.image}
                     </span>
                   </Col>
