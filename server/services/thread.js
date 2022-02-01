@@ -27,5 +27,22 @@ class ThreadService {
   async getThread(id) {
     return await this.#threadRepository.getThread(id);
   }
+  async getThreadPosts(id, pageNum) {
+    const posts = this.#threadRepository.getThreadPosts(id);
+    const startIndex = pageNum * 10 - 10;
+    const endIndex = pageNum * 10;
+    const numPages = Math.ceil(posts.length / 10);
+    if (
+      pageNum < 1 ||
+      (posts.length < endIndex && posts.length < startIndex) ||
+      pageNum > numPages
+    ) {
+      return false;
+    } else if (posts.length < endIndex && posts.length > startIndex) {
+      return { posts: posts.slice(startIndex, posts.length), numPages };
+    } else {
+      return { posts: posts.slice(startIndex, endIndex), numPages };
+    }
+  }
 }
 module.exports = ThreadService;

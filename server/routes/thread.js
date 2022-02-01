@@ -42,6 +42,18 @@ router.post("/replyToPost", authenticate, async (req, res) => {
     );
   });
 });
+router.get("/posts/:id/:page", async (req, res) => {
+  try {
+    const page = parseInt(req.params.page);
+    if (page > 0) {
+      res.send(await threadService.getThreadPosts(req.params.id, page));
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+});
 router.get("/:id", async (req, res) => {
   res.send(await threadService.getThread(req.params.id));
 });

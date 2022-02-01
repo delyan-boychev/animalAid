@@ -20,15 +20,49 @@ class ThreadRepository {
       .exec();
     return threads;
   }
-  async getThread(id) {
+  async getThread(threadId) {
     try {
-      const thread = await Thread.findById(id)
+      const thread = await Thread.findById(threadId)
         .populate("author", "-password")
-        .populate("threadPosts.author", "-password")
-        .populate("threadPosts.replies.author", "-password")
+        .select(["-posts"])
         .exec();
       if (thread !== null) {
         return thread;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  async getThreadPosts(threadId) {
+    try {
+      const thread = await Thread.findById(threadId)
+        .populate("posts.author", "-password")
+        .exec();
+      if (thread !== null) {
+        return thread.posts;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  async getThreadPostReplies(threadId, postId) {
+    try {
+      const thread = await Thread.findById(threadId)
+        .populate("posts.replies.author", "-password")
+        .exec();
+      if (thread !== null) {
+        const postIndex = thread.threadPosts.findIndex((post) =>
+          post._id.equals(postId)
+        );
+        if (postIndex > -1) {
+          return thread.threadPosts[postIndex].replies;
+        } else {
+          return true;
+        }
       } else {
         return false;
       }

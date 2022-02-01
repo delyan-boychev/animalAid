@@ -146,11 +146,12 @@ class ViewVetsForModerationVerify extends React.Component {
                   {vet.name.first} {vet.name.last}
                   <br />
                   <span className="text-muted">
-                    {vet.email}, {vet.city}, {vet.address}, {vet.URN},
-                    {vet.phoneNumber}
+                    {vet.email}, {vet.URN},{vet.phoneNumber}, Адрес:{" "}
+                    {vet.address}, {vet.city.type} {vet.city.name},{" "}
+                    {vet.city.region}
                   </span>
                 </Col>
-                <Col>
+                <Col sm={1}>
                   <Button
                     onClick={() => {
                       this.moderationVerify(vet.email);
