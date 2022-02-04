@@ -6,7 +6,6 @@ const threadService = new ThreadService();
 const validation = require("../models/validation/validation");
 const createThreadSchema = require("../models/validation/thread/createThread");
 const createThreadPostSchema = require("../models/validation/thread/createThreadPost");
-const replyToPostSchema = require("../models/validation/thread/replyToPost");
 const authenticate = require("../authentication/authenticate");
 router.post("/createThread", authenticate, async (req, res) => {
   validation(req.body, createThreadSchema, res, async () => {
@@ -25,19 +24,8 @@ router.post("/createThreadPost", authenticate, async (req, res) => {
       await threadService.createThreadPost(
         req.body.threadId,
         req.user.id,
-        req.body.content
-      )
-    );
-  });
-});
-router.post("/replyToPost", authenticate, async (req, res) => {
-  validation(req.body, replyToPostSchema, res, async () => {
-    res.send(
-      await threadService.replyToPost(
-        req.body.threadId,
-        req.body.postId,
-        req.user.id,
-        req.body.reply
+        req.body.content,
+        req.body.replyTo
       )
     );
   });

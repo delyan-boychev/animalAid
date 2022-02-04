@@ -56,13 +56,13 @@ class AdminRepository {
       }
       return await User.find(searchQuery)
         .populate("city")
-        .select(["-password"])
+        .select("-password -__v -createdOn -verified")
         .lean()
         .exec();
     } else {
       return await User.find()
         .populate("city")
-        .select(["-password"])
+        .select("-password -__v -createdOn -verified")
         .lean()
         .exec();
     }

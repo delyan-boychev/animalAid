@@ -17,7 +17,7 @@ import Cookies from "universal-cookie";
 const BASE_URL = require("../config.json").BASE_URL;
 export default function Home() {
   const cookies = new Cookies();
-  document.title = "Начална страница";
+  document.title = "Animal Aid";
   const token = cookies.get("authorization");
   return (
     <div>

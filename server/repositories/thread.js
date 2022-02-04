@@ -36,70 +36,40 @@ class ThreadRepository {
     }
   }
   async getThreadPosts(threadId) {
-    try {
-      const thread = await Thread.findById(threadId)
-        .populate("posts.author", "-password")
-        .exec();
-      if (thread !== null) {
-        return thread.posts;
-      } else {
-        return false;
-      }
-    } catch {
+    const thread = await Thread.findById(threadId)
+      .populate(
+        "threadPosts.author",
+        "-password -__v -_id -createdOn -verified -city"
+      )
+      .lean()
+      .exec();
+    if (thread !== null) {
+      return thread.threadPosts.map((post) => {
+        if (post.replyTo !== undefined)
+          if (typeof thread.threadPosts[post.replyTo] !== "undefined")
+            post.replyTo = {
+              content: thread.threadPosts[post.replyTo].content,
+              authorFullName: `${
+                thread.threadPosts[post.replyTo].author.name.first
+              } ${thread.threadPosts[post.replyTo].author.name.last}`,
+            };
+        return post;
+      });
+    } else {
       return false;
     }
   }
-  async getThreadPostReplies(threadId, postId) {
-    try {
-      const thread = await Thread.findById(threadId)
-        .populate("posts.replies.author", "-password")
-        .exec();
-      if (thread !== null) {
-        const postIndex = thread.threadPosts.findIndex((post) =>
-          post._id.equals(postId)
-        );
-        if (postIndex > -1) {
-          return thread.threadPosts[postIndex].replies;
-        } else {
-          return true;
-        }
-      } else {
-        return false;
-      }
-    } catch {
-      return false;
-    }
-  }
-  async createThreadPost(threadId, author, content) {
+  async createThreadPost(threadId, author, content, replyTo) {
     const thread = await Thread.findById(threadId).exec();
     if (thread !== null) {
-      thread.threadPosts.push({ author, content });
+      if (replyTo !== undefined)
+        if (typeof thread.threadPosts[replyTo] === "undefined") return false;
+      thread.threadPosts.push({ author, content, replyTo });
       try {
         thread.save();
         return true;
       } catch {
         return false;
-      }
-    } else {
-      return false;
-    }
-  }
-  async replyToPost(threadId, postId, author, reply) {
-    const thread = await Thread.findById(threadId).exec();
-    if (thread !== null) {
-      const postIndex = thread.threadPosts.findIndex((post) =>
-        post._id.equals(postId)
-      );
-      if (postIndex > -1) {
-        thread.threadPosts[postIndex].replies.push({ author, reply });
-        try {
-          thread.save();
-          return true;
-        } catch {
-          return false;
-        }
-      } else {
-        return true;
       }
     } else {
       return false;

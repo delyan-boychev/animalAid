@@ -62,9 +62,9 @@ class UserRepository {
         moderationVerified: true,
       })
         .populate("city")
+        .select("-password -__v -verified -moderationVerified")
         .lean();
       if (user !== null) {
-        user.password = undefined;
         return user;
       } else {
         return false;
@@ -154,7 +154,7 @@ class UserRepository {
   async getVets() {
     const vets = await User.find({ role: roles.Vet, moderationVerified: true })
       .populate("city")
-      .select(["-password"])
+      .select("-password -__v -createdOn -verified -moderationVerified")
       .lean()
       .exec();
     return vets;

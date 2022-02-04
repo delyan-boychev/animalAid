@@ -22,19 +22,23 @@ class AdminService {
    */
   async getAllUsers(pageNum, searchQuery) {
     const users = await this.#adminRepository.getAllUsers(searchQuery);
-    const startIndex = pageNum * 10 - 10;
-    const endIndex = pageNum * 10;
-    const numPages = Math.ceil(users.length / 10);
-    if (
-      pageNum < 1 ||
-      (users.length < endIndex && users.length < startIndex) ||
-      pageNum > numPages
-    ) {
-      return false;
-    } else if (users.length < endIndex && users.length > startIndex) {
-      return { users: users.slice(startIndex, users.length), numPages };
+    if (users !== false) {
+      const startIndex = pageNum * 10 - 10;
+      const endIndex = pageNum * 10;
+      const numPages = Math.ceil(users.length / 10);
+      if (
+        pageNum < 1 ||
+        (users.length < endIndex && users.length < startIndex) ||
+        pageNum > numPages
+      ) {
+        return false;
+      } else if (users.length < endIndex && users.length > startIndex) {
+        return { users: users.slice(startIndex, users.length), numPages };
+      } else {
+        return { users: users.slice(startIndex, endIndex), numPages };
+      }
     } else {
-      return { users: users.slice(startIndex, endIndex), numPages };
+      return false;
     }
   }
   /**
