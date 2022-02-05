@@ -20,6 +20,7 @@ import Contacts from "./pages/Contacts";
 import Vets from "./pages/UserPages/Vets";
 import Vet from "./pages/UserPages/Vet";
 import EditUser from "./pages/AdminPages/EditUser";
+import NoAccess from "./pages/NoAccess";
 const routes = (isLoggedIn) => [
   { path: "/", element: <Home />, exact: true },
   {
@@ -39,7 +40,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -52,7 +53,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -65,7 +66,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -78,7 +79,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -91,7 +92,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -104,7 +105,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -117,7 +118,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -130,7 +131,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -152,7 +153,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -165,7 +166,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -178,7 +179,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -191,7 +192,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -204,7 +205,7 @@ const routes = (isLoggedIn) => [
       </div>
     ) : (
       <div className="container mt-3">
-        <NotFound />
+        <NoAccess />
       </div>
     ),
     exact: true,
