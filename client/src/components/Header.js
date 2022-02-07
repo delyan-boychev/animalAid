@@ -9,7 +9,6 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-const BASE_URL = require("../config.json").BASE_URL;
 export default function Header() {
   const [open, setOpen] = useState(false);
   let autoCloseCollapse = () => {
@@ -24,7 +23,7 @@ export default function Header() {
     >
       <Navbar.Brand as={Link} to="/" className="text-secondary ms-3">
         <img
-          src={`${BASE_URL}/images/logo.webp`}
+          src={`./images/logo.webp`}
           alt="logo"
           style={{ maxHeight: "70px" }}
           className="logo-shadow"

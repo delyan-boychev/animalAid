@@ -103,6 +103,7 @@ class Vets extends React.Component {
                           vet.typeAnimals.length - 1 > index ? ", " : ""
                         }`
                     )}
+                    <br /> {vet.city.type} {vet.city.name}, {vet.city.region}
                   </small>
                 </Col>
               </Row>

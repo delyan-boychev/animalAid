@@ -6,7 +6,7 @@ const axios = require("axios");
 async function refreshToken() {
   const cookies = new Cookies();
   const token = cookies.get("authorization");
-  if (token !== "" && token !== null) {
+  if (token !== undefined) {
     let headers = { Authorization: `animalAidAuthorization ${token}` };
     const res = await axios.post(
       `${API_URL}/user/refreshToken`,
@@ -14,7 +14,10 @@ async function refreshToken() {
       { headers: headers }
     );
     if (res.data !== false) {
-      cookies.set("authorization", res.data, { maxAge: 3153600000, path: "/" });
+      cookies.set("authorization", res.data, {
+        maxAge: 3153600000,
+        path: "/",
+      });
       cookies.set("validity", parseInt(new Date().getTime() / 1000) + 1800, {
         maxAge: 3153600000,
         path: "/",
@@ -44,31 +47,28 @@ async function postRequestToken(url, data, headers) {
   }
   const cookies = new Cookies();
   let token = cookies.get("authorization");
+  const validity = cookies.get("validity");
   if (token !== undefined) {
-    headers["Authorization"] = `animalAidAuthorization ${token}`;
-    let URL = API_URL + url;
-    if (url.includes(API_URL)) URL = url;
-    try {
-      const res = await axios.post(URL, data, { headers: headers });
-      return res.data;
-    } catch (error) {
-      console.clear();
-      if (error.response.status === 401) {
-        const refreshedToken = await refreshToken();
-        if (refreshedToken) {
-          token = refreshedToken;
-          headers["Authorization"] = `animalAidAuthorization ${token}`;
-          const res2 = await axios.post(URL, data, { headers: headers });
-          return res2.data;
-        } else {
-          window.location.href = "/";
-          return "";
-        }
-      } else if (error.response.status === 403) {
+    if (validity > parseInt(new Date().getTime()) / 1000) {
+      headers["Authorization"] = `animalAidAuthorization ${token}`;
+      let URL = API_URL + url;
+      if (url.includes(API_URL)) URL = url;
+      try {
+        const res = await axios.post(URL, data, { headers: headers });
+        return res.data;
+      } catch (error) {
+        window.location.href = "/";
+      }
+    } else {
+      const refreshedToken = await refreshToken();
+      if (refreshedToken !== false) {
+        token = refreshedToken;
+        headers["Authorization"] = `animalAidAuthorization ${token}`;
+        const res2 = await axios.post(URL, data, { headers: headers });
+        return res2.data;
+      } else {
         window.location.href = "/";
         return "";
-      } else {
-        return false;
       }
     }
   }
@@ -98,24 +98,7 @@ async function getRequestToken(url, headers) {
         const res = await axios.get(URL, { headers: headers });
         return res.data;
       } catch (error) {
-        console.clear();
-        if (error.response.status === 401) {
-          const refreshedToken = await refreshToken();
-          if (refreshedToken !== false) {
-            token = refreshedToken;
-            headers["Authorization"] = `animalAidAuthorization ${token}`;
-            const res2 = await axios.get(URL, { headers: headers });
-            return res2.data;
-          } else {
-            window.location.href = "/";
-            return "";
-          }
-        } else if (error.response.status === 403) {
-          window.location.href = "/";
-          return "";
-        } else {
-          return false;
-        }
+        window.location.href = "/";
       }
     } else {
       const refreshedToken = await refreshToken();
