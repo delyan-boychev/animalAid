@@ -23,7 +23,7 @@ export default function Header() {
     >
       <Navbar.Brand as={Link} to="/" className="text-secondary ms-3">
         <img
-          src={`./images/logo.webp`}
+          src={`/images/logo.webp`}
           alt="logo"
           style={{ maxHeight: "70px" }}
           className="logo-shadow"

@@ -24,7 +24,7 @@ export default function Home() {
         <Carousel.Item
           style={{
             height: "500px",
-            backgroundImage: `url(./images/home1.webp)`,
+            backgroundImage: `url(/images/home1.webp)`,
             backgroundPosition: "50% 20%",
             backgroundSize: "cover",
           }}
@@ -59,7 +59,7 @@ export default function Home() {
         <Carousel.Item
           style={{
             height: "500px",
-            backgroundImage: `url(./images/home2.webp)`,
+            backgroundImage: `url(/images/home2.webp)`,
             backgroundPosition: "50% 20%",
             backgroundSize: "cover",
           }}
@@ -90,7 +90,7 @@ export default function Home() {
         <Carousel.Item
           style={{
             height: "500px",
-            backgroundImage: `url(./images/home3.webp)`,
+            backgroundImage: `url(/images/home3.webp)`,
             backgroundPosition: "50% 80%",
             backgroundSize: "cover",
           }}
@@ -181,7 +181,7 @@ export default function Home() {
         <div className="row flex-lg-row-reverse align-items-center g-5 py-5">
           <div className="col-10 col-sm-8 col-lg-6">
             <img
-              src={`./images/logoReverse.webp`}
+              src={`/images/logoReverse.webp`}
               className="d-block mx-lg-auto img-fluid"
               alt="Bootstrap Themes"
               style={{ width: "310px" }}

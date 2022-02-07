@@ -41,7 +41,7 @@ export default function About() {
         <Col>
           <img
             className="d-block mx-lg-auto img-fluid rounded ms-auto me-auto"
-            src={`./images/about1.webp`}
+            src={`/images/about1.webp`}
             alt="Делян"
             style={{ maxWidth: "300px" }}
           />
