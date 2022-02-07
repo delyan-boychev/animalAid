@@ -57,7 +57,12 @@ async function postRequestToken(url, data, headers) {
         const res = await axios.post(URL, data, { headers: headers });
         return res.data;
       } catch (error) {
-        window.location.href = "/";
+        if (error.response.status === 401) {
+          cookies.remove("authorization", { path: "/" });
+          cookies.remove("validity", { path: "/" });
+        } else {
+          window.location.href = "/";
+        }
       }
     } else {
       const refreshedToken = await refreshToken();
@@ -98,7 +103,12 @@ async function getRequestToken(url, headers) {
         const res = await axios.get(URL, { headers: headers });
         return res.data;
       } catch (error) {
-        window.location.href = "/";
+        if (error.response.status === 401) {
+          cookies.remove("authorization", { path: "/" });
+          cookies.remove("validity", { path: "/" });
+        } else {
+          window.location.href = "/";
+        }
       }
     } else {
       const refreshedToken = await refreshToken();
