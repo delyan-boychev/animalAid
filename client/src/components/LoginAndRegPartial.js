@@ -47,93 +47,95 @@ export default function LoginAndRegPartial(props) {
       </div>
     );
   } else {
-    if (profile) {
-      return (
-        <div>
-          <DropdownButton
-            id="dropdownbutton"
-            align={{ lg: "end" }}
-            className="ms-3"
-            variant="primary"
-            title={
-              <span
-                style={{ fontSize: "20px" }}
-                className="fw-bold shadow-navbar"
-              >
-                <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Профил
-              </span>
-            }
-          >
-            <Dropdown.Item
+    return (
+      <div>
+        <DropdownButton
+          id="dropdownbutton"
+          align={{ lg: "end" }}
+          className="ms-3"
+          variant="primary"
+          title={
+            <span
               style={{ fontSize: "20px" }}
-              className="text-primary fw-bold"
+              className="fw-bold shadow-navbar"
             >
-              {profile.name.first} {profile.name.last}
-            </Dropdown.Item>
-            <Dropdown.Divider></Dropdown.Divider>
-            <Dropdown.Item
-              style={{ fontSize: "19px" }}
-              eventKey="1"
-              as={Link}
-              to="/user/profile"
-              className="text-primary"
-              onClick={props.onClick}
-            >
-              <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Моят профил
-            </Dropdown.Item>
-            {profile.role === roles.Admin ? (
+              <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Профил
+            </span>
+          }
+        >
+          {profile ? (
+            <div>
+              <Dropdown.Item
+                style={{ fontSize: "20px" }}
+                className="text-primary fw-bold"
+              >
+                {profile.name.first} {profile.name.last}
+              </Dropdown.Item>
+              <Dropdown.Divider></Dropdown.Divider>
               <Dropdown.Item
                 style={{ fontSize: "19px" }}
                 eventKey="1"
                 as={Link}
-                to="/admin/adminPanel"
+                to="/user/profile"
                 className="text-primary"
                 onClick={props.onClick}
               >
-                <FontAwesomeIcon icon={faUsersCog}></FontAwesomeIcon>{" "}
-                Администраторски панел
+                <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Моят профил
               </Dropdown.Item>
-            ) : (
-              ""
-            )}
-            {profile.role !== roles.Vet ? (
+              {profile.role === roles.Admin ? (
+                <Dropdown.Item
+                  style={{ fontSize: "19px" }}
+                  eventKey="1"
+                  as={Link}
+                  to="/admin/adminPanel"
+                  className="text-primary"
+                  onClick={props.onClick}
+                >
+                  <FontAwesomeIcon icon={faUsersCog}></FontAwesomeIcon>{" "}
+                  Администраторски панел
+                </Dropdown.Item>
+              ) : (
+                ""
+              )}
+              {profile.role !== roles.Vet ? (
+                <Dropdown.Item
+                  style={{ fontSize: "19px" }}
+                  eventKey="1"
+                  as={Link}
+                  to="/user/vets?page=1"
+                  className="text-primary"
+                  onClick={props.onClick}
+                >
+                  <FontAwesomeIcon icon={faUserMd}></FontAwesomeIcon>{" "}
+                  Ветеринарни лекари
+                </Dropdown.Item>
+              ) : (
+                ""
+              )}
               <Dropdown.Item
                 style={{ fontSize: "19px" }}
                 eventKey="1"
                 as={Link}
-                to="/user/vets?page=1"
+                to="/user/chats"
                 className="text-primary"
                 onClick={props.onClick}
               >
-                <FontAwesomeIcon icon={faUserMd}></FontAwesomeIcon> Ветеринарни
-                лекари
+                <FontAwesomeIcon icon={faComments}></FontAwesomeIcon> Чатове
               </Dropdown.Item>
-            ) : (
-              ""
-            )}
-            <Dropdown.Item
-              style={{ fontSize: "19px" }}
-              eventKey="1"
-              as={Link}
-              to="/user/chats"
-              className="text-primary"
-              onClick={props.onClick}
-            >
-              <FontAwesomeIcon icon={faComments}></FontAwesomeIcon> Чатове
-            </Dropdown.Item>
-            <Dropdown.Item
-              style={{ fontSize: "19px" }}
-              onClick={logout}
-              className="text-primary"
-              eventKey="2"
-            >
-              <FontAwesomeIcon icon={faSignOutAlt}></FontAwesomeIcon> Изход
-            </Dropdown.Item>
-          </DropdownButton>
-        </div>
-      );
-    } else {
-      return "";
-    }
+              <Dropdown.Item
+                style={{ fontSize: "19px" }}
+                onClick={logout}
+                className="text-primary"
+                eventKey="2"
+              >
+                <FontAwesomeIcon icon={faSignOutAlt}></FontAwesomeIcon> Изход
+              </Dropdown.Item>
+            </div>
+          ) : (
+            ""
+          )}
+        </DropdownButton>
+      </div>
+    );
   }
 }
