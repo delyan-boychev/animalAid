@@ -7,6 +7,7 @@ import {
   faAddressCard,
   faEnvelopeOpenText,
   faHome,
+  faCommentDots,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 export default function Header() {
@@ -66,6 +67,16 @@ export default function Header() {
             <span className="nav-link-effect shadow-navbar">
               <FontAwesomeIcon icon={faEnvelopeOpenText}></FontAwesomeIcon>{" "}
               Контакти
+            </span>
+          </Nav.Link>
+          <Nav.Link
+            as={NavLink}
+            to="/threads"
+            className="navLink text-secondary"
+            onClick={autoCloseCollapse}
+          >
+            <span className="nav-link-effect shadow-navbar">
+              <FontAwesomeIcon icon={faCommentDots}></FontAwesomeIcon> Форум
             </span>
           </Nav.Link>
         </Nav>

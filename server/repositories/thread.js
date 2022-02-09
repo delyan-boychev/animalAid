@@ -1,4 +1,5 @@
 "use strict";
+const thread = require("../models/thread");
 const Thread = require("../models/thread");
 class ThreadRepository {
   async createThread(topic, description, author) {
@@ -14,17 +15,27 @@ class ThreadRepository {
     }
   }
   async getAllThreads(topic) {
-    const threads = await Thread.find({ topic })
-      .populate("author")
-      .select(["topic", "author"])
-      .exec();
-    return threads;
+    if (topic !== undefined) {
+      const threads = await Thread.find({
+        topic: { $regex: topic, $options: "i" },
+      })
+        .populate("author", "name email")
+        .select("topic author")
+        .exec();
+      return threads;
+    } else {
+      const threads = await Thread.find()
+        .populate("author", "name email")
+        .select("topic author")
+        .exec();
+      return threads;
+    }
   }
   async getThread(threadId) {
     try {
       const thread = await Thread.findById(threadId)
         .populate("author", "-password")
-        .select(["-posts"])
+        .select("-threadPosts")
         .exec();
       if (thread !== null) {
         return thread;
@@ -41,37 +52,40 @@ class ThreadRepository {
         "threadPosts.author",
         "-password -__v -_id -createdOn -verified -city"
       )
-      .lean()
       .exec();
     if (thread !== null) {
       return thread.threadPosts.map((post) => {
-        if (post.replyTo !== undefined)
-          if (typeof thread.threadPosts[post.replyTo] !== "undefined")
-            post.replyTo = {
-              content: thread.threadPosts[post.replyTo].content,
-              authorFullName: `${
-                thread.threadPosts[post.replyTo].author.name.first
-              } ${thread.threadPosts[post.replyTo].author.name.last}`,
+        const p = { ...post.toObject() };
+        if (post.replyTo !== undefined) {
+          const replyTo = thread.threadPosts.id(post.replyTo);
+          if (replyTo !== null) {
+            p.replyTo = {
+              content: replyTo.content,
+              authorFullName: `${replyTo.author.name.first} ${replyTo.author.name.last}`,
+              authorEmail: replyTo.author.email,
             };
-        return post;
+          }
+        }
+        return p;
       });
     } else {
       return false;
     }
   }
   async createThreadPost(threadId, author, content, replyTo) {
-    const thread = await Thread.findById(threadId).exec();
-    if (thread !== null) {
-      if (replyTo !== undefined)
-        if (typeof thread.threadPosts[replyTo] === "undefined") return false;
-      thread.threadPosts.push({ author, content, replyTo });
-      try {
+    try {
+      const thread = await Thread.findById(threadId).exec();
+      if (thread !== null) {
+        if (replyTo !== undefined)
+          if (thread.threadPosts.id(replyTo) === null) return false;
+        thread.threadPosts.push({ author, content, replyTo });
+        thread.dateLastActivity = parseInt(new Date().getTime().toString());
         thread.save();
         return true;
-      } catch {
+      } else {
         return false;
       }
-    } else {
+    } catch {
       return false;
     }
   }

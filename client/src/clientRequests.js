@@ -48,7 +48,7 @@ async function postRequestToken(url, data, headers) {
   const cookies = new Cookies();
   let token = cookies.get("authorization");
   const validity = cookies.get("validity");
-  if (token !== undefined) {
+  if (token !== undefined && validity !== undefined) {
     if (validity > parseInt(new Date().getTime()) / 1000) {
       headers["Authorization"] = `animalAidAuthorization ${token}`;
       let URL = API_URL + url;
@@ -96,7 +96,7 @@ async function getRequestToken(url, headers) {
   const validity = cookies.get("validity");
   let URL = API_URL + url;
   if (url.includes(API_URL)) URL = url;
-  if (token !== undefined) {
+  if (token !== undefined && validity !== undefined) {
     if (validity > parseInt(new Date().getTime()) / 1000) {
       headers["Authorization"] = `animalAidAuthorization ${token}`;
       try {

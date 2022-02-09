@@ -12,6 +12,8 @@ import { useRoutes } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./css/animations.css";
+import Threads from "./pages/Threads";
+import Thread from "./pages/Thread";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import Cookies from "universal-cookie";
@@ -193,6 +195,24 @@ const routes = (isLoggedIn) => [
     ) : (
       <div className="container mt-3">
         <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/threads",
+    element: (
+      <div className="container mt-3">
+        <Threads />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/thread",
+    element: (
+      <div className="container mt-3">
+        <Thread />
       </div>
     ),
     exact: true,

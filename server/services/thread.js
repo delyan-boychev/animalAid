@@ -20,6 +20,27 @@ class ThreadService {
   async getThread(id) {
     return await this.#threadRepository.getThread(id);
   }
+  async getAllThreads(topic, pageNum) {
+    const threads = await this.#threadRepository.getAllThreads(topic);
+    if (threads !== false) {
+      const startIndex = pageNum * 10 - 10;
+      const endIndex = pageNum * 10;
+      const numPages = Math.ceil(threads.length / 10);
+      if (
+        pageNum < 1 ||
+        (threads.length < endIndex && threads.length < startIndex) ||
+        pageNum > numPages
+      ) {
+        return false;
+      } else if (threads.length < endIndex && threads.length > startIndex) {
+        return { threads: threads.slice(startIndex, threads.length), numPages };
+      } else {
+        return { threads: threads.slice(startIndex, endIndex), numPages };
+      }
+    } else {
+      return false;
+    }
+  }
   async getThreadPosts(id, pageNum) {
     const posts = await this.#threadRepository.getThreadPosts(id);
     if (posts !== false) {

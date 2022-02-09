@@ -30,15 +30,25 @@ router.post("/createThreadPost", authenticate, async (req, res) => {
     );
   });
 });
-router.get("/posts/:id/:page", async (req, res) => {
+router.get("/getAllThreads/:pageNum/:searchQuery?", async (req, res) => {
   try {
-    const page = parseInt(req.params.page);
-    if (page > 0) {
-      res.send(await threadService.getThreadPosts(req.params.id, page));
+    const pageNum = parseInt(req.params.pageNum);
+    if (pageNum > 0) {
+      res.send(
+        await threadService.getAllThreads(req.params.searchQuery, pageNum)
+      );
     } else {
       res.sendStatus(400);
     }
   } catch {
+    res.sendStatus(400);
+  }
+});
+router.get("/posts/:id/:page", async (req, res) => {
+  const page = parseInt(req.params.page);
+  if (page > 0) {
+    res.send(await threadService.getThreadPosts(req.params.id, page));
+  } else {
     res.sendStatus(400);
   }
 });
