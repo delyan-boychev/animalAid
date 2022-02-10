@@ -19,7 +19,7 @@ const vetRegisterSchema = {
       height: { type: "number" },
       required: ["x", "y", "width", "height"],
     },
-    URN: { type: "string", pattern: `^([А-Я,а-я,\-,0-9]{2,20})\/([0-9]{4})$` },
+    URN: { type: "string", pattern: "^([А-Я,а-я,-,0-9]{2,20})/([0-9]{4})$" },
     address: { type: "string", minLength: 2, maxLenght: 90 },
     vetDescription: { type: "string", minLength: 100, maxLength: 600 },
     typeAnimals: {

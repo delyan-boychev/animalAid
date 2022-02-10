@@ -36,7 +36,7 @@ const URN = {
   id: "/URN",
   type: "object",
   properties: {
-    URN: { type: "string", pattern: `^([А-Я,а-я,\-,0-9]{2,20})\/([0-9]{4})$` },
+    URN: { type: "string", pattern: "^([А-Я,а-я,-,0-9]{2,20})/([0-9]{4})$" },
     id: { type: "string", pattern: "^[a-f\\d]{24}$" },
   },
   additionalProperties: false,

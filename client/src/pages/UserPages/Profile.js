@@ -13,8 +13,15 @@ export default class Profile extends React.Component {
   render() {
     return (
       <div>
-        <h3 className="text-center">Моят профил</h3>
-        <hr className="solid"></hr>
+        <h1 className="text-center text-primary fw-bold">Моят профил</h1>
+        <hr
+          className="ms-auto me-auto text-primary"
+          style={{
+            height: "4px",
+            opacity: "100%",
+            width: "30%",
+          }}
+        ></hr>
         <Tabs
           defaultActiveKey="profileInfo"
           className="mb-3"

@@ -98,8 +98,15 @@ class Threads extends React.Component {
     );
     return (
       <div>
-        <h3 className="text-center">Форум</h3>
-        <hr />
+        <h1 className="text-center text-primary fw-bold">Форум</h1>
+        <hr
+          className="ms-auto me-auto text-primary"
+          style={{
+            height: "4px",
+            opacity: "100%",
+            width: "30%",
+          }}
+        ></hr>
         <Row>
           <Form onSubmit={this.search} className="mw-75 col-sm-9 mt-3">
             <div className="d-flex">

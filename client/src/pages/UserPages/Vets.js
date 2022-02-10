@@ -106,8 +106,15 @@ class Vets extends React.Component {
     );
     return (
       <div>
-        <h3 className="text-center">Ветеринарни лекари</h3>
-        <hr />
+        <h1 className="text-center text-primary fw-bold">Ветеринарни лекари</h1>
+        <hr
+          className="ms-auto me-auto text-primary"
+          style={{
+            height: "4px",
+            opacity: "100%",
+            width: "30%",
+          }}
+        ></hr>
         <Form onSubmit={this.search} className="mw-75">
           <div className="d-flex">
             <div className="col-sm-8">
