@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs, Tab } from "react-bootstrap";
+import { Tabs, Tab, Collapse } from "react-bootstrap";
 import { faInfoCircle, faAt, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
@@ -26,6 +26,7 @@ export default class Profile extends React.Component {
           defaultActiveKey="profileInfo"
           className="mb-3"
           id="uncontrolled-tab-example"
+          transition={Collapse}
         >
           <Tab
             eventKey="profileInfo"

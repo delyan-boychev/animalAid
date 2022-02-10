@@ -1,5 +1,5 @@
 import React from "react";
-import { Tab, Row, Nav, Col } from "react-bootstrap";
+import { Tab, Row, Nav, Col, Collapse } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaw, faUserCheck, faUsers } from "@fortawesome/free-solid-svg-icons";
 import ViewAllUsers from "./AdminPanelTabs/ViewAllUsers";
@@ -15,6 +15,7 @@ export default class AdminPanel extends React.Component {
         id="left-tabs-example"
         defaultActiveKey="first"
         unmountOnExit={true}
+        transition={Collapse}
       >
         <Row>
           <Col sm={3}>
