@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import isLoggedIn from "../isLoggedIn";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ListGroup,
@@ -13,6 +14,7 @@ import {
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
+  faPlus,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 const client = require("../clientRequests");
@@ -62,6 +64,13 @@ class Threads extends React.Component {
       this.getThreads(1, true);
     }
   };
+  formatDate = (date) => {
+    return `${date.getDate().pad()}-${(
+      date.getMonth() + 1
+    ).pad()}-${date.getFullYear()} ${date.getHours().pad()}:${date
+      .getMinutes()
+      .pad()}:${date.getSeconds().pad()}ч.`;
+  };
   openThread = async (id) => {
     this.props.navigate(`/thread?id=${id}`);
   };
@@ -89,25 +98,42 @@ class Threads extends React.Component {
     );
     return (
       <div>
-        <h3 className="text-center">Теми</h3>
+        <h3 className="text-center">Форум</h3>
         <hr />
-        <Form onSubmit={this.search} className="mw-75">
-          <div className="d-flex">
-            <div className="col-sm-6">
-              <FloatingLabel controlId="searchQuery" label="Търсене">
-                <Form.Control
-                  placeholder="Търсене"
-                  type="text"
-                  value={this.state.searchQuery}
-                  onChange={this.handleOnChangeValue}
-                />
-              </FloatingLabel>
+        <Row>
+          <Form onSubmit={this.search} className="mw-75 col-sm-9 mt-3">
+            <div className="d-flex">
+              <div className="col-sm-8">
+                <FloatingLabel controlId="searchQuery" label="Търсене">
+                  <Form.Control
+                    placeholder="Търсене"
+                    type="text"
+                    value={this.state.searchQuery}
+                    onChange={this.handleOnChangeValue}
+                  />
+                </FloatingLabel>
+              </div>
+              <div className="align-self-center ms-3 me-3">
+                <Button type="submit">
+                  <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+                </Button>
+              </div>
             </div>
-            <Button type="submit">
-              <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-            </Button>
-          </div>
-        </Form>
+          </Form>
+          {isLoggedIn() ? (
+            <div className="col-sm-3 align-self-center justify-content-end mt-3">
+              <Button
+                className="rounded-pill"
+                onClick={() => this.props.navigate("/user/createThread")}
+              >
+                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon> Създаване на
+                тема
+              </Button>
+            </div>
+          ) : (
+            ""
+          )}
+        </Row>
         {pagination}
         <h4
           className="text-center mt-3"
@@ -131,6 +157,11 @@ class Threads extends React.Component {
                   <span className="text-muted">
                     {`${thread.author.name.first} ${thread.author.name.last}`},{" "}
                     {thread.author.email}
+                  </span>
+                  <br />
+                  <span className="text-primary">
+                    Последна активност:{" "}
+                    {this.formatDate(new Date(thread.dateLastActivity))}
                   </span>
                 </Col>
               </Row>

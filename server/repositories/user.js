@@ -2,6 +2,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const roles = require("../models/roles");
+const City = require("../models/city");
 class UserRepository {
   async register(user) {
     if (await User.exists({ email: user.email })) {
@@ -151,13 +152,46 @@ class UserRepository {
       return false;
     }
   }
-  async getVets() {
-    const vets = await User.find({ role: roles.Vet, moderationVerified: true })
-      .populate("city")
-      .select("-password -__v -createdOn -verified -moderationVerified")
-      .lean()
-      .exec();
-    return vets;
+  async getVets(searchQuery) {
+    let query = {};
+    if (searchQuery !== undefined) {
+      query = {
+        role: roles.Vet,
+        moderationVerified: true,
+        $or: [
+          { "name.first": { $regex: searchQuery, $options: "i" } },
+          { "name.last": { $regex: searchQuery, $options: "i" } },
+          { email: { $regex: searchQuery, $options: "i" } },
+          { address: { $regex: searchQuery, $options: "i" } },
+          { URN: { $regex: searchQuery, $options: "i" } },
+        ],
+      };
+      const cities = await City.find({
+        $or: [
+          { name: { $regex: searchQuery, $options: "i" } },
+          { region: { $regex: searchQuery, $options: "i" } },
+        ],
+      });
+      const cityIds = cities.map((city) => {
+        return city._id;
+      });
+      query["$or"].push({ city: cityIds });
+      return await User.find(query)
+        .populate("city")
+        .select("-password -__v -createdOn -verified")
+        .lean()
+        .exec();
+    } else {
+      query = {
+        role: roles.Vet,
+        moderationVerified: true,
+      };
+      return await User.find(query)
+        .populate("city")
+        .select("-password -__v -createdOn -verified")
+        .lean()
+        .exec();
+    }
   }
   async changeEmail(user, newEmail) {
     const u = await User.findById(user.id).exec();

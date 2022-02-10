@@ -47,7 +47,9 @@ class ThreadService {
       const startIndex = pageNum * 10 - 10;
       const endIndex = pageNum * 10;
       const numPages = Math.ceil(posts.length / 10);
-      if (
+      if (numPages === 0) {
+        return { posts: [], numPages: 0 };
+      } else if (
         pageNum < 1 ||
         (posts.length < endIndex && posts.length < startIndex) ||
         pageNum > numPages

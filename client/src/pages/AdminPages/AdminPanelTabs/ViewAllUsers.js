@@ -84,9 +84,9 @@ class ViewAllUsers extends React.Component {
     return (
       <div>
         <Row>
-          <Form onSubmit={this.search}>
+          <Form onSubmit={this.search} className="mw-75">
             <div className="d-flex">
-              <div>
+              <div className="col-sm-8">
                 <FloatingLabel controlId="searchQuery" label="Търсене">
                   <Form.Control
                     placeholder="Търсене"
@@ -96,9 +96,11 @@ class ViewAllUsers extends React.Component {
                   />
                 </FloatingLabel>
               </div>
-              <Button type="submit">
-                <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-              </Button>
+              <div className="align-self-center ms-3">
+                <Button type="submit">
+                  <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+                </Button>
+              </div>
             </div>
           </Form>
         </Row>

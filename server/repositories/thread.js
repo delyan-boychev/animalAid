@@ -1,5 +1,4 @@
 "use strict";
-const thread = require("../models/thread");
 const Thread = require("../models/thread");
 class ThreadRepository {
   async createThread(topic, description, author) {
@@ -20,13 +19,13 @@ class ThreadRepository {
         topic: { $regex: topic, $options: "i" },
       })
         .populate("author", "name email")
-        .select("topic author")
+        .select("topic author dateLastActivity")
         .exec();
       return threads;
     } else {
       const threads = await Thread.find()
         .populate("author", "name email")
-        .select("topic author")
+        .select("topic author dateLastActivity")
         .exec();
       return threads;
     }

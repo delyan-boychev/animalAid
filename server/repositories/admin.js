@@ -1,5 +1,4 @@
 "use strict";
-const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const City = require("../models/city");
 const roles = require("../models/roles");
@@ -38,33 +37,76 @@ class AdminRepository {
    * @param {String} searchQuery Search query
    * @returns {[]}
    */
-  async getAllUsers(searchQuery) {
+  async getAllUsers(searchQuery, role, excludeId) {
+    let query = {};
     if (searchQuery !== undefined) {
-      if (searchQuery["$or"] !== undefined) {
-        if (searchQuery["$or"][3]["city"] !== undefined) {
-          const cities = await City.find({
-            $or: [
-              { name: { $regex: searchQuery["$or"][3]["city"]["$regex"] } },
-              { region: { $regex: searchQuery["$or"][3]["city"]["$regex"] } },
-            ],
-          });
-          const cityIds = cities.map((city) => {
-            return city._id;
-          });
-          searchQuery["$or"][3]["city"] = cityIds;
-        }
+      if (role === roles.Vet) {
+        query = {
+          role: roles.Vet,
+          $or: [
+            { "name.first": { $regex: searchQuery, $options: "i" } },
+            { "name.last": { $regex: searchQuery, $options: "i" } },
+            { email: { $regex: searchQuery, $options: "i" } },
+            { address: { $regex: searchQuery, $options: "i" } },
+            { URN: { $regex: searchQuery, $options: "i" } },
+          ],
+        };
+      } else {
+        query = {
+          _id: { $ne: excludeId },
+          role: { $in: [roles.Admin, roles.Moderator, roles.User] },
+          $or: [
+            { "name.first": { $regex: searchQuery, $options: "i" } },
+            { "name.last": { $regex: searchQuery, $options: "i" } },
+            { email: { $regex: searchQuery, $options: "i" } },
+          ],
+        };
       }
-      return await User.find(searchQuery)
+      const cities = await City.find({
+        $or: [
+          { name: { $regex: searchQuery, $options: "i" } },
+          { region: { $regex: searchQuery, $options: "i" } },
+        ],
+      });
+      const cityIds = cities.map((city) => {
+        return city._id;
+      });
+      query["$or"].push({ city: cityIds });
+      return await User.find(query)
         .populate("city")
         .select("-password -__v -createdOn -verified")
         .lean()
         .exec();
     } else {
-      return await User.find()
+      if (role === roles.Vet) {
+        query = {
+          role: roles.Vet,
+        };
+      } else {
+        query = {
+          _id: { $ne: excludeId },
+          role: { $in: [roles.Admin, roles.Moderator, roles.User] },
+        };
+      }
+      return await User.find(query)
         .populate("city")
         .select("-password -__v -createdOn -verified")
         .lean()
         .exec();
+    }
+  }
+  async getVetsForModerationVerify() {
+    const vets = await User.find({
+      role: roles.Vet,
+      moderationVerified: false,
+    })
+      .select("-password -__v -createdOn -verified")
+      .lean()
+      .exec();
+    if (vets !== null) {
+      return vets;
+    } else {
+      return false;
     }
   }
   /**

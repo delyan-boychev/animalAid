@@ -14,6 +14,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./css/animations.css";
 import Threads from "./pages/Threads";
 import Thread from "./pages/Thread";
+import CreateThread from "./pages/UserPages/CreateThread";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import Cookies from "universal-cookie";
@@ -213,6 +214,19 @@ const routes = (isLoggedIn) => [
     element: (
       <div className="container mt-3">
         <Thread />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/user/createThread",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <CreateThread />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
       </div>
     ),
     exact: true,

@@ -19,23 +19,22 @@ router.get(
       if (pageNum > 0) {
         const searchQuery = req.params.searchQuery;
         if (searchQuery !== undefined) {
-          let query = {
-            _id: { $ne: req.user.id },
-            role: { $in: [roles.Admin, roles.Moderator, roles.User] },
-            $or: [
-              { "name.first": { $regex: searchQuery, $options: "i" } },
-              { "name.last": { $regex: searchQuery, $options: "i" } },
-              { email: { $regex: searchQuery, $options: "i" } },
-              { city: { $regex: searchQuery, $options: "i" } },
-            ],
-          };
-          res.send(await adminService.getAllUsers(pageNum, query));
+          res.send(
+            await adminService.getAllUsers(
+              pageNum,
+              searchQuery,
+              roles.User,
+              req.user.id
+            )
+          );
         } else {
           res.send(
-            await adminService.getAllUsers(pageNum, {
-              role: { $in: [roles.Admin, roles.Moderator, roles.User] },
-              _id: { $ne: req.user.id },
-            })
+            await adminService.getAllUsers(
+              pageNum,
+              undefined,
+              roles.User,
+              req.user.id
+            )
           );
         }
       } else {
@@ -55,23 +54,12 @@ router.get(
       if (pageNum > 0) {
         const searchQuery = req.params.searchQuery;
         if (searchQuery !== undefined) {
-          let query = {
-            role: roles.Vet,
-            $or: [
-              { "name.first": { $regex: searchQuery, $options: "i" } },
-              { "name.last": { $regex: searchQuery, $options: "i" } },
-              { email: { $regex: searchQuery, $options: "i" } },
-              { address: { $regex: searchQuery, $options: "i" } },
-              { URN: { $regex: searchQuery, $options: "i" } },
-              { city: { $regex: searchQuery, $options: "i" } },
-            ],
-          };
-          res.send(await adminService.getAllUsers(pageNum, query));
+          res.send(
+            await adminService.getAllUsers(pageNum, searchQuery, roles.Vet)
+          );
         } else {
           res.send(
-            await adminService.getAllUsers(pageNum, {
-              role: roles.Vet,
-            })
+            await adminService.getAllUsers(pageNum, undefined, roles.Vet)
           );
         }
       } else {
@@ -105,12 +93,7 @@ router.get(
     try {
       const pageNum = parseInt(req.params.pageNum);
       if (pageNum > 0) {
-        res.send(
-          await adminService.getAllUsers(pageNum, {
-            role: roles.Vet,
-            moderationVerified: false,
-          })
-        );
+        res.send(await adminService.getVetsForModerationVerify(pageNum));
       } else {
         res.sendStatus(400);
       }

@@ -20,8 +20,12 @@ class AdminService {
    * @param {{}} searchQuery Search query
    * @returns {{}}
    */
-  async getAllUsers(pageNum, searchQuery) {
-    const users = await this.#adminRepository.getAllUsers(searchQuery);
+  async getAllUsers(pageNum, searchQuery, role, excludeId) {
+    const users = await this.#adminRepository.getAllUsers(
+      searchQuery,
+      role,
+      excludeId
+    );
     if (users !== false) {
       const startIndex = pageNum * 10 - 10;
       const endIndex = pageNum * 10;
@@ -36,6 +40,27 @@ class AdminService {
         return { users: users.slice(startIndex, users.length), numPages };
       } else {
         return { users: users.slice(startIndex, endIndex), numPages };
+      }
+    } else {
+      return false;
+    }
+  }
+  async getVetsForModerationVerify(pageNum) {
+    const vets = await this.#adminRepository.getVetsForModerationVerify();
+    if (vets !== false) {
+      const startIndex = pageNum * 10 - 10;
+      const endIndex = pageNum * 10;
+      const numPages = Math.ceil(vets.length / 10);
+      if (
+        pageNum < 1 ||
+        (vets.length < endIndex && vets.length < startIndex) ||
+        pageNum > numPages
+      ) {
+        return false;
+      } else if (vets.length < endIndex && vets.length > startIndex) {
+        return { vets: vets.slice(startIndex, vets.length), numPages };
+      } else {
+        return { vets: vets.slice(startIndex, endIndex), numPages };
       }
     } else {
       return false;

@@ -376,8 +376,8 @@ class UserService {
    * @param {Number} pageNum Number of the page
    * @returns {[]}
    */
-  async getVets(pageNum) {
-    const vets = await this.#userRepository.getVets();
+  async getVets(pageNum, searchQuery) {
+    const vets = await this.#userRepository.getVets(searchQuery);
     if (vets !== false) {
       const startIndex = pageNum * 10 - 10;
       const endIndex = pageNum * 10;
