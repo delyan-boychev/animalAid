@@ -130,7 +130,7 @@ export default function Home() {
         </h2>
         <div className="row g-4 py-5 row-cols-1 row-cols-lg-3">
           <div className="col d-flex align-items-start">
-            <div className="icon-square bg-light text-primary flex-shrink-0 me-3">
+            <div className="icon-square text-primary flex-shrink-0 me-3">
               <h2>
                 <FontAwesomeIcon icon={faTachometerAlt}></FontAwesomeIcon>
               </h2>
@@ -145,7 +145,7 @@ export default function Home() {
             </div>
           </div>
           <div className="col d-flex align-items-start">
-            <div className="icon-square bg-light text-primary flex-shrink-0 me-3">
+            <div className="icon-square text-primary flex-shrink-0 me-3">
               <h2>
                 <FontAwesomeIcon icon={faLightbulb}></FontAwesomeIcon>
               </h2>
@@ -160,7 +160,7 @@ export default function Home() {
             </div>
           </div>
           <div className="col d-flex align-items-start">
-            <div className="icon-square bg-light text-primary flex-shrink-0 me-3">
+            <div className="icon-square text-primary flex-shrink-0 me-3">
               <h2>
                 <FontAwesomeIcon icon={faCogs}></FontAwesomeIcon>
               </h2>
