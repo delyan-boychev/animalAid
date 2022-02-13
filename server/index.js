@@ -25,6 +25,16 @@ const io = require("socket.io")(httpServer, {
     origin: [config.BASE_URL],
   },
 });
+const setCache = function (req, res, next) {
+  const period = 60 * 1440;
+  if (req.method == "GET") {
+    res.set("Cache-control", `public, max-age=${period}`);
+  } else {
+    res.set("Cache-control", `no-store`);
+  }
+  next();
+};
+app.use(setCache);
 const onConnection = require("./chatSockets")(io);
 io.on("connection", onConnection);
 app.disable("x-powered-by");
