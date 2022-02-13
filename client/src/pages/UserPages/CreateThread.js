@@ -85,7 +85,6 @@ class CreateThread extends React.Component {
   };
   handleOnChangeValue = (event) => {
     let fields = this.state.fields;
-    console.log(fields);
     fields[event.target.id] = event.target.value;
     this.setState({ fields });
     this.validate();
