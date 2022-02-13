@@ -10,7 +10,6 @@ const privateKey = fs.readFileSync("./ssl/key.pem", "utf8");
 const certificate = fs.readFileSync("./ssl/cert.pem", "utf8");
 const updateCaptchaEncryption = require("./captcha/updateCaptchaEncryption");
 const port = 8443;
-const apicache = require("apicache");
 const userRoute = require("./routes/user");
 const captchaRoute = require("./routes/captcha");
 const adminRoute = require("./routes/admin");
@@ -27,7 +26,6 @@ const io = require("socket.io")(httpServer, {
     origin: [config.BASE_URL],
   },
 });
-app.use(apicache.middleware("1 day"));
 const onConnection = require("./chatSockets")(io);
 io.on("connection", onConnection);
 app.disable("x-powered-by");

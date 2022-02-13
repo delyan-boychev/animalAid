@@ -17,6 +17,7 @@ const roles = require("../models/roles");
 let router = express.Router();
 const UserService = require("../services/user");
 const userService = new UserService();
+const apicache = require("apicache");
 router.post("/regUser", async (req, res) => {
   validation(req.body, userRegisterSchema, res, async () => {
     res.send(await userService.registerUser(req.body));
@@ -27,15 +28,19 @@ router.post("/regVet", async (req, res) => {
     res.send(await userService.registerVet(req.body));
   });
 });
-router.get("/img/:filename", async (req, res) => {
-  const fileName = req.params.filename;
-  let dir = `${path.dirname(require.main.filename)}/img`;
-  if (fs.existsSync(`${dir}/${fileName}`)) {
-    res.sendFile(`${dir}/${fileName}`);
-  } else {
-    res.sendStatus(404);
+router.get(
+  "/img/:filename",
+  apicache.middleware("1 hour"),
+  async (req, res) => {
+    const fileName = req.params.filename;
+    let dir = `${path.dirname(require.main.filename)}/img`;
+    if (fs.existsSync(`${dir}/${fileName}`)) {
+      res.sendFile(`${dir}/${fileName}`);
+    } else {
+      res.sendStatus(404);
+    }
   }
-});
+);
 router.post("/log", async (req, res) => {
   validation(req.body, userLoginSchema, res, async () => {
     res.send(await userService.loginUser(req.body));
