@@ -5,10 +5,12 @@ const compression = require("compression");
 const app = express();
 const fs = require("fs");
 var cors = require("cors");
+
 const privateKey = fs.readFileSync("./ssl/key.pem", "utf8");
 const certificate = fs.readFileSync("./ssl/cert.pem", "utf8");
 const updateCaptchaEncryption = require("./captcha/updateCaptchaEncryption");
 const port = 8443;
+const apicache = require("apicache");
 const userRoute = require("./routes/user");
 const captchaRoute = require("./routes/captcha");
 const adminRoute = require("./routes/admin");
@@ -25,16 +27,7 @@ const io = require("socket.io")(httpServer, {
     origin: [config.BASE_URL],
   },
 });
-const setCache = function (req, res, next) {
-  const period = 60 * 1440;
-  if (req.method == "GET") {
-    res.set("Cache-control", `public, max-age=${period}`);
-  } else {
-    res.set("Cache-control", `no-store`);
-  }
-  next();
-};
-app.use(setCache);
+app.use(apicache.middleware(1440));
 const onConnection = require("./chatSockets")(io);
 io.on("connection", onConnection);
 app.disable("x-powered-by");
