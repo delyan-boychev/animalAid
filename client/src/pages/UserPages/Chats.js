@@ -443,6 +443,7 @@ class Chats extends React.Component {
               <div className="d-flex flex-row bd-highlight mb-3">
                 <FormControl
                   id="message"
+                  autocomplete="off"
                   value={this.state.message}
                   onChange={this.onChangeText}
                 ></FormControl>

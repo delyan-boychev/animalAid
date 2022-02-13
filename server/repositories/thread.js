@@ -1,6 +1,13 @@
 "use strict";
 const Thread = require("../models/thread");
 class ThreadRepository {
+  /**
+   * Create thread
+   * @param {String} topic
+   * @param {String} description
+   * @param {String} author
+   * @returns {Boolean}
+   */
   async createThread(topic, description, author) {
     let thread = new Thread();
     thread.topic = topic;
@@ -13,6 +20,11 @@ class ThreadRepository {
       return false;
     }
   }
+  /**
+   * Get all threads by topic search
+   * @param {String} topic
+   * @returns {[]}
+   */
   async getAllThreads(topic) {
     if (topic !== undefined) {
       const threads = await Thread.find({
@@ -30,6 +42,11 @@ class ThreadRepository {
       return threads;
     }
   }
+  /**
+   * Get thread by id
+   * @param {String} threadId
+   * @returns {{}|Boolean}
+   */
   async getThread(threadId) {
     try {
       const thread = await Thread.findById(threadId)
@@ -45,6 +62,11 @@ class ThreadRepository {
       return false;
     }
   }
+  /**
+   * Get thread posts
+   * @param {String} threadId
+   * @returns {[]|Boolean}
+   */
   async getThreadPosts(threadId) {
     const thread = await Thread.findById(threadId)
       .populate(
@@ -71,6 +93,14 @@ class ThreadRepository {
       return false;
     }
   }
+  /**
+   * Create thread post
+   * @param {String} threadId
+   * @param {String} author
+   * @param {String} content
+   * @param {String} replyTo
+   * @returns {Boolean}
+   */
   async createThreadPost(threadId, author, content, replyTo) {
     try {
       const thread = await Thread.findById(threadId).exec();

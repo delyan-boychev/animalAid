@@ -2,6 +2,14 @@
 const Chat = require("../models/chat");
 const extMethods = require("../extensionMethods");
 class ChatRepository {
+  /**
+   * Start chat
+   * @param {String} userOne User One id
+   * @param {String} userTwo User Two id
+   * @param {String} message Message
+   * @param {Number} date Date of sending message
+   * @returns {Boolean}
+   */
   async startChat(userOne, userTwo, message, date) {
     let chat = new Chat();
     chat.userOne = userOne;
@@ -19,6 +27,14 @@ class ChatRepository {
       return false;
     }
   }
+  /**
+   * Send message
+   * @param {String} senderId Sender id
+   * @param {String} recieveId Recieve id
+   * @param {String} message Message
+   * @param {Number} date Date of sending message
+   * @returns {Boolean}
+   */
   async sendMessage(senderId, recieveId, message, date) {
     let chat = await Chat.findOne({
       $and: [
@@ -39,6 +55,12 @@ class ChatRepository {
       return false;
     }
   }
+  /**
+   * Check chat exists
+   * @param {String} userOne User One id
+   * @param {String} userTwo User Two id
+   * @returns {Boolean}
+   */
   async checkChatExists(userOne, userTwo) {
     return await Chat.exists({
       $and: [
@@ -47,6 +69,12 @@ class ChatRepository {
       ],
     });
   }
+  /**
+   * Get messages
+   * @param {String} userOne User One id
+   * @param {String} userTwo User Two id
+   * @returns {[]|Boolean}
+   */
   async getMessages(userOne, userTwo) {
     let chat = await Chat.findOne({
       $and: [
@@ -60,6 +88,12 @@ class ChatRepository {
       return false;
     }
   }
+  /**
+   * Seen messages
+   * @param {String} userOne User One id
+   * @param {String} userTwo User Two id
+   * @returns {Boolean}
+   */
   async seenMessages(userOne, userTwo) {
     let chat = await Chat.findOne({
       $and: [
@@ -84,6 +118,11 @@ class ChatRepository {
       return false;
     }
   }
+  /**
+   * Delete chat
+   * @param {String} userId User id
+   * @returns {Boolean}
+   */
   async deleteChat(userId) {
     try {
       return await Chat.deleteMany({
@@ -93,6 +132,11 @@ class ChatRepository {
       return false;
     }
   }
+  /**
+   * Get chats by user id
+   * @param {String} userId User id
+   * @returns {[]}
+   */
   async getUsersChats(userId) {
     let chats = await Chat.find({ userOne: userId })
       .populate("userTwo")

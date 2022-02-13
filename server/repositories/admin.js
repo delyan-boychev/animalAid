@@ -95,6 +95,10 @@ class AdminRepository {
         .exec();
     }
   }
+  /**
+   * Get vets for moderation verify
+   * @returns {[]|Boolean}
+   */
   async getVetsForModerationVerify() {
     const vets = await User.find({
       role: roles.Vet,

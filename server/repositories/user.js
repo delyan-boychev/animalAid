@@ -4,6 +4,11 @@ const User = require("../models/user");
 const roles = require("../models/roles");
 const City = require("../models/city");
 class UserRepository {
+  /**
+   * Register user
+   * @param {{}} user
+   * @returns {String|Boolean}
+   */
   async register(user) {
     if (await User.exists({ email: user.email })) {
       return "EMAIL_EXISTS";
@@ -29,6 +34,11 @@ class UserRepository {
       }
     }
   }
+  /**
+   * Check user exists
+   * @param {String} userId
+   * @returns {Boolean}
+   */
   async checkUserExists(userId) {
     try {
       return await User.exists({ _id: userId });
@@ -36,6 +46,11 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Check users exists and last request forgot password
+   * @param {String} email
+   * @returns {String|Boolean}
+   */
   async checkUserExistsAndLastRequestForgotPassword(email) {
     let user = await User.findOne({ email: email }).exec();
     if (user != null) {
@@ -55,6 +70,11 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Get vet info
+   * @param {String} id
+   * @returns {{}|Boolean}
+   */
   async getVet(id) {
     try {
       const user = await User.findOne({
@@ -74,6 +94,11 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Check user exists and last forgot password
+   * @param {String} email
+   * @returns {String|Boolean}
+   */
   async checkUserExistsAndLastForgotPassword(email) {
     let user = await User.findOne({ email: email }).exec();
     if (user != null) {
@@ -93,6 +118,11 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Set last request forgot password
+   * @param {String} email
+   * @returns {Boolean}
+   */
   async setLastRequestForgotPassword(email) {
     let u = await User.findOne({ email: email }).exec();
     if (u !== null) {
@@ -107,6 +137,11 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Get user profile
+   * @param {String} id
+   * @returns {{}|Boolean}
+   */
   async getProfile(id) {
     try {
       let user = await User.findById(id).populate("city").lean().exec();
@@ -120,6 +155,11 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Login user
+   * @param {{}} user
+   * @returns {{}|Boolean}
+   */
   async loginUser(user) {
     const u = await User.findOne({ email: user.email }).exec();
     if (u !== null) {
@@ -134,6 +174,11 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Verify user
+   * @param {String} email
+   * @returns {Boolean}
+   */
   async verify(email) {
     const u = await User.findOne({ email: email }).exec();
     if (u != null) {
@@ -152,6 +197,11 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Get vets and search
+   * @param {String} searchQuery
+   * @returns {[]}
+   */
   async getVets(searchQuery) {
     let query = {};
     if (searchQuery !== undefined) {
@@ -193,6 +243,12 @@ class UserRepository {
         .exec();
     }
   }
+  /**
+   * Change email address
+   * @param {{}} user
+   * @param {String} newEmail
+   * @returns {Boolean|String}
+   */
   async changeEmail(user, newEmail) {
     const u = await User.findById(user.id).exec();
     if (u !== null) {
@@ -218,6 +274,12 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Change forgot password
+   * @param {String} email
+   * @param {String} newPassword
+   * @returns {Boolean}
+   */
   async changeForgotPassword(email, newPassword) {
     const u = await User.findOne({ email: email }).exec();
     if (u !== null) {
@@ -236,6 +298,13 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Change password
+   * @param {String} id
+   * @param {String} oldPassword
+   * @param {String} newPassword
+   * @returns {Boolean}
+   */
   async changePassword(id, oldPassword, newPassword) {
     const u = await User.findById(id).exec();
     if (u !== null) {
@@ -257,6 +326,11 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Get role
+   * @param {String} id
+   * @returns {String|Boolean}
+   */
   async getRole(id) {
     try {
       const u = await User.findById(id).exec();
@@ -269,6 +343,13 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Edit profile
+   * @param {String} prop
+   * @param {String} value
+   * @param {String} id
+   * @returns {Boolean}
+   */
   async edit(prop, value, id) {
     const u = await User.findById(id).exec();
     if (u !== null) {

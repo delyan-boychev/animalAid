@@ -3,9 +3,18 @@ const City = require("../models/city");
 const Municipality = require("../models/municipality");
 const Region = require("../models/region");
 class CityRepository {
+  /**
+   * Get all regions
+   * @returns {[]}
+   */
   async getAllRegions() {
     return await Region.find();
   }
+  /**
+   * Get municipalities
+   * @param {String} region Region
+   * @returns {[]|Boolean}
+   */
   async getMunicipalitiesByRegion(region) {
     const municipalities = await Municipality.find({
       municipality: { $regex: region },
@@ -16,6 +25,11 @@ class CityRepository {
       return false;
     }
   }
+  /**
+   * Get cities
+   * @param {String} municipality Municipality
+   * @returns {[]|Boolean}
+   */
   async getCitiesByMunicipality(municipality) {
     const cities = await City.find({ municipality });
     if (cities !== null) {

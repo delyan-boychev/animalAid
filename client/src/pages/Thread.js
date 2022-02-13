@@ -60,7 +60,7 @@ class Thread extends React.Component {
     };
   }
   componentDidMount() {
-    document.title = "";
+    document.title = "Тема";
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     if (id !== null) {
@@ -85,6 +85,7 @@ class Thread extends React.Component {
     if (data === false) {
       this.props.navigate("/");
     } else {
+      document.title += `-${data.topic}`;
       this.setState({ threadId: id, thread: { ...data } });
       this.getThreadPosts(1);
     }
@@ -152,8 +153,7 @@ class Thread extends React.Component {
       fields,
       replyTo: `Отговор на ${
         document.getElementById(`fullName-${postId}`).innerText
-      } (
-      ${document.getElementById(`email-${postId}`).innerText}): ${
+      } (${document.getElementById(`email-${postId}`).innerText}): ${
         document.getElementById(`post-${postId}`).innerText
       }`,
     });
