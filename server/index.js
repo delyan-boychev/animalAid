@@ -27,7 +27,7 @@ const io = require("socket.io")(httpServer, {
     origin: [config.BASE_URL],
   },
 });
-app.use(apicache.middleware(1440));
+app.use(apicache.middleware("1 day"));
 const onConnection = require("./chatSockets")(io);
 io.on("connection", onConnection);
 app.disable("x-powered-by");
