@@ -118,5 +118,64 @@ class ThreadRepository {
       return false;
     }
   }
+  /**
+   * Edit threads
+   * @param {String} threadId
+   * @param {String} authorId
+   * @param {String} topic
+   * @param {String} description
+   * @returns {Boolean}
+   */
+  async editThread(threadId, authorId, topic, description) {
+    try {
+      const thread = await Thread.findOne({
+        _id: threadId,
+        author: authorId,
+      }).exec();
+      if (thread !== null) {
+        thread.topic = topic;
+        thread.description = description;
+        await thread.save();
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  /**
+   * Edit thread post
+   * @param {String} threadId
+   * @param {String} postId
+   * @param {String} authorPostId
+   * @param {String} content
+   * @returns {Boolean}
+   */
+  async editThreadPost(threadId, postId, authorPostId, content) {
+    try {
+      const thread = await Thread.findOne({
+        _id: threadId,
+      }).exec();
+      if (thread !== null) {
+        let post = thread.threadPosts.id(postId);
+        if (post !== null) {
+          if (post.author == authorPostId) {
+            thread.threadPosts.id(postId).content = content;
+            await thread.save();
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
 }
 module.exports = ThreadRepository;

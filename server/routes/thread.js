@@ -6,6 +6,8 @@ const threadService = new ThreadService();
 const validation = require("../models/validation/validation");
 const createThreadSchema = require("../models/validation/thread/createThread");
 const createThreadPostSchema = require("../models/validation/thread/createThreadPost");
+const editThreadSchema = require("../models/validation/thread/editThread");
+const editThreadPostSchema = require("../models/validation/thread/editThreadPost");
 const authenticate = require("../authentication/authenticate");
 router.post("/createThread", authenticate, async (req, res) => {
   validation(req.body, createThreadSchema, res, async () => {
@@ -26,6 +28,30 @@ router.post("/createThreadPost", authenticate, async (req, res) => {
         req.user.id,
         req.body.content,
         req.body.replyTo
+      )
+    );
+  });
+});
+router.post("/editThread", authenticate, async (req, res) => {
+  validation(req.body, editThreadSchema, res, async () => {
+    res.send(
+      await threadService.editThread(
+        req.body.threadId,
+        req.user.id,
+        req.body.topic,
+        req.body.description
+      )
+    );
+  });
+});
+router.post("/editThreadPost", authenticate, async (req, res) => {
+  validation(req.body, editThreadPostSchema, res, async () => {
+    res.send(
+      await threadService.editThreadPost(
+        req.body.threadId,
+        req.body.postId,
+        req.user.id,
+        req.body.content
       )
     );
   });

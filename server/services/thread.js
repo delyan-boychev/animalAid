@@ -64,5 +64,21 @@ class ThreadService {
       return false;
     }
   }
+  async editThread(threadId, authorId, topic, description) {
+    return await this.#threadRepository.editThread(
+      threadId,
+      authorId,
+      topic,
+      description
+    );
+  }
+  async editThreadPost(threadId, postId, authorPostId, content) {
+    return await this.#threadRepository.editThreadPost(
+      threadId,
+      postId,
+      authorPostId,
+      content
+    );
+  }
 }
 module.exports = ThreadService;
