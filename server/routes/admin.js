@@ -6,6 +6,8 @@ const moderationVerifyVetSchema = require("../models/validation/admin/moderation
 const changeRoleSchema = require("../models/validation/admin/changeRole");
 const editProfileSchema = require("../models/validation/admin/editProfile");
 const changeProfilePhotoSchema = require("../models/validation/admin/changeProfilePhoto");
+const deleteThreadSchema = require("../models/validation/admin/deleteThread");
+const deleteThreadPostSchema = require("../models/validation/admin/deleteThreadPost");
 const AdminService = require("../services/admin");
 const adminService = new AdminService();
 const roles = require("../models/roles");
@@ -145,6 +147,18 @@ router.post("/moderationVerifyVet", authenticateAdmin, async (req, res) => {
 router.post("/changeProfilePhoto", authenticateAdmin, async (req, res) => {
   validation(req.body, changeProfilePhotoSchema, res, async () => {
     res.send(await adminService.changeProfilePhoto(req.body));
+  });
+});
+router.post("/deleteThread", authenticateAdmin, async (req, res) => {
+  validation(req.body, deleteThreadSchema, res, async () => {
+    res.send(await adminService.deleteThread(req.body.threadId));
+  });
+});
+router.post("/deleteThreadPost", authenticateAdmin, async (req, res) => {
+  validation(req.body, deleteThreadPostSchema, res, async () => {
+    res.send(
+      await adminService.deleteThreadPost(req.body.threadId, req.body.postId)
+    );
   });
 });
 module.exports = router;

@@ -135,5 +135,11 @@ class AdminService {
       return false;
     }
   }
+  async deleteThread(threadId) {
+    return await this.#adminRepository.deleteThread(threadId);
+  }
+  async deleteThreadPost(threadId, postId) {
+    return await this.#adminRepository.deleteThreadPost(threadId, postId);
+  }
 }
 module.exports = AdminService;

@@ -141,8 +141,8 @@ router.get("/profile", authenticate, async (req, res) => {
     res.send(profile);
   }
 });
-router.get("/userId", authenticate, async (req, res) => {
-  res.send(req.user.id);
+router.get("/userIdAndRole", authenticate, async (req, res) => {
+  res.send({ id: req.user.id, role: req.user.role });
 });
 router.post("/changeEmail", authenticate, async (req, res) => {
   validation(req.body, changeEmailSchema, res, async () => {

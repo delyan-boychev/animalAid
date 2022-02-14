@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import isLoggedIn from "../isLoggedIn";
+import DialogModal from "../components/DialogModal";
+import InfoModal from "../components/InfoModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ListGroup,
@@ -17,30 +19,89 @@ import {
   faPen,
   faPlus,
   faSearch,
+  faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 const client = require("../clientRequests");
+const roles = require("../enums/roles");
 class Threads extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       userId: "",
+      userRole: "",
       page: 1,
       threads: [],
       numPages: 0,
       searchQuery: "",
       lastSearchQuery: "",
       search: false,
+      modal: {
+        show: false,
+        title: "Съобщение",
+        body: "",
+      },
+      modal2: {
+        show: false,
+        title: "Съобщение",
+        body: "",
+        task: () => {},
+      },
     };
   }
+  openModal = (body) => {
+    let modal = this.state.modal;
+    modal.show = true;
+    modal.body = body;
+    this.setState({ modal });
+  };
+  closeModal = () => {
+    let modal = this.state.modal;
+    modal.show = false;
+    this.setState({ modal });
+    this.getThreads(1);
+  };
+  openModal2 = (body, task) => {
+    let modal2 = this.state.modal2;
+    modal2.show = true;
+    modal2.body = body;
+    modal2.task = task;
+    this.setState({ modal2 });
+  };
+  closeModal2 = () => {
+    let modal2 = this.state.modal2;
+    modal2.show = false;
+    this.setState({ modal2 });
+  };
+  onDeleteThread = (id) => {
+    const thread = this.state.threads.find((thread) => thread._id === id);
+    if (thread !== undefined) {
+      this.openModal2(
+        `Сигурни ли сте, че искате да изтриете темата-${thread.topic}?`,
+        () => {
+          this.deleteThread(id);
+        }
+      );
+    }
+  };
+  deleteThread = async (id) => {
+    const deleteThread = await client.postRequestToken("/admin/deleteThread", {
+      threadId: id,
+    });
+    if (deleteThread === true) {
+      this.openModal("Темата е изтрита успешно!");
+    } else {
+      this.openModal("Не успяхме да изтрием темата!");
+    }
+  };
   componentDidMount() {
     document.title = "Форум";
     this.getThreads(1);
-    this.getUserId();
+    this.getUserIdAndRole();
   }
-  getUserId = async () => {
+  getUserIdAndRole = async () => {
     if (isLoggedIn()) {
-      const userId = await client.getRequestToken("/user/userId");
-      this.setState({ userId });
+      const user = await client.getRequestToken("/user/userIdAndRole");
+      this.setState({ userId: user.id, userRole: user.role });
     }
   };
   getThreads = async (page, search) => {
@@ -110,6 +171,19 @@ class Threads extends React.Component {
     );
     return (
       <div>
+        <DialogModal
+          show={this.state.modal2.show}
+          title={this.state.modal2.title}
+          body={this.state.modal2.body}
+          closeModal={this.closeModal2}
+          task={this.state.modal2.task}
+        ></DialogModal>
+        <InfoModal
+          show={this.state.modal.show}
+          title={this.state.modal.title}
+          body={this.state.modal.body}
+          closeModal={this.closeModal}
+        ></InfoModal>
         <h1 className="text-center text-primary fw-bold">Форум</h1>
         <hr
           className="ms-auto me-auto text-primary"
@@ -165,6 +239,8 @@ class Threads extends React.Component {
             <ListGroup.Item key={thread._id} id={thread._id}>
               <Row>
                 <Col
+                  xs={12}
+                  md={10}
                   onClick={() => {
                     this.openThread(thread._id);
                   }}
@@ -182,12 +258,25 @@ class Threads extends React.Component {
                   </span>
                 </Col>
                 {this.state.userId === thread.author._id ? (
-                  <Col xs={2}>
+                  <Col xs={2} md={1}>
                     <Button
                       className="rounded-circle"
                       onClick={() => this.editThread(thread._id)}
                     >
                       <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                    </Button>
+                  </Col>
+                ) : (
+                  ""
+                )}
+                {this.state.userRole === roles.Admin ? (
+                  <Col xs={2} md={1}>
+                    <Button
+                      variant="danger"
+                      className="rounded-circle"
+                      onClick={() => this.onDeleteThread(thread._id)}
+                    >
+                      <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
                     </Button>
                   </Col>
                 ) : (

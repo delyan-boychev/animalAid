@@ -30,6 +30,7 @@ class Thread extends React.Component {
     super(props);
     this.state = {
       userId: "",
+      userRole: "",
       fields: {
         postId: "",
         content: "",
@@ -69,7 +70,7 @@ class Thread extends React.Component {
   }
   componentDidMount() {
     document.title = "Тема";
-    this.getUserId();
+    this.getUserIdAndRole();
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     if (id !== null) {
@@ -112,10 +113,10 @@ class Thread extends React.Component {
     lastPost.replyTo = "";
     this.setState({ replyTo: "", lastPost, fields, errors });
   };
-  getUserId = async () => {
+  getUserIdAndRole = async () => {
     if (isLoggedIn()) {
-      const userId = await client.getRequestToken("/user/userId");
-      this.setState({ userId });
+      const user = await client.getRequestToken("/user/userIdAndRole");
+      this.setState({ userId: user.id, userRole: user.role });
     }
   };
   getThreadPosts = async (page) => {

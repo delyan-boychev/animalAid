@@ -1,6 +1,7 @@
 "use strict";
 const User = require("../models/user");
 const City = require("../models/city");
+const Thread = require("../models/thread");
 const roles = require("../models/roles");
 const ChatRepository = require("./chat");
 class AdminRepository {
@@ -255,6 +256,48 @@ class AdminRepository {
       u.save();
       return oldImgFileName;
     } else {
+      return false;
+    }
+  }
+  /**
+   * Delete thread
+   * @param {String} threadId
+   * @returns {Boolean}
+   */
+  async deleteThread(threadId) {
+    try {
+      await Thread.deleteOne({ _id: threadId }).exec();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  /**
+   * Delete thread post
+   * @param {String} threadId
+   * @param {String} postId
+   * @returns {Boolean}
+   */
+  async deleteThreadPost(threadId, postId) {
+    try {
+      let thread = await Thread.findById(threadId).exec();
+      if (thread !== null) {
+        if (thread.threadPosts.id(postId) !== null) {
+          thread.threadPosts.id(postId).remove();
+          let posts = thread.threadPosts.map((p) => {
+            if (p.replyTo === postId) {
+              p.replyTo = undefined;
+            }
+            return p;
+          });
+          thread.threadPosts = posts;
+          await thread.save();
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } catch {
       return false;
     }
   }
