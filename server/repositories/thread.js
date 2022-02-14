@@ -94,7 +94,7 @@ class ThreadRepository {
     const thread = await Thread.findById(threadId)
       .populate(
         "threadPosts.author",
-        "-password -__v -_id -createdOn -verified -city"
+        "-password -__v -createdOn -verified -city"
       )
       .exec();
     if (thread !== null) {
@@ -104,6 +104,7 @@ class ThreadRepository {
           const replyTo = thread.threadPosts.id(post.replyTo);
           if (replyTo !== null) {
             p.replyTo = {
+              replyTo: post.replyTo,
               content: replyTo.content,
               authorFullName: `${replyTo.author.name.first} ${replyTo.author.name.last}`,
               authorEmail: replyTo.author.email,
@@ -173,9 +174,11 @@ class ThreadRepository {
    * @param {String} postId
    * @param {String} authorPostId
    * @param {String} content
+   * @param {String} replyTo
    * @returns {Boolean}
+   * @returns
    */
-  async editThreadPost(threadId, postId, authorPostId, content) {
+  async editThreadPost(threadId, postId, authorPostId, content, replyTo) {
     try {
       const thread = await Thread.findOne({
         _id: threadId,
@@ -185,6 +188,7 @@ class ThreadRepository {
         if (post !== null) {
           if (post.author == authorPostId) {
             thread.threadPosts.id(postId).content = content;
+            thread.threadPosts.id(postId).replyTo = replyTo;
             await thread.save();
             return true;
           } else {

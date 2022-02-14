@@ -51,7 +51,8 @@ router.post("/editThreadPost", authenticate, async (req, res) => {
         req.body.threadId,
         req.body.postId,
         req.user.id,
-        req.body.content
+        req.body.content,
+        req.body.replyTo
       )
     );
   });

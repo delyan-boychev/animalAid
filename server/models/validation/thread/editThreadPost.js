@@ -5,6 +5,7 @@ const editThreadPostSchema = {
     threadId: { type: "string", pattern: "^[a-f\\d]{24}$" },
     postId: { type: "string", pattern: "^[a-f\\d]{24}$" },
     content: { type: "string", minLength: 10, maxLength: 600 },
+    replyTo: { type: "string", pattern: "^[a-f\\d]{24}$" },
   },
   additionalProperties: false,
   required: ["threadId", "postId", "content"],

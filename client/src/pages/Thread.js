@@ -20,14 +20,22 @@ import {
   faChevronCircleRight,
   faReply,
   faXmark,
+  faPen,
 } from "@fortawesome/free-solid-svg-icons";
+import isLoggedIn from "../isLoggedIn";
 const client = require("../clientRequests");
 const API_URL = require("../config.json").API_URL;
 class Thread extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: "",
       fields: {
+        postId: "",
+        content: "",
+        replyTo: "",
+      },
+      lastPost: {
         content: "",
         replyTo: "",
       },
@@ -61,6 +69,7 @@ class Thread extends React.Component {
   }
   componentDidMount() {
     document.title = "Тема";
+    this.getUserId();
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     if (id !== null) {
@@ -90,6 +99,25 @@ class Thread extends React.Component {
       this.getThreadPosts(1);
     }
   };
+  clearCreateEditPost = () => {
+    let errors = this.state.errors;
+    errors.content = "";
+    errors.isValid = false;
+    let fields = this.state.fields;
+    fields.content = "";
+    fields.postId = "";
+    fields.replyTo = "";
+    let lastPost = this.state.lastPost;
+    lastPost.content = "";
+    lastPost.replyTo = "";
+    this.setState({ replyTo: "", lastPost, fields, errors });
+  };
+  getUserId = async () => {
+    if (isLoggedIn()) {
+      const userId = await client.getRequestToken("/user/userId");
+      this.setState({ userId });
+    }
+  };
   getThreadPosts = async (page) => {
     const data = await client.getRequest(
       `/thread/posts/${this.state.threadId}/${page}`
@@ -100,7 +128,56 @@ class Thread extends React.Component {
       this.setState({ page: page, numPages: data.numPages, posts: data.posts });
     }
   };
-  submitForm = async (event) => {
+  editThread = async (id) => {
+    this.props.navigate(`/user/editThread?id=${id}`);
+  };
+  startEditThreadPost = async (id) => {
+    this.clearCreateEditPost();
+    let post = this.state.posts.find((p) => p._id === id);
+    if (post !== undefined) {
+      let replyTo = post.replyTo;
+      let replyToString =
+        replyTo !== undefined
+          ? `Отговор на ${replyTo.authorFullName} (${replyTo.authorEmail}): ${replyTo.content}`
+          : "";
+      let lastPost = this.state.lastPost;
+      let fields = this.state.fields;
+      lastPost.content = post.content;
+      lastPost.replyTo = replyTo !== undefined ? replyTo.replyTo : "";
+      fields.postId = id;
+      fields.content = post.content;
+      fields.replyTo = replyTo !== undefined ? replyTo.replyTo : "";
+      this.setState({
+        fields,
+        replyTo: replyToString,
+      });
+      this.validate();
+      document.getElementById("postButton").scrollIntoView();
+    }
+  };
+  editThreadPost = async (event) => {
+    event.preventDefault();
+    this.validate();
+    if (this.state.errors.isValid) {
+      const post = this.state.fields;
+      const replyTo = post.replyTo !== "" ? post.replyTo : undefined;
+      const response = await client.postRequestToken("/thread/editThreadPost", {
+        threadId: this.state.threadId,
+        postId: post.postId,
+        content: post.content,
+        replyTo,
+      });
+      this.clearCreateEditPost();
+      if (response === false) {
+        this.openModal("Не успяхме да редактираме Вашата публикация!");
+      } else {
+        this.openModal("Публикацията Ви беше редактирана успешно!");
+        this.getThread(this.state.threadId);
+        this.getThreadPosts(this.state.page);
+      }
+    }
+  };
+  createThreadPost = async (event) => {
     event.preventDefault();
     this.validate();
     if (this.state.errors.isValid) {
@@ -114,8 +191,7 @@ class Thread extends React.Component {
           replyTo,
         }
       );
-      this.setState({ replyTo: "", fields: { content: "", replyTo: "" } });
-      this.validate();
+      this.clearCreateEditPost();
       if (response === false) {
         this.openModal("Не успяхме да създадем Вашата публикация!");
       } else {
@@ -149,13 +225,10 @@ class Thread extends React.Component {
     let fields = this.state.fields;
     fields.replyTo = postId;
     document.getElementById("postButton").scrollIntoView();
+    let post = this.state.posts.find((p) => p._id === postId);
     this.setState({
       fields,
-      replyTo: `Отговор на ${
-        document.getElementById(`fullName-${postId}`).innerText
-      } (${document.getElementById(`email-${postId}`).innerText}): ${
-        document.getElementById(`post-${postId}`).innerText
-      }`,
+      replyTo: `Отговор на ${post.author.name.first} ${post.author.name.last} (${post.author.email}): ${post.content}`,
     });
   };
   removeReply = () => {
@@ -236,6 +309,17 @@ class Thread extends React.Component {
                     new Date(this.state.thread.dateLastActivity)
                   )}
                 </span>
+                <br />
+                {this.state.userId === this.state.thread.author._id ? (
+                  <Button
+                    className="rounded-circle mt-2 mb-2"
+                    onClick={() => this.editThread(this.state.thread._id)}
+                  >
+                    <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                  </Button>
+                ) : (
+                  ""
+                )}
               </Col>
               <Col sm={9}>
                 <h3>{this.state.thread.topic}</h3>
@@ -264,20 +348,18 @@ class Thread extends React.Component {
                       alt="profilePicture"
                     />
                     <br />
-                    <span className="text-muted" id={`fullName-${post._id}`}>
+                    <span className="text-muted">
                       {post.author.name.first} {post.author.name.last}
                     </span>
                     <br />
-                    <span className="text-muted" id={`email-${post._id}`}>
-                      {post.author.email}
-                    </span>
+                    <span className="text-muted">{post.author.email}</span>
                     <br />
                     <span className="text-muted">
                       {this.formatDate(new Date(post.date))}
                     </span>
                     <br />
                   </Col>
-                  <Col sm={isLoggedIn ? 8 : 9}>
+                  <Col sm={isLoggedIn ? 7 : 8}>
                     {post.replyTo !== undefined ? (
                       <Card body className="text-muted">
                         Отговор на {post.replyTo.authorFullName} (
@@ -286,13 +368,28 @@ class Thread extends React.Component {
                     ) : (
                       ""
                     )}
-                    <p id={`post-${post._id}`}>{post.content}</p>
+                    <p>{post.content}</p>
                   </Col>
                   {isLoggedIn ? (
-                    <Col sm={1}>
-                      <Button onClick={() => this.replyTo(post._id)}>
-                        <FontAwesomeIcon icon={faReply}></FontAwesomeIcon>
-                      </Button>
+                    <Col xs={2}>
+                      <div className="d-flex">
+                        <Button
+                          className="rounded-circle ms-1"
+                          onClick={() => this.replyTo(post._id)}
+                        >
+                          <FontAwesomeIcon icon={faReply}></FontAwesomeIcon>
+                        </Button>
+                        {this.state.userId === post.author._id ? (
+                          <Button
+                            className="rounded-circle ms-1"
+                            onClick={() => this.startEditThreadPost(post._id)}
+                          >
+                            <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                          </Button>
+                        ) : (
+                          ""
+                        )}
+                      </div>
                     </Col>
                   ) : (
                     ""
@@ -309,7 +406,13 @@ class Thread extends React.Component {
             closeModal={this.closeModal}
           ></InfoModal>
           {isLoggedIn ? (
-            <Form onSubmit={this.submitForm}>
+            <Form
+              onSubmit={
+                this.state.fields.postId === ""
+                  ? this.createThreadPost
+                  : this.editThreadPost
+              }
+            >
               <Card
                 body
                 className="text-muted"
@@ -333,16 +436,36 @@ class Thread extends React.Component {
                 </FloatingLabel>
                 <span className="text-danger">{this.state.errors.content}</span>
               </Form.Group>
-              <Button
-                id="postButton"
-                variant="primary"
-                type="submit"
-                className="mt-3"
-                disabled={!this.state.errors.isValid}
-              >
-                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon> Създаване на
-                публикация
-              </Button>
+              <div className="d-flex">
+                <Button
+                  id="postButton"
+                  variant="primary"
+                  type="submit"
+                  className="mt-3"
+                  disabled={
+                    !this.state.errors.isValid ||
+                    (this.state.lastPost.content ===
+                      this.state.fields.content &&
+                      this.state.lastPost.replyTo === this.state.fields.replyTo)
+                  }
+                >
+                  <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>{" "}
+                  {this.state.fields.postId === ""
+                    ? "Създаване на публикация"
+                    : "Редактирне на публикация"}
+                </Button>
+                {this.state.fields.postId !== "" ? (
+                  <Button
+                    variant="primary"
+                    className="mt-3 ms-3"
+                    onClick={this.clearCreateEditPost}
+                  >
+                    Спиране на редактиране
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </div>
             </Form>
           ) : (
             ""

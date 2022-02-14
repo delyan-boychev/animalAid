@@ -72,12 +72,13 @@ class ThreadService {
       description
     );
   }
-  async editThreadPost(threadId, postId, authorPostId, content) {
+  async editThreadPost(threadId, postId, authorPostId, content, replyTo) {
     return await this.#threadRepository.editThreadPost(
       threadId,
       postId,
       authorPostId,
-      content
+      content,
+      replyTo
     );
   }
   async getThreadForEdit(threadId, authorId) {

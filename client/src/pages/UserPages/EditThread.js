@@ -106,7 +106,7 @@ class EditThread extends React.Component {
     modal.show = false;
     this.setState({ modal });
     if (this.editedComplete) {
-      this.props.navigate("/threads");
+      this.props.navigate(`/thread?id=${this.state.threadId}`);
     }
   };
   handleOnChangeValue = (event) => {
