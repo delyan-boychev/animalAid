@@ -70,6 +70,9 @@ router.get("/getAllThreads/:pageNum/:searchQuery?", async (req, res) => {
     res.sendStatus(400);
   }
 });
+router.get("/getThreadForEdit/:id", authenticate, async (req, res) => {
+  res.send(await threadService.getThreadForEdit(req.params.id, req.user.id));
+});
 router.get("/posts/:id/:page", async (req, res) => {
   const page = parseInt(req.params.page);
   if (page > 0) {

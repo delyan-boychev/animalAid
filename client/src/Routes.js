@@ -23,6 +23,7 @@ import Contacts from "./pages/Contacts";
 import Vets from "./pages/UserPages/Vets";
 import Vet from "./pages/UserPages/Vet";
 import EditUser from "./pages/AdminPages/EditUser";
+import EditThread from "./pages/UserPages/EditThread";
 import NoAccess from "./pages/NoAccess";
 const routes = (isLoggedIn) => [
   { path: "/", element: <Home />, exact: true },
@@ -223,6 +224,19 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? (
       <div className="container mt-3">
         <CreateThread />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/user/editThread",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <EditThread />
       </div>
     ) : (
       <div className="container mt-3">

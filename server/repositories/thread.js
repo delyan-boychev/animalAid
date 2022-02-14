@@ -63,6 +63,29 @@ class ThreadRepository {
     }
   }
   /**
+   * Get thread for edit
+   * @param {String} threadId
+   * @param {String} authorId
+   * @returns {Boolean}
+   */
+  async getThreadForEdit(threadId, authorId) {
+    try {
+      const thread = await Thread.findOne({
+        _id: threadId,
+        author: authorId,
+      })
+        .select("author topic description")
+        .exec();
+      if (thread !== null) {
+        return thread;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  /**
    * Get thread posts
    * @param {String} threadId
    * @returns {[]|Boolean}

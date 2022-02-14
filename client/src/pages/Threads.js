@@ -14,6 +14,7 @@ import {
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
+  faPen,
   faPlus,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +23,7 @@ class Threads extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: "",
       page: 1,
       threads: [],
       numPages: 0,
@@ -33,7 +35,14 @@ class Threads extends React.Component {
   componentDidMount() {
     document.title = "Форум";
     this.getThreads(1);
+    this.getUserId();
   }
+  getUserId = async () => {
+    if (isLoggedIn()) {
+      const userId = await client.getRequestToken("/user/userId");
+      this.setState({ userId });
+    }
+  };
   getThreads = async (page, search) => {
     let url = `/thread/getAllThreads/${page}`;
     if (search === true)
@@ -73,6 +82,9 @@ class Threads extends React.Component {
   };
   openThread = async (id) => {
     this.props.navigate(`/thread?id=${id}`);
+  };
+  editThread = async (id) => {
+    this.props.navigate(`/user/editThread?id=${id}`);
   };
   render() {
     const pagination = (
@@ -150,15 +162,13 @@ class Threads extends React.Component {
         </h4>
         <ListGroup>
           {this.state.threads.map((thread) => (
-            <ListGroup.Item
-              key={thread._id}
-              id={thread._id}
-              onClick={() => {
-                this.openThread(thread._id);
-              }}
-            >
+            <ListGroup.Item key={thread._id} id={thread._id}>
               <Row>
-                <Col>
+                <Col
+                  onClick={() => {
+                    this.openThread(thread._id);
+                  }}
+                >
                   {thread.topic}
                   <br />
                   <span className="text-muted">
@@ -171,6 +181,18 @@ class Threads extends React.Component {
                     {this.formatDate(new Date(thread.dateLastActivity))}
                   </span>
                 </Col>
+                {this.state.userId === thread.author._id ? (
+                  <Col xs={2}>
+                    <Button
+                      className="rounded-circle"
+                      onClick={() => this.editThread(thread._id)}
+                    >
+                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                    </Button>
+                  </Col>
+                ) : (
+                  ""
+                )}
               </Row>
             </ListGroup.Item>
           ))}

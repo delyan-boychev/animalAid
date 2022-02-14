@@ -80,5 +80,8 @@ class ThreadService {
       content
     );
   }
+  async getThreadForEdit(threadId, authorId) {
+    return await this.#threadRepository.getThreadForEdit(threadId, authorId);
+  }
 }
 module.exports = ThreadService;
