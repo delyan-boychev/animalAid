@@ -21,9 +21,12 @@ import {
   faReply,
   faXmark,
   faPen,
+  faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
+import DialogModal from "../components/DialogModal";
 import isLoggedIn from "../isLoggedIn";
 const client = require("../clientRequests");
+const roles = require("../enums/roles");
 const API_URL = require("../config.json").API_URL;
 class Thread extends React.Component {
   constructor(props) {
@@ -66,6 +69,12 @@ class Thread extends React.Component {
         title: "Съобщение",
         body: "",
       },
+      modal2: {
+        show: false,
+        title: "Съобщение",
+        body: "",
+        task: () => {},
+      },
     };
   }
   componentDidMount() {
@@ -89,6 +98,18 @@ class Thread extends React.Component {
     let modal = this.state.modal;
     modal.show = false;
     this.setState({ modal });
+  };
+  openModal2 = (body, task) => {
+    let modal2 = this.state.modal2;
+    modal2.show = true;
+    modal2.body = body;
+    modal2.task = task;
+    this.setState({ modal2 });
+  };
+  closeModal2 = () => {
+    let modal2 = this.state.modal2;
+    modal2.show = false;
+    this.setState({ modal2 });
   };
   getThread = async (id) => {
     const data = await client.getRequest(`/thread/${id}`);
@@ -176,6 +197,32 @@ class Thread extends React.Component {
         this.getThread(this.state.threadId);
         this.getThreadPosts(this.state.page);
       }
+    }
+  };
+  onDeleteThreadPost = (id) => {
+    const post = this.state.posts.find((p) => p._id === id);
+    if (post !== undefined) {
+      this.openModal2(
+        `Сигурни ли сте, че искате да изтриете публикацията?`,
+        () => {
+          this.deleteThreadPost(id);
+        }
+      );
+    }
+  };
+  deleteThreadPost = async (id) => {
+    const deleteThreadPost = await client.postRequestToken(
+      "/admin/deleteThreadPost",
+      {
+        threadId: this.state.threadId,
+        postId: id,
+      }
+    );
+    if (deleteThreadPost === true) {
+      this.openModal("Публикацията е изтрита успешно!");
+      this.getThreadPosts(1);
+    } else {
+      this.openModal("Не успяхме да изтрием публикацията!");
     }
   };
   createThreadPost = async (event) => {
@@ -332,7 +379,7 @@ class Thread extends React.Component {
             Все още няма публикации!
           </h3>
           {pagination}
-          <ListGroup>
+          <ListGroup style={{ wordBreak: "break-all" }}>
             {this.state.posts.map((post) => (
               <ListGroup.Item key={post._id}>
                 <Row>
@@ -372,7 +419,7 @@ class Thread extends React.Component {
                     <p>{post.content}</p>
                   </Col>
                   {isLoggedIn ? (
-                    <Col xs={2}>
+                    <Col lg={2} sm={3}>
                       <div className="d-flex">
                         <Button
                           className="rounded-circle ms-1"
@@ -386,6 +433,19 @@ class Thread extends React.Component {
                             onClick={() => this.startEditThreadPost(post._id)}
                           >
                             <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
+                          </Button>
+                        ) : (
+                          ""
+                        )}
+                        {this.state.userRole === roles.Admin ? (
+                          <Button
+                            className="rounded-circle ms-1"
+                            variant="danger"
+                            onClick={() => this.onDeleteThreadPost(post._id)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faTrashCan}
+                            ></FontAwesomeIcon>
                           </Button>
                         ) : (
                           ""
@@ -406,6 +466,13 @@ class Thread extends React.Component {
             body={this.state.modal.body}
             closeModal={this.closeModal}
           ></InfoModal>
+          <DialogModal
+            show={this.state.modal2.show}
+            title={this.state.modal2.title}
+            body={this.state.modal2.body}
+            closeModal={this.closeModal2}
+            task={this.state.modal2.task}
+          ></DialogModal>
           {isLoggedIn ? (
             <Form
               onSubmit={
