@@ -14,7 +14,7 @@ class CaptchaService {
     let captcha = [];
     let charsLength = charsArray.length;
     let index;
-    for (let i = 0; i < 6; i++) {
+    while (captcha.length < 6) {
       index = Math.floor(Math.random() * charsLength);
       while (captcha.indexOf(charsArray[index]) !== -1)
         index = Math.floor(Math.random() * charsArray.length + 1);
