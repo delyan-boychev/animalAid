@@ -73,9 +73,7 @@ class UserService {
               height: user.imageCrop.height,
             })
             .webp()
-            .toFile(`${dir}/${imgFileName}`, function (err) {
-              if (err) console.log(err);
-            });
+            .toFile(`${dir}/${imgFileName}`);
         }
         return isReg;
       } else {

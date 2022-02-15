@@ -1,4 +1,5 @@
 import React from "react";
+import $ from "jquery";
 import {
   ListGroup,
   Pagination,
@@ -174,7 +175,7 @@ class Thread extends React.Component {
         replyTo: replyToString,
       });
       this.validate();
-      document.getElementById("postButton").scrollIntoView();
+      $("body").animate({ scrollTop: $("body").height() }, 500);
     }
   };
   editThreadPost = async (event) => {
@@ -272,7 +273,7 @@ class Thread extends React.Component {
   replyTo = (postId) => {
     let fields = this.state.fields;
     fields.replyTo = postId;
-    document.getElementById("postButton").scrollIntoView();
+    $("body").animate({ scrollTop: $("body").height() }, 500);
     let post = this.state.posts.find((p) => p._id === postId);
     this.setState({
       fields,

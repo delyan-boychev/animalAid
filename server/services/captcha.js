@@ -1,9 +1,7 @@
 "use strict";
-const captchaRepository = require("../repositories/captcha");
 const { createCanvas } = require("canvas");
 const encryptDecryptCaptcha = require("../captcha/encryptDecryptCaptcha");
 class CaptchaService {
-  #captchaRepository = new captchaRepository();
   /**
    * Get captcha
    * @returns {{}} Captcha

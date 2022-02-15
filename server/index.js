@@ -15,6 +15,7 @@ const captchaRoute = require("./routes/captcha");
 const adminRoute = require("./routes/admin");
 const cityRoute = require("./routes/city");
 const threadRoute = require("./routes/thread");
+const fundrisingCampaignRoute = require("./routes/fundrisingCampaign");
 const credentials = {
   key: privateKey,
   cert: certificate,
@@ -23,7 +24,7 @@ const credentials = {
 const httpServer = require("https").createServer(credentials, app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: [config.BASE_URL],
+    origin: [config.BASE_URL, "http://192.168.1.106:3000"],
   },
 });
 const onConnection = require("./chatSockets")(io);
@@ -37,6 +38,7 @@ app.use("/captcha", captchaRoute);
 app.use("/admin", adminRoute);
 app.use("/city", cityRoute);
 app.use("/thread", threadRoute);
+app.use("/fundrisingCampaign", fundrisingCampaignRoute);
 mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

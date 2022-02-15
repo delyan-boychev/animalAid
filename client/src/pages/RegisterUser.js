@@ -1,4 +1,5 @@
 import React from "react";
+import $ from "jquery";
 import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import InfoModal from "../components/InfoModal";
 import { useNavigate } from "react-router";
@@ -83,8 +84,8 @@ class RegisterUser extends React.Component {
     fields["city"] = "";
     this.setState({ municipalities, cities: [], fields });
     this.validate();
-    document.getElementById("municipalitySelect").options[0].selected = true;
-    document.getElementById("citySelect").options[0].selected = true;
+    $("#municipalitySelect").val("");
+    $("#citySelect").val("");
   };
   onChangeMunicipality = async (event) => {
     const cities = await client.getRequest(
@@ -94,7 +95,7 @@ class RegisterUser extends React.Component {
     fields["city"] = "";
     this.setState({ cities, fields });
     this.validate();
-    document.getElementById("citySelect").options[0].selected = true;
+    $("#citySelect").val("");
   };
   changeCity = (event) => {
     const fields = this.state.fields;

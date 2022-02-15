@@ -1,9 +1,9 @@
 const FundrisingCampaign = require("../models/fundrisingCampaign");
 class FundrisingCampaignRepository {
   async createFundrisingCampaign(campaign) {
-    const campaign = new FundrisingCampaign(campaign);
+    const c = new FundrisingCampaign(campaign);
     try {
-      await campaign.save();
+      await c.save();
       return true;
     } catch {
       return false;

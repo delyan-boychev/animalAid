@@ -11,7 +11,7 @@ const deleteThreadPostSchema = require("../models/validation/admin/deleteThreadP
 const AdminService = require("../services/admin");
 const adminService = new AdminService();
 const roles = require("../models/roles");
-let router = express.Router();
+const router = express.Router();
 router.get(
   "/getAllUsers/:pageNum/:searchQuery?",
   authenticateAdmin,

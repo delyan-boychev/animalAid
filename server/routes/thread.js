@@ -1,6 +1,6 @@
 "use strict";
 const express = require("express");
-let router = express.Router();
+const router = express.Router();
 const ThreadService = require("../services/thread");
 const threadService = new ThreadService();
 const validation = require("../models/validation/validation");

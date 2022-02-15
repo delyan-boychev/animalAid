@@ -28,6 +28,7 @@ function randomStringWithSpecialSymbols(length) {
   if (typeof Object.defineProperty === "function") {
     try {
       Object.defineProperty(Array.prototype, "sortBy", { value: sb });
+      // eslint-disable-next-line no-empty
     } catch (e) {}
   }
   if (!Array.prototype.sortBy) Array.prototype.sortBy = sb;

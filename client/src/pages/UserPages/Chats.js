@@ -1,4 +1,5 @@
 import React from "react";
+import $ from "jquery";
 import {
   Button,
   Col,
@@ -48,9 +49,9 @@ class Chats extends React.Component {
     this.startSocket(this.state.token);
   }
   setListener = () => {
-    let chat = document.getElementById("chat-box");
-    chat.addEventListener("scroll", (event) => {
-      if (chat.scrollTop === 0) {
+    let chat = $("#chat-box");
+    chat.on("scroll", () => {
+      if (chat.scrollTop() === 0) {
         this.getNextPage();
       }
     });
@@ -107,7 +108,7 @@ class Chats extends React.Component {
   };
   onChangeText = () => {
     let errorMessage = "";
-    let message = document.getElementById("message").value;
+    let message = $("#message").val();
     if (message.length > 255) {
       errorMessage =
         "Дължината на съобщението трябва да бъде максимум 255 символа!";
@@ -122,8 +123,6 @@ class Chats extends React.Component {
         date: data.date,
       };
       this.setState({ messages: [...this.state.messages, message] });
-      let chat = document.getElementById("chat-box");
-      chat.scrollTop = chat.scrollHeight;
       this.socket.emit("seenMessages", {
         id: this.socket.id,
         recieveId: this.state.currentChatId,
@@ -165,15 +164,13 @@ class Chats extends React.Component {
       prevState.currentChatId === this.state.currentChatId &&
       prevState.page !== this.state.page
     ) {
-      document
-        .getElementById(`ms-${this.state.lastMessageId}`)
-        .scrollIntoView();
+      $(`#ms-${this.state.lastMessageId}`)[0].scrollIntoView();
+      $("#chat-box").css({
+        overflow: "scroll",
+      });
     } else if (prevState.currentChatId !== this.state.currentChatId) {
-      let chat = document.getElementById("chat-box");
-      chat.scrollTop = chat.scrollHeight;
-      document
-        .querySelector("body")
-        .scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      $("#chat-box").animate({ scrollTop: $("#chat-box").height() }, 500);
+      $("body").animate({ scrollTop: $("body").height() }, 500);
       this.socket.emit("seenMessages", {
         id: this.socket.id,
         recieveId: this.state.currentChatId,
@@ -185,8 +182,7 @@ class Chats extends React.Component {
         200
       );
     } else if (prevState.messages !== this.state.messages) {
-      let chat = document.getElementById("chat-box");
-      chat.scrollTop = chat.scrollHeight;
+      $("#chat-box").animate({ scrollTop: $("#chat-box").height() }, 500);
     }
   }
   sendMsg = (event) => {
@@ -238,8 +234,7 @@ class Chats extends React.Component {
     });
     setTimeout(
       function () {
-        let chat = document.getElementById("chat-box");
-        chat.scrollTop = chat.scrollHeight;
+        $("#chat-box").animate({ scrollTop: $("#chat-box").height() }, 500);
         this.getMsg(id);
         this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
       }.bind(this),
@@ -253,6 +248,9 @@ class Chats extends React.Component {
         id: this.socket.id,
         getId: this.state.currentChatId,
         numPage: this.page,
+      });
+      $("#chat-box").css({
+        overflow: "hidden",
       });
     }
   };

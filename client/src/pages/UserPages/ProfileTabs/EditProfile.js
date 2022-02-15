@@ -1,4 +1,5 @@
 import React from "react";
+import $ from "jquery";
 import InfoModal from "../../../components/InfoModal";
 import {
   ListGroup,
@@ -292,8 +293,8 @@ export default class EditProfile extends React.Component {
     profile["city"] = this.state.lastProfile.city._id;
     this.setState({ municipalities, cities: [], profile });
     this.validateEditProfile();
-    document.getElementById("municipalitySelect").options[0].selected = true;
-    document.getElementById("citySelect").options[0].selected = true;
+    $("#municipalitySelect").val("");
+    $("#citySelect").val("");
   };
   onChangeMunicipality = async (event) => {
     const cities = await client.getRequest(
@@ -303,7 +304,7 @@ export default class EditProfile extends React.Component {
     profile["city"] = this.state.lastProfile.city._id;
     this.setState({ cities, profile });
     this.validateEditProfile();
-    document.getElementById("citySelect").options[0].selected = true;
+    $("#citySelect").val("");
   };
   changeCity = (event) => {
     const profile = this.state.profile;
@@ -327,20 +328,20 @@ export default class EditProfile extends React.Component {
     }
   };
   onCheckUncheck = (event) => {
-    let checkbox = document.getElementById(event.target.id);
+    let checkbox = $(`#${event.target.id}`);
     if (
-      checkbox.checked === true &&
-      !this.state.profile.typeAnimals.includes(checkbox.value)
+      checkbox.is(":checked") === true &&
+      !this.state.profile.typeAnimals.includes(checkbox.val())
     ) {
       let fields = this.state.profile;
-      fields.typeAnimals.push(checkbox.value);
+      fields.typeAnimals.push(checkbox.val());
       this.setState({ profile: fields });
     } else if (
-      checkbox.checked === false &&
-      this.state.profile.typeAnimals.includes(checkbox.value)
+      checkbox.is(":checked") === false &&
+      this.state.profile.typeAnimals.includes(checkbox.val())
     ) {
       let fields = this.state.profile;
-      const index = fields.typeAnimals.indexOf(checkbox.value);
+      const index = fields.typeAnimals.indexOf(checkbox.val());
       if (index > -1) {
         fields.typeAnimals.splice(index, 1);
         this.setState({ profile: fields });
