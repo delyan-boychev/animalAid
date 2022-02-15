@@ -5,7 +5,6 @@ const compression = require("compression");
 const app = express();
 const fs = require("fs");
 var cors = require("cors");
-
 const privateKey = fs.readFileSync("./ssl/key.pem", "utf8");
 const certificate = fs.readFileSync("./ssl/cert.pem", "utf8");
 const updateCaptchaEncryption = require("./captcha/updateCaptchaEncryption");
@@ -24,7 +23,7 @@ const credentials = {
 const httpServer = require("https").createServer(credentials, app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: [config.BASE_URL, "http://192.168.1.106:3000"],
+    origin: [config.BASE_URL],
   },
 });
 const onConnection = require("./chatSockets")(io);
