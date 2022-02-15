@@ -170,7 +170,7 @@ class Chats extends React.Component {
       });
     } else if (prevState.currentChatId !== this.state.currentChatId) {
       $("#chat-box").animate({ scrollTop: $("#chat-box").height() }, 500);
-      $("body").animate({ scrollTop: $("body").height() }, 500);
+      $("html, body").animate({ scrollTop: $(document).height() }, 1000);
       this.socket.emit("seenMessages", {
         id: this.socket.id,
         recieveId: this.state.currentChatId,

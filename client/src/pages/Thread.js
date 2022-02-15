@@ -175,7 +175,7 @@ class Thread extends React.Component {
         replyTo: replyToString,
       });
       this.validate();
-      $("body").animate({ scrollTop: $("body").height() }, 500);
+      $("html, body").animate({ scrollTop: $(document).height() }, 500);
     }
   };
   editThreadPost = async (event) => {
@@ -273,7 +273,7 @@ class Thread extends React.Component {
   replyTo = (postId) => {
     let fields = this.state.fields;
     fields.replyTo = postId;
-    $("body").animate({ scrollTop: $("body").height() }, 500);
+    $("html, body").animate({ scrollTop: $(document).height() }, 500);
     let post = this.state.posts.find((p) => p._id === postId);
     this.setState({
       fields,
