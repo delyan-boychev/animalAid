@@ -4,24 +4,18 @@ module.exports = (io) => {
   let activeUsers = {};
   let chatService = new ChatService();
   const onRequestGetAllChatUsers = async function (socket) {
-    const senderId = Object.keys(activeUsers).find(
-      (key) => activeUsers[key] === socket.id
-    );
+    const senderId = activeUsers[socket.id];
     const users = await chatService.getUsersChats(senderId);
     if (users !== false) {
       io.to(socket.id).emit("allChatUsers", { users: users, id: senderId });
     }
   };
   const onSeenMessages = async function (socket) {
-    const senderId = Object.keys(activeUsers).find(
-      (key) => activeUsers[key] === socket.id
-    );
+    const senderId = activeUsers[socket.id];
     await chatService.seenMessages(senderId, socket.recieveId);
   };
   const onRequestGetMessages = async function (socket) {
-    const senderId = Object.keys(activeUsers).find(
-      (key) => activeUsers[key] === socket.id
-    );
+    const senderId = activeUsers[socket.id];
     const messages = await chatService.getMessages(
       senderId,
       socket.getId,
@@ -29,7 +23,7 @@ module.exports = (io) => {
     );
     if (messages !== false) {
       if (socket.numPage > 1) {
-        io.to(activeUsers[senderId]).emit("getMessagesNextPage", {
+        io.to(socket.id).emit("getMessagesNextPage", {
           id: socket.id,
           messages: messages.messages,
           numPages: messages.numPages,
@@ -37,10 +31,14 @@ module.exports = (io) => {
       } else {
         const user = await chatService.getProfile(socket.getId);
         user["activeStatus"] = false;
-        if (activeUsers[socket.getId]) {
+        if (
+          Object.keys(activeUsers).find(
+            (key) => activeUsers[key] === socket.getId
+          )
+        ) {
           user["activeStatus"] = true;
         }
-        io.to(activeUsers[senderId]).emit("getMessages", {
+        io.to(socket.id).emit("getMessages", {
           id: socket.id,
           user: user,
           messages: messages.messages,
@@ -50,9 +48,7 @@ module.exports = (io) => {
     }
   };
   const onNewMessage = async function (socket) {
-    const senderId = Object.keys(activeUsers).find(
-      (key) => activeUsers[key] === socket.id
-    );
+    const senderId = activeUsers[socket.id];
     const message = await chatService.sendMessage(
       senderId,
       socket.recieveId,
@@ -61,8 +57,11 @@ module.exports = (io) => {
       socket.startChat
     );
     if (message !== false) {
-      if (activeUsers[socket.recieveId]) {
-        io.to(activeUsers[socket.recieveId]).emit("newMessage", {
+      let socketId = Object.keys(activeUsers).find(
+        (key) => activeUsers[key] === socket.recieveId
+      );
+      if (socketId) {
+        io.to(socketId).emit("newMessage", {
           msg: socket.msg,
           senderId: senderId,
           date: socket.date,
@@ -76,17 +75,15 @@ module.exports = (io) => {
     if (res !== false) {
       const users = await chatService.getUsersChats(res.id);
       socket.emit("allChatUsers", { users: users, id: res.id });
-      activeUsers[res.id] = socket.id;
+      activeUsers[socket.id] = res.id;
       io.emit("changeActiveStatus", { userId: res.id, activeStatus: true });
       socket.on("newMessage", onNewMessage);
       socket.on("requestGetMessages", onRequestGetMessages);
       socket.on("requestGetAllChatUsers", onRequestGetAllChatUsers);
       socket.on("seenMessages", onSeenMessages);
       socket.on("disconnect", function () {
-        const uId = Object.keys(activeUsers).find(
-          (key) => activeUsers[key] === socket.id
-        );
-        delete activeUsers[uId];
+        const uId = activeUsers[socket.id];
+        delete activeUsers[socket.id];
         io.emit("changeActiveStatus", { userId: uId, activeStatus: false });
       });
     } else {
