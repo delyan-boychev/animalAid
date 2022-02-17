@@ -46,7 +46,7 @@ class ChatService {
    * @param {String} userOne
    * @param {String} userTwo
    * @param {Number} pageNum
-   * @returns {{}|Boolean}
+   * @returns {Object|Boolean}
    */
   async getMessages(userOne, userTwo, pageNum) {
     const usersExists =
@@ -107,7 +107,7 @@ class ChatService {
   /**
    * Get user info by user id
    * @param {String} userId
-   * @returns {Boolean|{}}
+   * @returns {Boolean|Object}
    */
   async getProfile(userId) {
     const user = await this.#userRepository.getProfile(userId);

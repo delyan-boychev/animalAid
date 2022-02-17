@@ -36,19 +36,19 @@ class ChatRepository {
    * @returns {Boolean}
    */
   async sendMessage(senderId, recieveId, message, date) {
-    let chat = await Chat.findOne({
-      $and: [
-        { $or: [{ userOne: senderId }, { userOne: recieveId }] },
-        { $or: [{ userTwo: senderId }, { userTwo: recieveId }] },
-      ],
-    });
-    chat.messages.push({
-      date: date,
-      seen: false,
-      message: message,
-      sender: senderId,
-    });
     try {
+      let chat = await Chat.findOne({
+        $and: [
+          { $or: [{ userOne: senderId }, { userOne: recieveId }] },
+          { $or: [{ userTwo: senderId }, { userTwo: recieveId }] },
+        ],
+      });
+      chat.messages.push({
+        date: date,
+        seen: false,
+        message: message,
+        sender: senderId,
+      });
       await chat.save();
       return true;
     } catch {
@@ -62,12 +62,16 @@ class ChatRepository {
    * @returns {Boolean}
    */
   async checkChatExists(userOne, userTwo) {
-    return await Chat.exists({
-      $and: [
-        { $or: [{ userOne: userOne }, { userOne: userTwo }] },
-        { $or: [{ userTwo: userOne }, { userTwo: userTwo }] },
-      ],
-    });
+    try {
+      return await Chat.exists({
+        $and: [
+          { $or: [{ userOne: userOne }, { userOne: userTwo }] },
+          { $or: [{ userTwo: userOne }, { userTwo: userTwo }] },
+        ],
+      });
+    } catch {
+      return false;
+    }
   }
   /**
    * Get messages
@@ -76,15 +80,19 @@ class ChatRepository {
    * @returns {[]|Boolean}
    */
   async getMessages(userOne, userTwo) {
-    let chat = await Chat.findOne({
-      $and: [
-        { $or: [{ userOne: userOne }, { userOne: userTwo }] },
-        { $or: [{ userTwo: userOne }, { userTwo: userTwo }] },
-      ],
-    });
-    if (chat !== null) {
-      return chat.messages;
-    } else {
+    try {
+      let chat = await Chat.findOne({
+        $and: [
+          { $or: [{ userOne: userOne }, { userOne: userTwo }] },
+          { $or: [{ userTwo: userOne }, { userTwo: userTwo }] },
+        ],
+      });
+      if (chat !== null) {
+        return chat.messages;
+      } else {
+        return false;
+      }
+    } catch {
       return false;
     }
   }
@@ -95,26 +103,26 @@ class ChatRepository {
    * @returns {Boolean}
    */
   async seenMessages(userOne, userTwo) {
-    let chat = await Chat.findOne({
-      $and: [
-        { $or: [{ userOne: userOne }, { userOne: userTwo }] },
-        { $or: [{ userTwo: userOne }, { userTwo: userTwo }] },
-      ],
-    });
-    if (chat !== null) {
-      let indexes = extMethods.getAllIndexes(chat.messages, "seen", false);
-      indexes.forEach((i) => {
-        if (chat.messages[i]["sender"] != userOne) {
-          chat.messages[i]["seen"] = true;
-        }
+    try {
+      let chat = await Chat.findOne({
+        $and: [
+          { $or: [{ userOne: userOne }, { userOne: userTwo }] },
+          { $or: [{ userTwo: userOne }, { userTwo: userTwo }] },
+        ],
       });
-      try {
+      if (chat !== null) {
+        let indexes = extMethods.getAllIndexes(chat.messages, "seen", false);
+        indexes.forEach((i) => {
+          if (chat.messages[i]["sender"] != userOne) {
+            chat.messages[i]["seen"] = true;
+          }
+        });
         await chat.save();
         return true;
-      } catch {
+      } else {
         return false;
       }
-    } else {
+    } catch {
       return false;
     }
   }
@@ -135,7 +143,7 @@ class ChatRepository {
   /**
    * Get chats by user id
    * @param {String} userId User id
-   * @returns {[]}
+   * @returns {Object[]}
    */
   async getUsersChats(userId) {
     let chats = await Chat.find({ userOne: userId })

@@ -23,29 +23,27 @@ class ThreadRepository {
   /**
    * Get all threads by topic search
    * @param {String} topic
-   * @returns {[]}
+   * @returns {Object[]}
    */
   async getAllThreads(topic) {
     if (topic !== undefined) {
-      const threads = await Thread.find({
+      return await Thread.find({
         topic: { $regex: topic, $options: "i" },
       })
         .populate("author", "name email")
         .select("topic author dateLastActivity")
         .exec();
-      return threads;
     } else {
-      const threads = await Thread.find()
+      return await Thread.find()
         .populate("author", "name email")
         .select("topic author dateLastActivity")
         .exec();
-      return threads;
     }
   }
   /**
    * Get thread by id
    * @param {String} threadId
-   * @returns {{}|Boolean}
+   * @returns {Object|Boolean}
    */
   async getThread(threadId) {
     try {

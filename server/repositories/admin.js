@@ -2,6 +2,7 @@
 const User = require("../models/user");
 const City = require("../models/city");
 const Thread = require("../models/thread");
+const FundrisingCampaign = require("../models/fundrisingCampaign");
 const roles = require("../models/roles");
 const ChatRepository = require("./chat");
 class AdminRepository {
@@ -11,7 +12,7 @@ class AdminRepository {
    * @param {String} email Vet email
    * @returns {Boolean}
    */
-  async moderationVerify(email) {
+  async moderationVerifyVet(email) {
     const u = await User.findOne({ email: email }).exec();
     if (u != null) {
       if (u.role === roles.Vet) {
@@ -36,7 +37,7 @@ class AdminRepository {
   /**
    * Get all users
    * @param {String} searchQuery Search query
-   * @returns {[]}
+   * @returns {Object[]}
    */
   async getAllUsers(searchQuery, role, excludeId) {
     let query = {};
@@ -149,7 +150,7 @@ class AdminRepository {
   /**
    * Get user profile
    * @param {String} id User id
-   * @returns {}
+   * @returns {Object}
    */
   async getProfile(id) {
     try {
@@ -296,6 +297,54 @@ class AdminRepository {
         } else {
           return false;
         }
+      }
+    } catch {
+      return false;
+    }
+  }
+  /**
+   * Moderation verify fundrising campaign
+   * @param {String} campaignId
+   * @returns {Boolean|Object}
+   */
+  async moderationVerifyFundrisingCampaign(campaignId) {
+    try {
+      const campaign = await FundrisingCampaign.findById(campaignId)
+        .populate("user", "name email")
+        .exec();
+      if (campaign !== null) {
+        if (campaign.moderationVerified === false) {
+          campaign.moderationVerified = true;
+          await campaign.save();
+          return campaign;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  /**
+   * Complete fundrising campaign
+   * @param {String} campaignId
+   * @returns {Boolean}
+   */
+  async completeFundrisingCampaign(campaignId) {
+    try {
+      const campaign = await FundrisingCampaign.findOneById(campaignId).exec();
+      if (campaign !== null) {
+        if (campaign.completed === false) {
+          campaign.completed = true;
+          await campaign.save();
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
       }
     } catch {
       return false;

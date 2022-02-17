@@ -6,7 +6,7 @@ const City = require("../models/city");
 class UserRepository {
   /**
    * Register user
-   * @param {{}} user
+   * @param {Object} user
    * @returns {String|Boolean}
    */
   async register(user) {
@@ -73,7 +73,7 @@ class UserRepository {
   /**
    * Get vet info
    * @param {String} id
-   * @returns {{}|Boolean}
+   * @returns {Object|Boolean}
    */
   async getVet(id) {
     try {
@@ -140,7 +140,7 @@ class UserRepository {
   /**
    * Get user profile
    * @param {String} id
-   * @returns {{}|Boolean}
+   * @returns {Object|Boolean}
    */
   async getProfile(id) {
     try {
@@ -157,8 +157,8 @@ class UserRepository {
   }
   /**
    * Login user
-   * @param {{}} user
-   * @returns {{}|Boolean}
+   * @param {Object} user
+   * @returns {Object|Boolean}
    */
   async loginUser(user) {
     const u = await User.findOne({ email: user.email }).exec();
@@ -200,7 +200,7 @@ class UserRepository {
   /**
    * Get vets and search
    * @param {String} searchQuery
-   * @returns {[]}
+   * @returns {Object[]}
    */
   async getVets(searchQuery) {
     let query = {};
@@ -245,7 +245,7 @@ class UserRepository {
   }
   /**
    * Change email address
-   * @param {{}} user
+   * @param {Object} user
    * @param {String} newEmail
    * @returns {Boolean|String}
    */

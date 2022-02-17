@@ -3,6 +3,11 @@
   "ENCRYPTION_KEY": "9EJb5MuYmffLEUrUbMKphDFvCTsDwdEY?&!_MzGXV4yEn9b$hCC3X^Q*w+PFz4yCUc&?R*b3zDymkWv8=wK9FQCc-MRuFK4V#zCp5kjAYLh=xG7husgrU#TphU3VsTQr",
   "API_URL": "https://animalaidbg.com:8443",
   "BASE_URL": "https://animalaidbg.com",
+  "EMAIL_INFO": {
+    "EMAIL": "bganimalaid@gmail.com",
+    "PASSWORD": "nyyjnqksvjgpkqnd",
+    "EMAIL_SENDER": "Animal Aid <bganimalaid@gmail.com>"
+  },
   "SSL_CERTIFICATE_PASS": "PCDubXm4k*!$DjzM^XPaXQpZBnvDd*NxNnr#-2aXCMFA&ExLHUYa9%HZwvv$+PCvCGmD&C75&khdDQzPQExSaGRm=vWMs6dw9ejFq7+&3DR%=ATVd4M%84J@rp+pq-WK",
   "TOKEN_ENCRYPTION": "p%_@RAnbRfaPDsx^5_AUDADs55gGZQTv-xecDafemNT^BcErgWpetvP@!RE4ESfM=-k8sq2GJm@3wM&L9sjxtB=!pek39y9?BEcSr8-_v-=^PgVc_$eZzg@SUBAcv!GL"
 }

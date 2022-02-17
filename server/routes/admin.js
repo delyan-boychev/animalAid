@@ -11,6 +11,7 @@ const deleteThreadPostSchema = require("../models/validation/admin/deleteThreadP
 const AdminService = require("../services/admin");
 const adminService = new AdminService();
 const roles = require("../models/roles");
+const completeFundrisingCampaignSchema = require("../models/validation/fundrisingCampaign/completeFundrisingCampaign");
 const router = express.Router();
 router.get(
   "/getAllUsers/:pageNum/:searchQuery?",
@@ -141,7 +142,7 @@ router.post("/changeRole", authenticateAdmin, async (req, res) => {
 });
 router.post("/moderationVerifyVet", authenticateAdmin, async (req, res) => {
   validation(req.body, moderationVerifyVetSchema, res, async () => {
-    res.send(await adminService.moderationVerify(req.body.email));
+    res.send(await adminService.moderationVerifyVet(req.body.email));
   });
 });
 router.post("/changeProfilePhoto", authenticateAdmin, async (req, res) => {
@@ -161,4 +162,28 @@ router.post("/deleteThreadPost", authenticateAdmin, async (req, res) => {
     );
   });
 });
+router.post(
+  "/moderationVerifyFundrisingCampaign",
+  authenticateAdmin,
+  async (req, res) => {
+    validation(req.body, completeFundrisingCampaignSchema, res, async () => {
+      res.send(
+        await adminService.moderationVerifyFundrisingCampaign(
+          req.body.campaignId
+        )
+      );
+    });
+  }
+);
+router.post(
+  "/completeFundrisingCampaign",
+  authenticateAdmin,
+  async (req, res) => {
+    validation(req.body, completeFundrisingCampaignSchema, res, async () => {
+      res.send(
+        await adminService.completeFundrisingCampaign(req.body.campaignId)
+      );
+    });
+  }
+);
 module.exports = router;

@@ -5,7 +5,7 @@ const Region = require("../models/region");
 class CityRepository {
   /**
    * Get all regions
-   * @returns {[]}
+   * @returns {Object[]}
    */
   async getAllRegions() {
     return await Region.find();

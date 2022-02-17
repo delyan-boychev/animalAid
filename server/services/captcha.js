@@ -4,7 +4,7 @@ const encryptDecryptCaptcha = require("../captcha/encryptDecryptCaptcha");
 class CaptchaService {
   /**
    * Get captcha
-   * @returns {{}} Captcha
+   * @returns {Object} Captcha
    */
   getCaptcha() {
     const charsArray =

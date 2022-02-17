@@ -9,23 +9,23 @@ const encryptDecryptCaptcha = require("../captcha/encryptDecryptCaptcha");
 const config = require("../config.json");
 const nodemailer = require("nodemailer");
 const verifyTemplates = require("../models/emailTemplates/verifyProfile");
-const forgotPasswordTemplates = require("../models/emailTemplates/forgotPassword");
+const forgotPasswordEmail = require("../models/emailTemplates/forgotPassword");
 const roles = require("../models/roles");
 const transportMail = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "bganimalaid@gmail.com",
-    pass: "nyyjnqksvjgpkqnd",
+    user: config.EMAIL_INFO.EMAIL,
+    pass: config.EMAIL_INFO.PASSWORD,
   },
 });
+const fromSender = config.EMAIL_INFO.EMAIL_SENDER;
 const Cryptr = require("cryptr");
-const fromSender = "Animal Aid <bganimalaid@gmail.com>";
 class UserService {
   #userRepository = new userRepository();
   #captchaRepository = new captchaRepository();
   /**
    * Register user
-   * @param {{}} user User info
+   * @param {Object} user User info
    * @returns {Boolean|String}
    */
   async registerUser(user) {
@@ -86,7 +86,7 @@ class UserService {
   /**
    * Get vet profile
    * @param {String} id User id
-   * @returns {{}}
+   * @returns {Object}
    */
   async getVet(id) {
     return await this.#userRepository.getVet(id);
@@ -101,7 +101,7 @@ class UserService {
   }
   /**
    * Register vet
-   * @param {{}} user User info
+   * @param {Object} user User info
    * @returns {Boolean|String}
    */
   async registerVet(user) {
@@ -177,7 +177,7 @@ class UserService {
   }
   /**
    * Login user
-   * @param {{}} user User info
+   * @param {Object} user User info
    * @returns {Boolean|String}
    */
   async loginUser(user) {
@@ -221,7 +221,7 @@ class UserService {
   /**
    * Get user profile
    * @param {String} id User id
-   * @returns {{}}
+   * @returns {Object}
    */
   async getProfile(id) {
     return await this.#userRepository.getProfile(id);
@@ -260,7 +260,7 @@ class UserService {
   /**
    * Validate forgot password token
    * @param {String} token Forgot password token
-   * @returns {{}}
+   * @returns {Object}
    */
   async validateForgotPasswordToken(token) {
     const cryptr = new Cryptr(config.ENCRYPTION_KEY);
@@ -331,7 +331,7 @@ class UserService {
           from: fromSender,
           to: email,
           subject: "Забравена парола в Animal Aid",
-          html: forgotPasswordTemplates.forgotPasswordEmail(token),
+          html: forgotPasswordEmail(token),
         });
         return true;
       } else {
@@ -372,7 +372,7 @@ class UserService {
   /**
    * Get vet profiles
    * @param {Number} pageNum Number of the page
-   * @returns {[]}
+   * @returns {Object[]}
    */
   async getVets(pageNum, searchQuery) {
     const vets = await this.#userRepository.getVets(searchQuery);
@@ -413,7 +413,7 @@ class UserService {
   /**
    * Change profile photo
    * @param {String} id User id
-   * @param {{}} img Data url img and crop
+   * @param {Object} img Data url img and crop
    * @returns {Boolean}
    */
   async changeProfilePhoto(id, img) {

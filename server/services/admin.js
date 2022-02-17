@@ -1,9 +1,20 @@
 "use strict";
 const path = require("path");
+const nodemailer = require("nodemailer");
+const config = require("../config.json");
 const fs = require("fs");
 const sharp = require("sharp");
 const extensionMethods = require("../extensionMethods");
+const verifiedFundrisingCampaign = require("../models/emailTemplates/verifiedFundrisingCampaign");
 const AdminRepository = require("../repositories/admin");
+const transportMail = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: config.EMAIL_INFO.EMAIL,
+    pass: config.EMAIL_INFO.PASSWORD,
+  },
+});
+const fromSender = config.EMAIL_INFO.EMAIL_SENDER;
 class AdminService {
   #adminRepository = new AdminRepository();
   /**
@@ -11,14 +22,14 @@ class AdminService {
    * @param {String} email Vet email
    * @returns {Boolean}
    */
-  async moderationVerify(email) {
+  async moderationVerifyVet(email) {
     return await this.#adminRepository.moderationVerify(email);
   }
   /**
    * Get all users
    * @param {Number} pageNum Page number
-   * @param {{}} searchQuery Search query
-   * @returns {{}}
+   * @param {String} searchQuery Search query
+   * @returns {Object[]}
    */
   async getAllUsers(pageNum, searchQuery, role, excludeId) {
     const users = await this.#adminRepository.getAllUsers(
@@ -45,6 +56,11 @@ class AdminService {
       return false;
     }
   }
+  /**
+   * Get vets for moderation verify
+   * @param {Number} pageNum
+   * @returns {Object[]}
+   */
   async getVetsForModerationVerify(pageNum) {
     const vets = await this.#adminRepository.getVetsForModerationVerify();
     if (vets !== false) {
@@ -69,7 +85,7 @@ class AdminService {
   /**
    * Get user info
    * @param {String} id User id
-   * @returns {{}}
+   * @returns {Object}
    */
   async getUserInfo(id) {
     return await this.#adminRepository.getProfile(id);
@@ -96,7 +112,7 @@ class AdminService {
   /**
    * Change profile photo
    * @param {String} id User id
-   * @param {{}} img Data url img and crop
+   * @param {Object} img Data url img and crop
    * @returns {Boolean}
    */
   async changeProfilePhoto(img) {
@@ -135,11 +151,55 @@ class AdminService {
       return false;
     }
   }
+  /**
+   * Delete thread
+   * @param {String} threadId
+   * @returns {Boolean}
+   */
   async deleteThread(threadId) {
     return await this.#adminRepository.deleteThread(threadId);
   }
+  /**
+   * Delete thread post
+   * @param {String} threadId
+   * @param {String} postId
+   * @returns {Boolean}
+   */
   async deleteThreadPost(threadId, postId) {
     return await this.#adminRepository.deleteThreadPost(threadId, postId);
+  }
+  /**
+   * Moderation verify fundrising campaign
+   * @param {String} campaignId
+   * @returns {Boolean}
+   */
+  async moderationVerifyFundrisingCampaign(campaignId) {
+    const campaign =
+      await this.#adminRepository.moderationVerifyFundrisingCampaign(
+        campaignId
+      );
+    if (campaign !== false) {
+      transportMail.sendMail({
+        from: fromSender,
+        to: campaign.user.email,
+        subject: "Одобрена кампания",
+        html: verifiedFundrisingCampaign(
+          campaign.user.name.first,
+          campaign.title
+        ),
+      });
+      return true;
+    } else {
+      return false;
+    }
+  }
+  /**
+   * Complete fudrising campaign
+   * @param {String} campaignId
+   * @returns {Boolean}
+   */
+  async completeFundrisingCampaign(campaignId) {
+    return await this.#adminRepository.completeFundrisingCampaign(campaignId);
   }
 }
 module.exports = AdminService;
