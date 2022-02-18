@@ -8,6 +8,7 @@ import {
   ListGroup,
   Col,
   Row,
+  Spinner,
   Pagination,
   Form,
   FloatingLabel,
@@ -234,6 +235,9 @@ class Threads extends React.Component {
         >
           Няма намерени теми!
         </h4>
+        <div className="text-center mt-3" hidden={this.state.numPages > 0}>
+          <Spinner animation="border" variant="primary" role="status"></Spinner>
+        </div>
         <ListGroup>
           {this.state.threads.map((thread) => (
             <ListGroup.Item key={thread._id} id={thread._id}>

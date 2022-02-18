@@ -382,7 +382,7 @@ class Thread extends React.Component {
           >
             Все още няма публикации!
           </h3>
-          <div className="text-center" hidden={this.state.numPages !== -1}>
+          <div className="text-center mt-3" hidden={this.state.numPages !== -1}>
             <Spinner
               animation="border"
               variant="primary"
