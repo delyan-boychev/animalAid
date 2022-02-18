@@ -376,6 +376,7 @@ class Thread extends React.Component {
               </Col>
             </Row>
           </Card>
+          {pagination}
           <h3
             className="text-center mt-3"
             hidden={this.state.numPages === -1 || this.state.numPages > 0}
@@ -389,7 +390,6 @@ class Thread extends React.Component {
               role="status"
             ></Spinner>
           </div>
-          {pagination}
           <ListGroup style={{ wordBreak: "break-all" }}>
             {this.state.posts.map((post) => (
               <ListGroup.Item key={post._id}>

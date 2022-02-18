@@ -5,6 +5,7 @@ import {
   ListGroup,
   Col,
   Row,
+  Spinner,
   Pagination,
   Form,
   FloatingLabel,
@@ -111,6 +112,9 @@ class ViewAllVets extends React.Component {
         >
           Няма намерени ветеринарни лекари!
         </h4>
+        <div className="text-center mt-3" hidden={this.state.numPages > 0}>
+          <Spinner animation="border" variant="primary" role="status"></Spinner>
+        </div>
         <ListGroup>
           {this.state.vets.map((vet) => (
             <ListGroup.Item

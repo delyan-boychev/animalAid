@@ -3,7 +3,14 @@ import { useNavigate } from "react-router-dom";
 import InfoModal from "../../../components/InfoModal";
 import DialogModal from "../../../components/DialogModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ListGroup, Col, Row, Pagination, Button } from "react-bootstrap";
+import {
+  ListGroup,
+  Col,
+  Row,
+  Pagination,
+  Button,
+  Spinner,
+} from "react-bootstrap";
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
@@ -129,6 +136,9 @@ class ViewVetsForModerationVerify extends React.Component {
         >
           Няма намерени ветеринарни лекари за одоборение!
         </h4>
+        <div className="text-center mt-3" hidden={this.state.numPages > 0}>
+          <Spinner animation="border" variant="primary" role="status"></Spinner>
+        </div>
         <ListGroup>
           {this.state.vets.map((vet) => (
             <ListGroup.Item key={vet._id} id={vet._id}>

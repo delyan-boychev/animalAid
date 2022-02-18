@@ -5,6 +5,7 @@ import {
   ListGroup,
   Col,
   Row,
+  Spinner,
   Pagination,
   Form,
   FloatingLabel,
@@ -111,6 +112,9 @@ class ViewAllUsers extends React.Component {
         >
           Няма намерени потребители!
         </h4>
+        <div className="text-center mt-3" hidden={this.state.numPages > 0}>
+          <Spinner animation="border" variant="primary" role="status"></Spinner>
+        </div>
         <ListGroup>
           {this.state.users.map((user) => (
             <ListGroup.Item
