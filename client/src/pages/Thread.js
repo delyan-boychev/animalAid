@@ -63,7 +63,7 @@ class Thread extends React.Component {
         },
       },
       page: 1,
-      numPages: 0,
+      numPages: -1,
       posts: [],
       modal: {
         show: false,
@@ -376,9 +376,19 @@ class Thread extends React.Component {
               </Col>
             </Row>
           </Card>
-          <h3 className="text-center mt-3" hidden={this.state.numPages > 0}>
+          <h3
+            className="text-center mt-3"
+            hidden={this.state.numPages === -1 || this.state.numPages > 0}
+          >
             Все още няма публикации!
           </h3>
+          <div className="text-center" hidden={this.state.numPages !== -1}>
+            <Spinner
+              animation="border"
+              variant="primary"
+              role="status"
+            ></Spinner>
+          </div>
           {pagination}
           <ListGroup style={{ wordBreak: "break-all" }}>
             {this.state.posts.map((post) => (
