@@ -40,12 +40,11 @@ export default function About() {
             </Link>
           </div>
         </Col>
-        <Col>
+        <Col sm={6}>
           <img
-            className="d-block mx-lg-auto img-fluid rounded ms-auto me-auto mt-5"
+            className="d-block img-fluid rounded ms-auto me-auto mt-5"
             src={`/images/about1.webp`}
             alt="Делян"
-            style={{ maxWidth: "300px" }}
           />
         </Col>
       </Row>
