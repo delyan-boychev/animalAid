@@ -1,13 +1,11 @@
-const config = require("../config.json");
-const Cryptr = require("cryptr");
+const decryptToken = require("../tokenEncryption/decrypt");
 const UserService = require("../services/user");
 const userService = new UserService();
 const authenticate = async function (req, res, next) {
   const token = req.query.token;
   if (token) {
-    const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
-    try {
-      let data = cryptr.decrypt(token).split(";");
+    let data = decryptToken(token).split(";");
+    if (data[0] !== "") {
       if (parseInt(data[1]) < parseInt(new Date().getTime() / 1000)) {
         res.sendStatus(401);
       } else {
@@ -20,7 +18,7 @@ const authenticate = async function (req, res, next) {
           next();
         }
       }
-    } catch {
+    } else {
       res.sendStatus(401);
     }
   } else {

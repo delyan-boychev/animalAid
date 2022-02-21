@@ -1,5 +1,4 @@
-const config = require("../config.json");
-const Cryptr = require("cryptr");
+const decryptToken = require("../tokenEncryption/decrypt");
 const UserService = require("../services/user");
 const userService = new UserService();
 const roles = require("../models/roles");
@@ -8,9 +7,8 @@ const authenticateAdmin = async function (req, res, next) {
 
   if (authHeader) {
     const token = authHeader.replace("animalAidAuthorization ", "");
-    const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
-    try {
-      let data = cryptr.decrypt(token).split(";");
+    let data = decryptToken(token).split(";");
+    if (data[0] !== "") {
       if (parseInt(data[1]) < parseInt(new Date().getTime() / 1000)) {
         res.sendStatus(401);
       } else {
@@ -25,7 +23,7 @@ const authenticateAdmin = async function (req, res, next) {
           next();
         }
       }
-    } catch {
+    } else {
       res.sendStatus(401);
     }
   } else {
