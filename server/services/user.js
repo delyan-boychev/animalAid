@@ -3,6 +3,8 @@ const userRepository = require("../repositories/user");
 const captchaRepository = require("../repositories/captcha");
 const path = require("path");
 const fs = require("fs");
+const encryptToken = require("../tokenEncryption/encrypt");
+const decryptToken = require("../tokenEncryption/decrypt");
 const sharp = require("sharp");
 const extensionMethods = require("../extensionMethods");
 const encryptDecryptCaptcha = require("../captcha/encryptDecryptCaptcha");
@@ -200,8 +202,7 @@ class UserService {
                 return "PROFILE_NOT_MODERATION_VERIFIED";
               }
             }
-            const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
-            const token = cryptr.encrypt(
+            const token = encryptToken(
               `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
             );
             return token;
@@ -232,18 +233,17 @@ class UserService {
    * @returns {String|Boolean}
    */
   refreshToken(token) {
-    const cryptr = new Cryptr(config.TOKEN_ENCRYPTION);
-    try {
-      const decoded = cryptr.decrypt(token).split(";");
+    const decoded = decryptToken(token).split(";");
+    if (decoded[0] !== "") {
       if (parseInt(decoded[1]) > parseInt(new Date().getTime() / 1000)) {
         return false;
       } else {
-        const refreshToken = cryptr.encrypt(
+        const refreshToken = encryptToken(
           `${decoded[0]};${parseInt(new Date().getTime() / 1000) + 1800}`
         );
         return refreshToken;
       }
-    } catch {
+    } else {
       return false;
     }
   }
