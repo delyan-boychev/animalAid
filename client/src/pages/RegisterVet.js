@@ -131,7 +131,7 @@ class RegisterVet extends React.Component {
     this.setState({ municipalities, cities: [], fields });
     this.validate();
     $("#municipalitySelect").val("");
-    $("#municipalitySelect").val("");
+    $("#citySelect").val("");
   };
   onChangeMunicipality = async (event) => {
     const cities = await client.getRequest(
@@ -141,7 +141,7 @@ class RegisterVet extends React.Component {
     fields["city"] = "";
     this.setState({ cities, fields });
     this.validate();
-    $("#municipalitySelect").val("");
+    $("#citySelect").val("");
   };
   changeCity = (event) => {
     const fields = this.state.fields;
@@ -153,20 +153,20 @@ class RegisterVet extends React.Component {
     let checkbox = $(`#${event.target.id}`);
     if (
       checkbox.is(":checked") === true &&
-      !this.state.profile.typeAnimals.includes(checkbox.val())
+      !this.state.fields.typeAnimals.includes(checkbox.val())
     ) {
-      let fields = this.state.profile;
+      let fields = this.state.fields;
       fields.typeAnimals.push(checkbox.val());
-      this.setState({ profile: fields });
+      this.setState({ fields });
     } else if (
       checkbox.is(":checked") === false &&
-      this.state.profile.typeAnimals.includes(checkbox.val())
+      this.state.fields.typeAnimals.includes(checkbox.val())
     ) {
-      let fields = this.state.profile;
+      let fields = this.state.fields;
       const index = fields.typeAnimals.indexOf(checkbox.val());
       if (index > -1) {
         fields.typeAnimals.splice(index, 1);
-        this.setState({ profile: fields });
+        this.setState({ fields });
       }
     }
     this.validate();

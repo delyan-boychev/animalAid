@@ -23,7 +23,7 @@ class AdminService {
    * @returns {Boolean}
    */
   async moderationVerifyVet(email) {
-    return await this.#adminRepository.moderationVerify(email);
+    return await this.#adminRepository.moderationVerifyVet(email);
   }
   /**
    * Get all users

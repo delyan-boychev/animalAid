@@ -106,6 +106,7 @@ class AdminRepository {
       role: roles.Vet,
       moderationVerified: false,
     })
+      .populate("city")
       .select("-password -__v -createdOn -verified")
       .lean()
       .exec();

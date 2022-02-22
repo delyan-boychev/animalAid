@@ -70,6 +70,72 @@ class UserRepository {
       return false;
     }
   }
+  async getVetsAroundUser(userId, searchQuery) {
+    try {
+      const user = await User.findById(userId).populate("city").exec();
+      if (user !== null) {
+        const cities = await City.find({
+          $or: [
+            { name: user.city.name },
+            { region: user.city.region },
+            { municipality: user.city.municipality },
+          ],
+        });
+        const cityIds = cities.map((city) => city._id);
+        let query = { role: roles.Vet, city: cityIds };
+        if (searchQuery !== undefined) {
+          query["$or"] = [
+            { "name.first": { $regex: searchQuery, $options: "i" } },
+            { "name.last": { $regex: searchQuery, $options: "i" } },
+            { email: { $regex: searchQuery, $options: "i" } },
+            { address: { $regex: searchQuery, $options: "i" } },
+            { URN: { $regex: searchQuery, $options: "i" } },
+          ];
+        }
+        const vets = await User.find(query).populate("city").exec();
+        vets.sort((a, b) => {
+          if (
+            a.city._id === user.city._id &&
+            a.city.municipality === user.city.municipality &&
+            a.city.region === user.city.region
+          ) {
+            return -1;
+          } else if (
+            a.city._id !== user.city._id &&
+            a.city.municipality === user.city.municipality &&
+            a.city.region === user.city.region &&
+            b.city._id !== user.city._id &&
+            b.city.municipality !== user.city.municipality &&
+            b.city.region === user.city.region
+          ) {
+            return -1;
+          } else if (
+            a.city._id !== user.city._id &&
+            a.city.municipality === user.city.municipality &&
+            a.city.region === user.city.region &&
+            b.city._id !== user.city._id &&
+            b.city.municipality === user.city.municipality &&
+            b.city.region === user.city.region
+          ) {
+            return 0;
+          } else if (
+            a.city._id !== user.city._id &&
+            a.city.municipality !== user.city.municipality &&
+            a.city.region === user.city.region
+          ) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        return vets;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
   /**
    * Get vet info
    * @param {String} id
@@ -214,6 +280,7 @@ class UserRepository {
           { email: { $regex: searchQuery, $options: "i" } },
           { address: { $regex: searchQuery, $options: "i" } },
           { URN: { $regex: searchQuery, $options: "i" } },
+          { typeAnimals: { $regex: searchQuery, $options: "i" } },
         ],
       };
       const cities = await City.find({
@@ -222,9 +289,7 @@ class UserRepository {
           { region: { $regex: searchQuery, $options: "i" } },
         ],
       });
-      const cityIds = cities.map((city) => {
-        return city._id;
-      });
+      const cityIds = cities.map((city) => city._id);
       query["$or"].push({ city: cityIds });
       return await User.find(query)
         .populate("city")

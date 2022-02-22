@@ -71,6 +71,33 @@ router.get(
     }
   }
 );
+router.get(
+  "/getVetsAroundUser/:pageNum/:searchQuery?",
+  authenticate,
+  async (req, res) => {
+    if (req.user.role !== roles.Vet) {
+      try {
+        const pageNum = parseInt(req.params.pageNum);
+        if (pageNum > 0) {
+          const searchQuery = req.params.searchQuery;
+          res.send(
+            await userService.getVetsAroundUser(
+              pageNum,
+              req.user.id,
+              searchQuery
+            )
+          );
+        } else {
+          res.sendStatus(400);
+        }
+      } catch {
+        res.sendStatus(400);
+      }
+    } else {
+      res.sendStatus(403);
+    }
+  }
+);
 router.get("/getVet/:id", authenticate, async (req, res) => {
   if (req.user.role !== roles.Vet) {
     if (req.params.id !== undefined && req.params.id !== "") {

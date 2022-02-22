@@ -43,7 +43,7 @@ class ViewVetsForModerationVerify extends React.Component {
     let url = `/admin/getVetsForModerationVerify/${page}`;
     const data = await client.getRequestToken(url);
     if (data !== false) {
-      this.setState({ page: page, numPages: data.numPages, vets: data.users });
+      this.setState({ page: page, numPages: data.numPages, vets: data.vets });
     } else {
       this.setState({ page: 1, numPages: 1, vets: [] });
     }
