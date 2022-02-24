@@ -8,6 +8,7 @@ import Profile from "./pages/UserPages/Profile";
 import RequestForgotPassword from "./pages/RequestForgotPassword";
 import ChangeForgotPassword from "./pages/ChangeForgotPassword";
 import AdminPanel from "./pages/AdminPages/AdminPanel";
+import VetsAroundUser from "./pages/UserPages/VetsAroundUser";
 import { useRoutes } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -119,6 +120,19 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? (
       <div className="container mt-3">
         <Vets />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/user/vetsAroundUser",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <VetsAroundUser />
       </div>
     ) : (
       <div className="container mt-3">

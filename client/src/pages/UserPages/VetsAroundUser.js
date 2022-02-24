@@ -1,10 +1,8 @@
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
-  faMagnifyingGlassLocation,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import {
@@ -21,7 +19,7 @@ import { useNavigate } from "react-router";
 const API_URL = require("../../config.json").API_URL;
 const client = require("../../clientRequests");
 const animalsTranslate = require("../../enums/animalsTranslate");
-class Vets extends React.Component {
+class VetsAroundUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +33,7 @@ class Vets extends React.Component {
     this.getVets(1);
   }
   getVets = async (page, search) => {
-    let url = `/user/getVets/${page}`;
+    let url = `/user/getVetsAroundUser/${page}`;
     if (search === true)
       url += `/${encodeURIComponent(this.state.searchQuery)}`;
     else if (search === undefined && this.state.search === true)
@@ -64,7 +62,7 @@ class Vets extends React.Component {
     this.props.navigate(`/user/vet?id=${id}`);
   };
   componentDidMount() {
-    document.title = "Ветеринарни лекари";
+    document.title = "Най-близки ветеринарни лекари";
     this.getVets(1);
   }
   render() {
@@ -91,7 +89,9 @@ class Vets extends React.Component {
     );
     return (
       <div>
-        <h1 className="text-center text-primary fw-bold">Ветеринарни лекари</h1>
+        <h1 className="text-center text-primary fw-bold">
+          Най-близки ветеринарни лекари
+        </h1>
         <hr
           className="ms-auto me-auto text-primary"
           style={{
@@ -100,43 +100,31 @@ class Vets extends React.Component {
             width: "30%",
           }}
         ></hr>
-        <Row>
-          <Col className="mt-3">
-            <Form onSubmit={this.search}>
-              <div className="d-flex">
-                <div className="col-sm-8">
-                  <FloatingLabel controlId="searchQuery" label="Търсене">
-                    <Form.Control
-                      placeholder="Търсене"
-                      type="text"
-                      value={this.state.searchQuery}
-                      onChange={this.handleOnChangeValue}
-                    />
-                  </FloatingLabel>
-                </div>
-                <div className="col-sm-1 align-self-center ms-3">
-                  <Button type="submit">
-                    <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-                  </Button>
-                </div>
-              </div>
-            </Form>
-          </Col>
-          <Col className="align-self-center mt-3" sm={4}>
-            <Button as={Link} to="/user/vetsAroundUser?page=1">
-              <FontAwesomeIcon
-                icon={faMagnifyingGlassLocation}
-              ></FontAwesomeIcon>{" "}
-              Най-близки ветеринарни лекари
-            </Button>
-          </Col>
-        </Row>
+        <Form onSubmit={this.search} className="mw-75">
+          <div className="d-flex">
+            <div className="col-sm-8">
+              <FloatingLabel controlId="searchQuery" label="Търсене">
+                <Form.Control
+                  placeholder="Търсене"
+                  type="text"
+                  value={this.state.searchQuery}
+                  onChange={this.handleOnChangeValue}
+                />
+              </FloatingLabel>
+            </div>
+            <div className="align-self-center ms-3">
+              <Button type="submit">
+                <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+              </Button>
+            </div>
+          </div>
+        </Form>
         {pagination}
         <h4
           className="text-center mt-3"
           hidden={this.state.vets.length !== 0 || this.state.numPages === 0}
         >
-          Няма намерени ветеринарни лекари!
+          Няма намерени ветеринарни лекари около Вас!
         </h4>
         <div className="text-center mt-3" hidden={this.state.numPages > 0}>
           <Spinner animation="border" variant="primary" role="status"></Spinner>
@@ -179,6 +167,6 @@ class Vets extends React.Component {
 }
 function WithNavigate(props) {
   let navigate = useNavigate();
-  return <Vets {...props} navigate={navigate} />;
+  return <VetsAroundUser {...props} navigate={navigate} />;
 }
 export default WithNavigate;
