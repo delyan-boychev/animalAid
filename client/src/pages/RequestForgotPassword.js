@@ -88,11 +88,7 @@ export default class RequestForgotPassword extends React.Component {
           <Form onSubmit={this.submitForm}>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="email">
-                <FloatingLabel
-                  controlId="email"
-                  label="Имейл адрес"
-                  className="mb-3"
-                >
+                <FloatingLabel controlId="email" label="Имейл адрес">
                   <Form.Control
                     placeholder="Имейл адрес"
                     type="text"

@@ -1,4 +1,4 @@
-const decryptToken = require("../tokenEncryption/decrypt");
+const decryptToken = require("../encryption/tokenEncryption").decryptToken;
 const UserService = require("../services/user");
 const userService = new UserService();
 const authenticate = async function (token) {

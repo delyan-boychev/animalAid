@@ -8,6 +8,7 @@ mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+console.log("Cities are adding...");
 const regions = createRegionsJSON();
 const municipalities = createMunicipalitiesJSON();
 const cities = createCitiesJSON();

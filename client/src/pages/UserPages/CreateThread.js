@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 const client = require("../../clientRequests");
 class CreateThread extends React.Component {
+  submitted = false;
   createdComplete = false;
   constructor(props) {
     super(props);
@@ -31,7 +32,8 @@ class CreateThread extends React.Component {
   }
   submitForm = async (event) => {
     event.preventDefault();
-    this.validate();
+    this.submitted = true;
+    await this.validate();
     if (this.state.errors.isValid) {
       const thread = this.state.fields;
       const response = await client.postRequestToken("/thread/createThread", {
@@ -46,28 +48,30 @@ class CreateThread extends React.Component {
       }
     }
   };
-  validate() {
-    const fields = this.state.fields;
-    let errors = {
-      topic: "",
-      description: "",
-      isValid: true,
-    };
-    if (fields["topic"].length < 5 || fields["topic"].length > 100) {
-      errors["topic"] =
-        "Темата трябва да е поне 5 символа и максимум 100 символа!";
-      errors["isValid"] = false;
-    }
-    if (
-      fields["description"].length < 50 ||
-      fields["description"].length > 1500
-    ) {
-      errors["description"] =
-        "Описанието трябва да е поне 50 символа и максимум 1500 символа!";
-      errors["isValid"] = false;
-    }
+  async validate() {
+    if (this.submitted === true) {
+      const fields = this.state.fields;
+      let errors = {
+        topic: "",
+        description: "",
+        isValid: true,
+      };
+      if (fields["topic"].length < 5 || fields["topic"].length > 100) {
+        errors["topic"] =
+          "Темата трябва да е поне 5 символа и максимум 100 символа!";
+        errors["isValid"] = false;
+      }
+      if (
+        fields["description"].length < 50 ||
+        fields["description"].length > 1500
+      ) {
+        errors["description"] =
+          "Описанието трябва да е поне 50 символа и максимум 1500 символа!";
+        errors["isValid"] = false;
+      }
 
-    this.setState({ errors });
+      await this.setState({ errors });
+    }
   }
   openModal = (body) => {
     let modal = this.state.modal;
@@ -123,12 +127,7 @@ class CreateThread extends React.Component {
             </FloatingLabel>
             <span className="text-danger">{this.state.errors.description}</span>
           </Form.Group>
-          <Button
-            variant="primary"
-            type="submit"
-            className="mt-3"
-            disabled={!this.state.errors.isValid}
-          >
+          <Button variant="primary" type="submit" className="mt-3">
             <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon> Създаване на тема
           </Button>
         </Form>

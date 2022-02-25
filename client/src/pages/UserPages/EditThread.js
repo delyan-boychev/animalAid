@@ -7,6 +7,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 const client = require("../../clientRequests");
 class EditThread extends React.Component {
   editedComplete = false;
+  submitted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -56,7 +57,8 @@ class EditThread extends React.Component {
   };
   submitForm = async (event) => {
     event.preventDefault();
-    this.validate();
+    this.submitted = true;
+    await this.validate();
     if (this.state.errors.isValid) {
       const thread = this.state.fields;
       const response = await client.postRequestToken("/thread/editThread", {
@@ -72,28 +74,31 @@ class EditThread extends React.Component {
       }
     }
   };
-  validate() {
-    const fields = this.state.fields;
-    let errors = {
-      topic: "",
-      description: "",
-      isValid: true,
-    };
-    if (fields["topic"].length < 5 || fields["topic"].length > 100) {
-      errors["topic"] =
-        "Темата трябва да е поне 5 символа и максимум 100 символа!";
-      errors["isValid"] = false;
+  async validate() {
+    console.log(this.submitted);
+    if (this.submitted === true) {
+      const fields = this.state.fields;
+      let errors = {
+        topic: "",
+        description: "",
+        isValid: true,
+      };
+      if (fields["topic"].length < 5 || fields["topic"].length > 100) {
+        errors["topic"] =
+          "Темата трябва да е поне 5 символа и максимум 100 символа!";
+        errors["isValid"] = false;
+      }
+      if (
+        fields["description"].length < 50 ||
+        fields["description"].length > 1500
+      ) {
+        errors["description"] =
+          "Описанието трябва да е поне 50 символа и максимум 1500 символа!";
+        errors["isValid"] = false;
+      }
+      await this.setState({ errors });
+      console.log(this.state.errors);
     }
-    if (
-      fields["description"].length < 50 ||
-      fields["description"].length > 1500
-    ) {
-      errors["description"] =
-        "Описанието трябва да е поне 50 символа и максимум 1500 символа!";
-      errors["isValid"] = false;
-    }
-
-    this.setState({ errors });
   }
   openModal = (body) => {
     let modal = this.state.modal;
@@ -149,17 +154,7 @@ class EditThread extends React.Component {
             </FloatingLabel>
             <span className="text-danger">{this.state.errors.description}</span>
           </Form.Group>
-          <Button
-            variant="primary"
-            type="submit"
-            className="mt-3"
-            disabled={
-              !this.state.errors.isValid ||
-              (this.state.lastThread.topic === this.state.fields.topic &&
-                this.state.lastThread.description ===
-                  this.state.fields.description)
-            }
-          >
+          <Button variant="primary" type="submit" className="mt-3">
             <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon> Редактиране на
             тема
           </Button>

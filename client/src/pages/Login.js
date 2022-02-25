@@ -12,6 +12,7 @@ import {
 const client = require("../clientRequests");
 export default class Login extends React.Component {
   loginComplete = false;
+  submitted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -43,8 +44,8 @@ export default class Login extends React.Component {
   }
   submitForm = async (event) => {
     event.preventDefault();
-    this.validate();
-    const cookies = new Cookies();
+    this.submitted = true;
+    await this.validate();
     if (this.state.errors.isValid) {
       const user = this.state.fields;
       const response = await client.postRequest("/user/log", {
@@ -71,7 +72,7 @@ export default class Login extends React.Component {
         );
       } else {
         this.openModal("Вие влязохте успешно в профила си!");
-
+        const cookies = new Cookies();
         cookies.set("authorization", response, {
           maxAge: 3153600000,
           path: "/",
@@ -89,31 +90,36 @@ export default class Login extends React.Component {
     let captcha = { captchaImage: res.dataUrl, captchaCode: res.code };
     this.setState({ captcha });
   };
-  validate() {
-    const fields = this.state.fields;
-    let errors = {
-      email: "",
-      password: "",
-      captcha: "",
-      isValid: true,
-    };
-    const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    const checkCaptcha =
-      /^[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*]{6}$/;
-    if (!isEmail.test(fields["email"])) {
-      errors["email"] = "Имейлът е невалиден!";
-      errors["isValid"] = false;
+  async validate() {
+    if (this.submitted === true) {
+      const fields = this.state.fields;
+      let errors = {
+        email: "",
+        password: "",
+        captcha: "",
+        isValid: true,
+      };
+      const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+      const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+      const checkCaptcha =
+        /^[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*]{6}$/;
+      if (!isEmail.test(fields["email"])) {
+        errors["email"] = "Имейлът е невалиден!";
+        errors["isValid"] = false;
+      }
+      if (
+        !checkPass.test(fields["password"]) ||
+        fields["password"].length < 8
+      ) {
+        errors["password"] = "Паролата е невалидна!";
+        errors["isValid"] = false;
+      }
+      if (!checkCaptcha.test(fields["captcha"])) {
+        errors["captcha"] = "Кодът е невалиден!";
+        errors["isValid"] = false;
+      }
+      await this.setState({ errors });
     }
-    if (!checkPass.test(fields["password"]) || fields["password"].length < 8) {
-      errors["password"] = "Паролата е невалидна!";
-      errors["isValid"] = false;
-    }
-    if (!checkCaptcha.test(fields["captcha"])) {
-      errors["captcha"] = "Кодът е невалиден!";
-      errors["isValid"] = false;
-    }
-    this.setState({ errors });
   }
   openModal = (body) => {
     let modal = this.state.modal;
@@ -147,11 +153,7 @@ export default class Login extends React.Component {
         ></InfoModal>
         <Form onSubmit={this.submitForm}>
           <Form.Group className="mb-3">
-            <FloatingLabel
-              controlId="email"
-              label="Имейл адрес"
-              className="mb-3"
-            >
+            <FloatingLabel controlId="email" label="Имейл адрес">
               <Form.Control
                 placeholder="Имейл адрес"
                 type="text"
@@ -162,7 +164,7 @@ export default class Login extends React.Component {
             <span className="text-danger">{this.state.errors.email}</span>
           </Form.Group>
           <Form.Group className="mb-3">
-            <FloatingLabel controlId="password" label="Парола" className="mb-3">
+            <FloatingLabel controlId="password" label="Парола">
               <Form.Control
                 placeholder="Парола"
                 type="password"
@@ -200,11 +202,7 @@ export default class Login extends React.Component {
               <span className="text-danger">{this.state.errors.captcha}</span>
             </Form.Group>
           </Row>
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={!this.state.errors.isValid}
-          >
+          <Button variant="primary" type="submit">
             Влизане
           </Button>
         </Form>

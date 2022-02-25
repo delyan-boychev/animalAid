@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 const client = require("../../../clientRequests");
 
 export default class ChangeEmail extends React.Component {
+  submitted = false;
   changeEmailComplete = false;
   constructor(props) {
     super(props);
@@ -28,8 +29,8 @@ export default class ChangeEmail extends React.Component {
   }
   submitForm = async (event) => {
     event.preventDefault();
-    this.validate();
-    const cookies = new Cookies();
+    this.submitted = true;
+    await this.validate();
     if (this.state.errors.isValid) {
       const fields = this.state.fields;
       let res = await client.postRequestToken("/user/changeEmail", fields);
@@ -37,6 +38,7 @@ export default class ChangeEmail extends React.Component {
         this.openModal(
           "Имейл адресът е променен успешно! Моля проверете новата си поща и след това влезте в профила с новия имейл адрес!"
         );
+        const cookies = new Cookies();
         cookies.remove("authorization", { path: "/" });
         cookies.remove("validity", { path: "/" });
         this.changeEmailComplete = true;
@@ -47,24 +49,29 @@ export default class ChangeEmail extends React.Component {
       }
     }
   };
-  validate() {
-    const fields = this.state.fields;
-    let errors = {
-      newEmail: "",
-      password: "",
-      isValid: true,
-    };
-    const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    if (!isEmail.test(fields["newEmail"])) {
-      errors["newEmail"] = "Новият имейл е невалиден!";
-      errors["isValid"] = false;
+  async validate() {
+    if (this.submitted === true) {
+      const fields = this.state.fields;
+      let errors = {
+        newEmail: "",
+        password: "",
+        isValid: true,
+      };
+      const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+      const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+      if (!isEmail.test(fields["newEmail"])) {
+        errors["newEmail"] = "Новият имейл е невалиден!";
+        errors["isValid"] = false;
+      }
+      if (
+        !checkPass.test(fields["password"]) ||
+        fields["password"].length < 8
+      ) {
+        errors["password"] = "Паролата е невалидна!";
+        errors["isValid"] = false;
+      }
+      await this.setState({ errors });
     }
-    if (!checkPass.test(fields["password"]) || fields["password"].length < 8) {
-      errors["password"] = "Паролата е невалидна!";
-      errors["isValid"] = false;
-    }
-    this.setState({ errors });
   }
   openModal = (body) => {
     let modal = this.state.modal;
@@ -99,11 +106,7 @@ export default class ChangeEmail extends React.Component {
           <Form onSubmit={this.submitForm}>
             <Row className="mb-3">
               <Form.Group as={Col}>
-                <FloatingLabel
-                  controlId="newEmail"
-                  label="Нов имейл"
-                  className="mb-3"
-                >
+                <FloatingLabel controlId="newEmail" label="Нов имейл">
                   <Form.Control
                     placeholder="Нов имейл"
                     type="text"
@@ -118,11 +121,7 @@ export default class ChangeEmail extends React.Component {
             </Row>
             <Row className="mb-3">
               <Form.Group as={Col}>
-                <FloatingLabel
-                  controlId="password"
-                  label="Парола"
-                  className="mb-3"
-                >
+                <FloatingLabel controlId="password" label="Парола">
                   <Form.Control
                     placeholder="Парола"
                     type="password"
@@ -135,11 +134,7 @@ export default class ChangeEmail extends React.Component {
                 </span>
               </Form.Group>
             </Row>
-            <Button
-              variant="primary"
-              type="submit"
-              disabled={!this.state.errors.isValid}
-            >
+            <Button variant="primary" type="submit">
               Промяна на имейл адрес
             </Button>
           </Form>

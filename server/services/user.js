@@ -3,11 +3,15 @@ const userRepository = require("../repositories/user");
 const captchaRepository = require("../repositories/captcha");
 const path = require("path");
 const fs = require("fs");
-const encryptToken = require("../tokenEncryption/encrypt");
-const decryptToken = require("../tokenEncryption/decrypt");
+const simdjson = require("simdjson");
+const encryptToken = require("../encryption/tokenEncryption").encryptToken;
+const decryptToken = require("../encryption/tokenEncryption").decryptToken;
+const encryptString = require("../encryption/stringEncryption").encryptString;
+const decryptString = require("../encryption/stringEncryption").decryptString;
 const sharp = require("sharp");
 const extensionMethods = require("../extensionMethods");
-const encryptDecryptCaptcha = require("../captcha/encryptDecryptCaptcha");
+const decryptCaptcha =
+  require("../encryption/captchaEncryption").decryptCaptcha;
 const config = require("../config.json");
 const nodemailer = require("nodemailer");
 const verifyTemplates = require("../models/emailTemplates/verifyProfile");
@@ -21,7 +25,6 @@ const transportMail = nodemailer.createTransport({
   },
 });
 const fromSender = config.EMAIL_INFO.EMAIL_SENDER;
-const Cryptr = require("cryptr");
 class UserService {
   #userRepository = new userRepository();
   #captchaRepository = new captchaRepository();
@@ -31,7 +34,7 @@ class UserService {
    * @returns {Boolean|String}
    */
   async registerUser(user) {
-    const captcha = encryptDecryptCaptcha.decryptCaptcha(user.captchaCode);
+    const captcha = decryptCaptcha(user.captchaCode);
     if (captcha === user.captcha) {
       const captchaExists = await this.#captchaRepository.captchaExists(
         user.captcha,
@@ -55,8 +58,7 @@ class UserService {
         user.role = "User";
         const isReg = await this.#userRepository.register(user);
         if (isReg === true) {
-          const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-          const key = cryptr.encrypt(user.email);
+          const key = encryptString(user.email);
           transportMail.sendMail({
             from: fromSender,
             to: user.email,
@@ -107,7 +109,7 @@ class UserService {
    * @returns {Boolean|String}
    */
   async registerVet(user) {
-    const captcha = encryptDecryptCaptcha.decryptCaptcha(user.captchaCode);
+    const captcha = decryptCaptcha(user.captchaCode);
     if (captcha === user.captcha) {
       const captchaExists = await this.#captchaRepository.captchaExists(
         user.captcha,
@@ -131,8 +133,7 @@ class UserService {
         user.role = "Vet";
         const isReg = await this.#userRepository.register(user);
         if (isReg === true) {
-          const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-          const key = cryptr.encrypt(user.email);
+          const key = encryptString(user.email);
           transportMail.sendMail({
             from: fromSender,
             to: user.email,
@@ -169,11 +170,10 @@ class UserService {
    * @returns {Boolean}
    */
   async verifyProfile(key) {
-    const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-    try {
-      const email = cryptr.decrypt(key);
+    const email = decryptString(key);
+    if (email !== "") {
       return await this.#userRepository.verify(email);
-    } catch {
+    } else {
       return false;
     }
   }
@@ -183,7 +183,7 @@ class UserService {
    * @returns {Boolean|String}
    */
   async loginUser(user) {
-    const captcha = encryptDecryptCaptcha.decryptCaptcha(user.captchaCode);
+    const captcha = decryptCaptcha(user.captchaCode);
     if (captcha === user.captcha) {
       const captchaExists = await this.#captchaRepository.captchaExists(
         user.captcha,
@@ -263,9 +263,8 @@ class UserService {
    * @returns {Object}
    */
   async validateForgotPasswordToken(token) {
-    const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-    try {
-      const decoded = JSON.parse(cryptr.decrypt(token));
+    const decoded = simdjson.parse(decryptString(token));
+    if (decoded !== "") {
       if (decoded["exp"] != undefined && decoded["email"] != undefined) {
         if (decoded["exp"] < parseInt(new Date().getTime() / 1000)) {
           return { isValid: false, email: "" };
@@ -283,7 +282,7 @@ class UserService {
       } else {
         return { isValid: false, email: "" };
       }
-    } catch {
+    } else {
       return { isValid: false, email: "" };
     }
   }
@@ -320,8 +319,7 @@ class UserService {
         email
       );
       if (isSet) {
-        const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-        const token = cryptr.encrypt(
+        const token = encryptString(
           JSON.stringify({
             email: email,
             exp: parseInt(new Date().getTime() / 1000) + 900,
@@ -354,8 +352,7 @@ class UserService {
       newEmail
     );
     if (changeEmailRes === true) {
-      const cryptr = new Cryptr(config.ENCRYPTION_KEY);
-      const key = cryptr.encrypt(newEmail);
+      const key = encryptString(newEmail);
       transportMail.sendMail({
         from: fromSender,
         to: newEmail,

@@ -4,6 +4,7 @@ import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 const client = require("../../../clientRequests");
 
 export default class ChangePassword extends React.Component {
+  submitted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -27,10 +28,15 @@ export default class ChangePassword extends React.Component {
   }
   submitForm = async (event) => {
     event.preventDefault();
-    this.validate();
+    this.submitted = true;
+    await this.validate();
     if (this.state.errors.isValid) {
       const fields = this.state.fields;
       fields.newPasswordConfirm = undefined;
+      this.setState({
+        fields: { oldPassword: "", newPassword: "", newPasswordConfirm: "" },
+      });
+      this.submitted = false;
       let res = await client.postRequestToken("/user/changePassword", fields);
       if (res === true) {
         this.openModal("Паролата е променена успешно!");
@@ -39,35 +45,37 @@ export default class ChangePassword extends React.Component {
       }
     }
   };
-  validate() {
-    const fields = this.state.fields;
-    let errors = {
-      oldPassword: "",
-      newPassword: "",
-      newPasswordConfirm: "",
-      isValid: true,
-    };
-    const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    if (
-      !checkPass.test(fields["oldPassword"]) ||
-      fields["oldPassword"].length < 8
-    ) {
-      errors["oldPassword"] = "Паролата е невалидна!";
-      errors["isValid"] = false;
+  async validate() {
+    if (this.submitted === true) {
+      const fields = this.state.fields;
+      let errors = {
+        oldPassword: "",
+        newPassword: "",
+        newPasswordConfirm: "",
+        isValid: true,
+      };
+      const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+      if (
+        !checkPass.test(fields["oldPassword"]) ||
+        fields["oldPassword"].length < 8
+      ) {
+        errors["oldPassword"] = "Паролата е невалидна!";
+        errors["isValid"] = false;
+      }
+      if (
+        !checkPass.test(fields["newPassword"]) ||
+        fields["newPassword"].length < 8
+      ) {
+        errors["newPassword"] =
+          "Паролата трябва да съдържа поне една малка латинска буква, една главна латинска буква, една цифра и да е поне 8 символа!";
+        errors["isValid"] = false;
+      }
+      if (fields["newPassword"] !== fields["newPasswordConfirm"]) {
+        errors["newPasswordConfirm"] = "Двете пароли не съвпадат!";
+        errors["isValid"] = false;
+      }
+      await this.setState({ errors });
     }
-    if (
-      !checkPass.test(fields["newPassword"]) ||
-      fields["newPassword"].length < 8
-    ) {
-      errors["newPassword"] =
-        "Паролата трябва да съдържа поне една малка латинска буква, една главна латинска буква, една цифра и да е поне 8 символа!";
-      errors["isValid"] = false;
-    }
-    if (fields["newPassword"] !== fields["newPasswordConfirm"]) {
-      errors["newPasswordConfirm"] = "Двете пароли не съвпадат!";
-      errors["isValid"] = false;
-    }
-    this.setState({ errors });
   }
   openModal = (body) => {
     let modal = this.state.modal;
@@ -99,11 +107,7 @@ export default class ChangePassword extends React.Component {
           <Form onSubmit={this.submitForm}>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="oldPassword">
-                <FloatingLabel
-                  controlId="oldPassword"
-                  label="Стара парола"
-                  className="mb-3"
-                >
+                <FloatingLabel controlId="oldPassword" label="Стара парола">
                   <Form.Control
                     placeholder="Стара парола"
                     type="password"
@@ -118,11 +122,7 @@ export default class ChangePassword extends React.Component {
             </Row>
             <Row className="mb-3">
               <Form.Group as={Col}>
-                <FloatingLabel
-                  controlId="newPassword"
-                  label="Нова парола"
-                  className="mb-3"
-                >
+                <FloatingLabel controlId="newPassword" label="Нова парола">
                   <Form.Control
                     placeholder="Нова парола"
                     type="password"
@@ -140,7 +140,6 @@ export default class ChangePassword extends React.Component {
                 <FloatingLabel
                   controlId="newPasswordConfirm"
                   label="Потвърждаване на нова парола"
-                  className="mb-3"
                 >
                   <Form.Control
                     placeholder="Потвърждаване на нова парола"
@@ -154,11 +153,7 @@ export default class ChangePassword extends React.Component {
                 </span>
               </Form.Group>
             </Row>
-            <Button
-              variant="primary"
-              type="submit"
-              disabled={!this.state.errors.isValid}
-            >
+            <Button variant="primary" type="submit">
               Промяна на парола
             </Button>
           </Form>

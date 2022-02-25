@@ -1,6 +1,7 @@
 "use strict";
 const { createCanvas } = require("canvas");
-const encryptDecryptCaptcha = require("../captcha/encryptDecryptCaptcha");
+const encryptCaptcha =
+  require("../encryption/captchaEncryption").encryptCaptcha;
 class CaptchaService {
   /**
    * Get captcha
@@ -44,7 +45,7 @@ class CaptchaService {
     ctx.stroke();
     return {
       dataUrl: canvas.toDataURL("image/png"),
-      code: encryptDecryptCaptcha.encryptCaptcha(captcha.join("")),
+      code: encryptCaptcha(captcha.join("")),
     };
   }
 }

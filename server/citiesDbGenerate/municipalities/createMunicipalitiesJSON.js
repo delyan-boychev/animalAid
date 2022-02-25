@@ -1,8 +1,9 @@
 const fs = require("fs");
 const path = require("path");
+const simdjson = require("simdjson");
 const createMunicipalitiesJSON = () => {
   let dir = path.dirname(require.main.filename);
-  let municipalities = JSON.parse(
+  let municipalities = simdjson.parse(
     fs.readFileSync(`${dir}/municipalities/Ek_obst.json`).toString()
   );
   let municipalities2 = [];

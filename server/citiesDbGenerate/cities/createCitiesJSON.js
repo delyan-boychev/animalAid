@@ -1,9 +1,12 @@
 const fs = require("fs");
 const path = require("path");
+const simdjson = require("simdjson");
 const createCitiesJSON = () => {
   let dir = path.dirname(require.main.filename);
-  const regions = JSON.parse(fs.readFileSync(`${dir}/regions/regions.json`));
-  let cities = JSON.parse(
+  const regions = simdjson.parse(
+    fs.readFileSync(`${dir}/regions/regions.json`)
+  );
+  let cities = simdjson.parse(
     fs.readFileSync(`${dir}/cities/Ek_atte.json`).toString()
   );
   let cities2 = [];

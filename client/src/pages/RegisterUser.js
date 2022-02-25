@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 const client = require("../clientRequests");
 class RegisterUser extends React.Component {
+  submitted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -105,7 +106,8 @@ class RegisterUser extends React.Component {
   };
   submitForm = async (event) => {
     event.preventDefault();
-    this.validate();
+    this.submitted = true;
+    await this.validate();
     if (this.state.errors.isValid) {
       const user = this.state.fields;
       const response = await client.postRequest("/user/regUser", {
@@ -180,72 +182,74 @@ class RegisterUser extends React.Component {
     let captcha = { captchaImage: res.dataUrl, captchaCode: res.code };
     this.setState({ captcha });
   };
-  validate() {
-    let errors = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      image: this.state.errors.image,
-      city: "",
-      phoneNumber: "",
-      password: "",
-      confirmPassword: "",
-      captcha: "",
-      isValid: true,
-    };
-    let fields = this.state.fields;
-    const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
-    const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    const checkCaptcha =
-      /^[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*]{6}$/;
-    if (fields["firstName"].length < 2 || fields["firstName"].length > 50) {
-      errors["firstName"] =
-        "Името трябва да е поне 2 символа и да е максимум 50 символа!";
-      errors["isValid"] = false;
+  async validate() {
+    if (this.submitted === true) {
+      let errors = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        image: this.state.errors.image,
+        city: "",
+        phoneNumber: "",
+        password: "",
+        confirmPassword: "",
+        captcha: "",
+        isValid: true,
+      };
+      let fields = this.state.fields;
+      const isEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+      const isPhoneNumber = /^\+(?:[0-9]●?){6,14}[0-9]$/;
+      const checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+      const checkCaptcha =
+        /^[0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*]{6}$/;
+      if (fields["firstName"].length < 2 || fields["firstName"].length > 50) {
+        errors["firstName"] =
+          "Името трябва да е поне 2 символа и да е максимум 50 символа!";
+        errors["isValid"] = false;
+      }
+      if (fields["lastName"].length < 2 || fields["lastName"].length > 50) {
+        errors["lastName"] =
+          "Фамилията трябва да е поне 2 символа и да е максимум 50 символа!";
+        errors["isValid"] = false;
+      }
+      if (!isEmail.test(fields["email"])) {
+        errors["email"] = "Имейл адресът е невалиден!";
+        errors["isValid"] = false;
+      }
+      if (fields["city"] === "") {
+        errors["city"] = "Не сте избрали град!";
+        errors["isValid"] = false;
+      }
+      if (errors["image"] !== "") {
+        errors["isValid"] = false;
+      } else if (fields["image"] === null || fields["image"] === undefined) {
+        errors["image"] = "Не сте прикачили изображение!";
+        errors["isValid"] = false;
+      }
+      if (!isPhoneNumber.test(fields["phoneNumber"])) {
+        errors["phoneNumber"] =
+          "Невалиден телефонен номер! Пример за валиден: +359123456789";
+        errors["isValid"] = false;
+      }
+      if (
+        !checkPass.test(fields["password"]) ||
+        fields["password"].length < 8 ||
+        fields["password"].length > 98
+      ) {
+        errors["password"] =
+          "Паролата трябва да съдържа поне една малка латинска буква, една главна латинска буква, една цифра, да е поне 8 символа и да е максимум 98 символа!";
+        errors["isValid"] = false;
+      }
+      if (fields["password"] !== fields["confirmPassword"]) {
+        errors["confirmPassword"] = "Двете пароли не съвпадат!";
+        errors["isValid"] = false;
+      }
+      if (!checkCaptcha.test(fields["captcha"])) {
+        errors["captcha"] = "Кодът е невалиден!";
+        errors["isValid"] = false;
+      }
+      await this.setState({ errors });
     }
-    if (fields["lastName"].length < 2 || fields["lastName"].length > 50) {
-      errors["lastName"] =
-        "Фамилията трябва да е поне 2 символа и да е максимум 50 символа!";
-      errors["isValid"] = false;
-    }
-    if (!isEmail.test(fields["email"])) {
-      errors["email"] = "Имейл адресът е невалиден!";
-      errors["isValid"] = false;
-    }
-    if (fields["city"] === "") {
-      errors["city"] = "Не сте избрали град!";
-      errors["isValid"] = false;
-    }
-    if (errors["image"] !== "") {
-      errors["isValid"] = false;
-    } else if (fields["image"] === null || fields["image"] === undefined) {
-      errors["image"] = "Не сте прикачили изображение!";
-      errors["isValid"] = false;
-    }
-    if (!isPhoneNumber.test(fields["phoneNumber"])) {
-      errors["phoneNumber"] =
-        "Невалиден телефонен номер! Пример за валиден: +359123456789";
-      errors["isValid"] = false;
-    }
-    if (
-      !checkPass.test(fields["password"]) ||
-      fields["password"].length < 8 ||
-      fields["password"].length > 98
-    ) {
-      errors["password"] =
-        "Паролата трябва да съдържа поне една малка латинска буква, една главна латинска буква, една цифра, да е поне 8 символа и да е максимум 98 символа!";
-      errors["isValid"] = false;
-    }
-    if (fields["password"] !== fields["confirmPassword"]) {
-      errors["confirmPassword"] = "Двете пароли не съвпадат!";
-      errors["isValid"] = false;
-    }
-    if (!checkCaptcha.test(fields["captcha"])) {
-      errors["captcha"] = "Кодът е невалиден!";
-      errors["isValid"] = false;
-    }
-    this.setState({ errors });
   }
   onCropChange = (crop) => {
     this.setState({ crop });
@@ -528,11 +532,7 @@ class RegisterUser extends React.Component {
               <span className="text-danger">{this.state.errors.captcha}</span>
             </Form.Group>
           </Row>
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={!this.state.errors.isValid}
-          >
+          <Button variant="primary" type="submit">
             Регистрация
           </Button>
         </Form>

@@ -8,7 +8,8 @@ const fs = require("fs");
 var cors = require("cors");
 const privateKey = fs.readFileSync("./ssl/key.pem", "utf8");
 const certificate = fs.readFileSync("./ssl/cert.pem", "utf8");
-const updateCaptchaEncryption = require("./captcha/updateCaptchaEncryption");
+const updateCaptchaEncryption =
+  require("./encryption/captchaEncryption").updateCaptchaEncryption;
 const port = config.PORT;
 const userRoute = require("./routes/user");
 const captchaRoute = require("./routes/captcha");
