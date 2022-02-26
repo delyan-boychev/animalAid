@@ -13,7 +13,7 @@ import ImageUploading from "react-images-uploading";
 import Cropper from "react-easy-crop";
 const client = require("../clientRequests");
 class RegisterVet extends React.Component {
-  submited = false;
+  submitted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -220,7 +220,7 @@ class RegisterVet extends React.Component {
     this.setState({ captcha });
   };
   async validate() {
-    if (this.submited === true) {
+    if (this.submitted === true) {
       let errors = {
         firstName: "",
         lastName: "",
