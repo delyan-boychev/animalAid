@@ -24,8 +24,35 @@ function randomStringWithSpecialSymbols(length) {
   }
   return result;
 }
+/**
+ * Get page from array
+ * @param {Object[]} arr
+ * @param {Number} numPerPage
+ * @param {Number} pageNum
+ * @param {String} nameEl
+ * @returns {{}|Boolean}
+ */
+function getPageFromArr(arr, numPerPage, pageNum, nameEl) {
+  const startIndex = pageNum * numPerPage - numPerPage;
+  const endIndex = pageNum * numPerPage;
+  const numPages = Math.ceil(arr.length / numPerPage);
+  let page = { numPages };
+  if (
+    pageNum < 1 ||
+    (arr.length < endIndex && arr.length < startIndex) ||
+    pageNum > numPages
+  ) {
+    return false;
+  } else if (arr.length < endIndex && arr.length > startIndex) {
+    page[nameEl] = arr.slice(startIndex, arr.length);
+  } else {
+    page[nameEl] = arr.slice(startIndex, endIndex);
+  }
+  return page;
+}
 module.exports = {
   getAllIndexes,
   randomString,
   randomStringWithSpecialSymbols,
+  getPageFromArr,
 };

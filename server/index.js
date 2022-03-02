@@ -2,6 +2,7 @@ const express = require("express");
 const config = require("./config.json");
 const mongoose = require("mongoose");
 const bodyParse = require("./parseJson/body-parse");
+const cronJobs = require("./cronJobs");
 const compression = require("compression");
 const app = express();
 const fs = require("fs");
@@ -44,6 +45,7 @@ mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+cronJobs();
 updateCaptchaEncryption();
 setInterval(updateCaptchaEncryption, 600000);
 httpServer.listen(port, () => {

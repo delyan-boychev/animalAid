@@ -16,6 +16,7 @@ import {
   Button,
 } from "react-bootstrap";
 import { useNavigate } from "react-router";
+import PageTitle from "../../components/PageTitle";
 const API_URL = require("../../config.json").API_URL;
 const client = require("../../clientRequests");
 const animalsTranslate = require("../../enums/animalsTranslate");
@@ -89,17 +90,7 @@ class VetsAroundUser extends React.Component {
     );
     return (
       <div>
-        <h1 className="text-center text-primary fw-bold">
-          Най-близки ветеринарни лекари
-        </h1>
-        <hr
-          className="ms-auto me-auto text-primary"
-          style={{
-            height: "4px",
-            opacity: "100%",
-            width: "30%",
-          }}
-        ></hr>
+        <PageTitle title="Най-близки ветеринарни лекари" />
         <Form onSubmit={this.search} className="mw-75">
           <div className="d-flex">
             <div className="col-sm-8">

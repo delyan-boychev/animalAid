@@ -16,6 +16,8 @@ import "./css/animations.css";
 import Threads from "./pages/Threads";
 import Thread from "./pages/Thread";
 import CreateThread from "./pages/UserPages/CreateThread";
+import FundrisingCampaings from "./pages/FundrisingCampaigns";
+import FundrisingCampaign from "./pages/FundrisingCampaign";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import Cookies from "universal-cookie";
@@ -25,6 +27,7 @@ import Vets from "./pages/UserPages/Vets";
 import Vet from "./pages/UserPages/Vet";
 import EditUser from "./pages/AdminPages/EditUser";
 import EditThread from "./pages/UserPages/EditThread";
+import CreateFundrisingCampaign from "./pages/UserPages/CreateFundrisingCampaign";
 import NoAccess from "./pages/NoAccess";
 const routes = (isLoggedIn) => [
   { path: "/", element: <Home />, exact: true },
@@ -251,6 +254,45 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? (
       <div className="container mt-3">
         <EditThread />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/user/createFundrisingCampaign",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <CreateFundrisingCampaign />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/fundrisingCampaigns",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <FundrisingCampaings />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/fundrisingCampaign",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <FundrisingCampaign />
       </div>
     ) : (
       <div className="container mt-3">

@@ -304,18 +304,37 @@ class AdminRepository {
     }
   }
   /**
+   * Get fundrising campaigns for moderation verify
+   * @returns {Object[]}
+   */
+  async getCampaignsForModerationVerify() {
+    return await FundrisingCampaign.find({
+      moderationVerified: false,
+      rejectedComment: { $eq: "" },
+    }).select("title shortDescription mainPhoto value");
+  }
+  /**
    * Moderation verify fundrising campaign
    * @param {String} campaignId
    * @returns {Boolean|Object}
    */
-  async moderationVerifyFundrisingCampaign(campaignId) {
+  async moderationVerifyFundrisingCampaign(
+    campaignId,
+    verified,
+    rejectedComment
+  ) {
     try {
       const campaign = await FundrisingCampaign.findById(campaignId)
         .populate("user", "name email")
         .exec();
       if (campaign !== null) {
         if (campaign.moderationVerified === false) {
-          campaign.moderationVerified = true;
+          if (verified === false) {
+            campaign.rejectedComment = rejectedComment;
+          } else {
+            campaign.expireAt = parseInt(new Date().getTime() / 1000) + 2629743;
+          }
+          campaign.moderationVerified = verified;
           await campaign.save();
           return campaign;
         } else {

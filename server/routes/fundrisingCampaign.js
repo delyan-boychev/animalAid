@@ -42,7 +42,7 @@ router.get("/getAllCampaigns/:pageNum/:searchQuery?", async (req, res) => {
     res.sendStatus(400);
   }
 });
-router.get("/getFundrisingCampaign/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   res.send(
     await fundrisingCampaignService.getFundrisingCampaign(req.params.id)
   );

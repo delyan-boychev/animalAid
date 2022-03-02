@@ -1,6 +1,9 @@
 "use strict";
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
 const authenticateAdmin = require("../authentication/authenticateAdmin");
+const authenticateGetAdmin = require("../authentication/authenticateGetAdmin");
 const validation = require("../models/validation/validation");
 const moderationVerifyVetSchema = require("../models/validation/admin/moderationVerifyVet");
 const changeRoleSchema = require("../models/validation/admin/changeRole");
@@ -11,7 +14,8 @@ const deleteThreadPostSchema = require("../models/validation/admin/deleteThreadP
 const AdminService = require("../services/admin");
 const adminService = new AdminService();
 const roles = require("../models/roles");
-const completeFundrisingCampaignSchema = require("../models/validation/fundrisingCampaign/completeFundrisingCampaign");
+const completeFundrisingCampaignSchema = require("../models/validation/admin/completeFundrisingCampaign");
+const moderationVerifyCampaignSchema = require("../models/validation/admin/moderationVerifyFundrisingCampaign");
 const router = express.Router();
 router.get(
   "/getAllUsers/:pageNum/:searchQuery?",
@@ -166,13 +170,20 @@ router.post(
   "/moderationVerifyFundrisingCampaign",
   authenticateAdmin,
   async (req, res) => {
-    validation(req.body, completeFundrisingCampaignSchema, res, async () => {
-      res.send(
-        await adminService.moderationVerifyFundrisingCampaign(
-          req.body.campaignId
-        )
-      );
-    });
+    validation(
+      req.body,
+      moderationVerifyCampaignSchema(req.body),
+      res,
+      async () => {
+        res.send(
+          await adminService.moderationVerifyFundrisingCampaign(
+            req.body.campaignId,
+            req.body.verfied,
+            req.body.rejectedComment
+          )
+        );
+      }
+    );
   }
 );
 router.post(
@@ -186,4 +197,13 @@ router.post(
     });
   }
 );
+router.get("/document/:filename", authenticateGetAdmin, async (req, res) => {
+  const fileName = req.params.filename;
+  let dir = `${path.dirname(require.main.filename)}/documents`;
+  if (fs.existsSync(`${dir}/${fileName}`)) {
+    res.sendFile(`${dir}/${fileName}`);
+  } else {
+    res.sendStatus(404);
+  }
+});
 module.exports = router;

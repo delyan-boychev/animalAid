@@ -5,7 +5,9 @@ const config = require("../config.json");
 const fs = require("fs");
 const sharp = require("sharp");
 const extensionMethods = require("../extensionMethods");
+const getPageFromArr = require("../extensionMethods").getPageFromArr;
 const verifiedFundrisingCampaign = require("../models/emailTemplates/verifiedFundrisingCampaign");
+const rejectedFundrisingCampaign = require("../models/emailTemplates/rejectedFundrisingCampaign");
 const AdminRepository = require("../repositories/admin");
 const transportMail = nodemailer.createTransport({
   service: "gmail",
@@ -38,20 +40,7 @@ class AdminService {
       excludeId
     );
     if (users !== false) {
-      const startIndex = pageNum * 10 - 10;
-      const endIndex = pageNum * 10;
-      const numPages = Math.ceil(users.length / 10);
-      if (
-        pageNum < 1 ||
-        (users.length < endIndex && users.length < startIndex) ||
-        pageNum > numPages
-      ) {
-        return false;
-      } else if (users.length < endIndex && users.length > startIndex) {
-        return { users: users.slice(startIndex, users.length), numPages };
-      } else {
-        return { users: users.slice(startIndex, endIndex), numPages };
-      }
+      return getPageFromArr(users, 10, pageNum, "users");
     } else {
       return false;
     }
@@ -64,20 +53,7 @@ class AdminService {
   async getVetsForModerationVerify(pageNum) {
     const vets = await this.#adminRepository.getVetsForModerationVerify();
     if (vets !== false) {
-      const startIndex = pageNum * 10 - 10;
-      const endIndex = pageNum * 10;
-      const numPages = Math.ceil(vets.length / 10);
-      if (
-        pageNum < 1 ||
-        (vets.length < endIndex && vets.length < startIndex) ||
-        pageNum > numPages
-      ) {
-        return false;
-      } else if (vets.length < endIndex && vets.length > startIndex) {
-        return { vets: vets.slice(startIndex, vets.length), numPages };
-      } else {
-        return { vets: vets.slice(startIndex, endIndex), numPages };
-      }
+      return getPageFromArr(vets, 10, pageNum, "vets");
     } else {
       return false;
     }
@@ -171,23 +147,44 @@ class AdminService {
   /**
    * Moderation verify fundrising campaign
    * @param {String} campaignId
-   * @returns {Boolean}
+   * @param {Boolean} verified
+   * @param {String} rejectedComment
+   * @returns  {Boolean}
    */
-  async moderationVerifyFundrisingCampaign(campaignId) {
+  async moderationVerifyFundrisingCampaign(
+    campaignId,
+    verified,
+    rejectedComment
+  ) {
     const campaign =
       await this.#adminRepository.moderationVerifyFundrisingCampaign(
-        campaignId
+        campaignId,
+        verified,
+        rejectedComment
       );
     if (campaign !== false) {
-      transportMail.sendMail({
-        from: fromSender,
-        to: campaign.user.email,
-        subject: "Одобрена кампания",
-        html: verifiedFundrisingCampaign(
-          campaign.user.name.first,
-          campaign.title
-        ),
-      });
+      if (verified === true) {
+        transportMail.sendMail({
+          from: fromSender,
+          to: campaign.user.email,
+          subject: "Одобрена кампания",
+          html: verifiedFundrisingCampaign(
+            campaign.user.name.first,
+            campaign.title
+          ),
+        });
+      } else {
+        transportMail.sendMail({
+          from: fromSender,
+          to: campaign.user.email,
+          subject: "Отхвърлена кампания",
+          html: rejectedFundrisingCampaign(
+            campaign.user.name.first,
+            campaign.title,
+            campaign.rejectedComment
+          ),
+        });
+      }
       return true;
     } else {
       return false;

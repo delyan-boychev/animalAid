@@ -48,7 +48,6 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-img/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -124,5 +123,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+#Directories tmp
+img/
+documents/
 
 # End of https://www.toptal.com/developers/gitignore/api/node

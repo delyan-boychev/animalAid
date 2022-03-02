@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, FloatingLabel, Col } from "react-bootstrap";
+import { Form, Button, FloatingLabel } from "react-bootstrap";
 import InfoModal from "../../components/InfoModal";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -115,7 +115,7 @@ class CreateThread extends React.Component {
             </FloatingLabel>
             <span className="text-danger">{this.state.errors.topic}</span>
           </Form.Group>
-          <Form.Group as={Col}>
+          <Form.Group>
             <FloatingLabel controlId="description" label="Описание">
               <Form.Control
                 as="textarea"

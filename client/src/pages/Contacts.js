@@ -1,19 +1,12 @@
 import { ListGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAt, faPhone } from "@fortawesome/free-solid-svg-icons";
+import PageTitle from "../components/PageTitle";
 export default function Contacts() {
   document.title = "Контакти";
   return (
     <div>
-      <h1 className="text-center text-primary fw-bold">Контакти</h1>
-      <hr
-        className="ms-auto me-auto text-primary"
-        style={{
-          height: "4px",
-          opacity: "100%",
-          width: "30%",
-        }}
-      ></hr>
+      <PageTitle title="Контакти" />
       <div className="h5">
         При нужда и въпроси относно платформата може да се свържете с мен-Делян
         Бойчев, чрез дадените отдолу начини за връзка!

@@ -1,20 +1,13 @@
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import PageTitle from "../components/PageTitle";
 export default function About() {
   document.title = "За нас";
   return (
     <div>
       <Row>
         <Col sm={6}>
-          <h1 className="fw-bold text-primary text-center">За нас</h1>
-          <hr
-            className="ms-auto me-auto text-primary"
-            style={{
-              height: "4px",
-              opacity: "100%",
-              width: "30%",
-            }}
-          ></hr>
+          <PageTitle title="За нас" />
           <div className="h5">
             Аз съм Делян Бойчев, създател на платформата{" "}
             <span className="text-primary fw-bold">Animal Aid</span> и ученик в

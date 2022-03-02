@@ -6,6 +6,7 @@ import "../../extensionFunctions/formatNumber";
 import EditProfile from "./ProfileTabs/EditProfile";
 import ChangeEmail from "./ProfileTabs/ChangeEmail";
 import ChangePassword from "./ProfileTabs/ChangePassword";
+import PageTitle from "../../components/PageTitle";
 export default class Profile extends React.Component {
   componentDidMount() {
     document.title = "Моят профил";
@@ -13,15 +14,7 @@ export default class Profile extends React.Component {
   render() {
     return (
       <div>
-        <h1 className="text-center text-primary fw-bold">Моят профил</h1>
-        <hr
-          className="ms-auto me-auto text-primary"
-          style={{
-            height: "4px",
-            opacity: "100%",
-            width: "30%",
-          }}
-        ></hr>
+        <PageTitle title="Моят профил" />
         <Tabs
           defaultActiveKey="profileInfo"
           className="mb-3"

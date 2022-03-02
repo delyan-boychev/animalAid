@@ -14,6 +14,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
 import DialogModal from "../../components/DialogModal";
+import PageTitle from "../../components/PageTitle";
 const client = require("../../clientRequests");
 const API_URL = require("../../config.json").API_URL;
 const animalsTranslate = require("../../enums/animalsTranslate");
@@ -94,9 +95,9 @@ class Vet extends React.Component {
           <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
         <div hidden={this.state.vet.name.first === ""}>
-          <h3 className="text-center">
-            {this.state.vet.name.first} {this.state.vet.name.last}
-          </h3>
+          <PageTitle
+            title={`${this.state.vet.name.first} ${this.state.vet.name.last}`}
+          />
           <div className="d-flex justify-content-center mb-3">
             <img
               className="mb-3 rounded-circle"

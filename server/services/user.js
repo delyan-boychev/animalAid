@@ -10,6 +10,7 @@ const encryptString = require("../encryption/stringEncryption").encryptString;
 const decryptString = require("../encryption/stringEncryption").decryptString;
 const sharp = require("sharp");
 const extensionMethods = require("../extensionMethods");
+const getPageFromArr = require("../extensionMethods").getPageFromArr;
 const decryptCaptcha =
   require("../encryption/captchaEncryption").decryptCaptcha;
 const config = require("../config.json");
@@ -372,20 +373,7 @@ class UserService {
       searchQuery
     );
     if (vets !== false) {
-      const startIndex = pageNum * 10 - 10;
-      const endIndex = pageNum * 10;
-      const numPages = Math.ceil(vets.length / 10);
-      if (
-        pageNum < 1 ||
-        (vets.length < endIndex && vets.length < startIndex) ||
-        pageNum > numPages
-      ) {
-        return false;
-      } else if (vets.length < endIndex && vets.length > startIndex) {
-        return { vets: vets.slice(startIndex, vets.length), numPages };
-      } else {
-        return { vets: vets.slice(startIndex, endIndex), numPages };
-      }
+      return getPageFromArr(vets, 10, pageNum, "vets");
     }
     {
       return false;
@@ -399,20 +387,7 @@ class UserService {
   async getVets(pageNum, searchQuery) {
     const vets = await this.#userRepository.getVets(searchQuery);
     if (vets !== false) {
-      const startIndex = pageNum * 10 - 10;
-      const endIndex = pageNum * 10;
-      const numPages = Math.ceil(vets.length / 10);
-      if (
-        pageNum < 1 ||
-        (vets.length < endIndex && vets.length < startIndex) ||
-        pageNum > numPages
-      ) {
-        return false;
-      } else if (vets.length < endIndex && vets.length > startIndex) {
-        return { vets: vets.slice(startIndex, vets.length), numPages };
-      } else {
-        return { vets: vets.slice(startIndex, endIndex), numPages };
-      }
+      return getPageFromArr(vets, 10, pageNum, "vets");
     }
     {
       return false;

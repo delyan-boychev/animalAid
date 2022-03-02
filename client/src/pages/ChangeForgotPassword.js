@@ -3,6 +3,7 @@ import InfoModal from "../components/InfoModal";
 import { Form, Col, Button, Card, Row, FloatingLabel } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import PageTitle from "../components/PageTitle";
 const client = require("../clientRequests");
 
 export default class ChangeForgotPassword extends React.Component {
@@ -110,7 +111,7 @@ export default class ChangeForgotPassword extends React.Component {
               body={this.state.modal.body}
               closeModal={this.closeModal}
             ></InfoModal>
-            <h3 className="text-center">Промяна на забравена парола</h3>
+            <PageTitle title="Промяна на забравена парола" />
             <Card body>
               <Form onSubmit={this.submitForm}>
                 <Row className="mb-3">

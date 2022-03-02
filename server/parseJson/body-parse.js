@@ -6,7 +6,7 @@ const bodyParse = async function (req, res, next) {
   });
   req.on("end", function () {
     if (data !== "") {
-      if (Buffer.byteLength(data, "utf8") > 1048576) {
+      if (Buffer.byteLength(data, "utf8") > 15728640) {
         res.sendStatus(400);
       } else {
         try {

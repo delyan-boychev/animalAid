@@ -16,6 +16,7 @@ const transportMail = nodemailer.createTransport({
   },
 });
 const fromSender = config.EMAIL_INFO.EMAIL_SENDER;
+const getPageFromArr = require("../extensionMethods").getPageFromArr;
 class FundrisingCampaignService {
   #fundrisingCampaignRepository = new FundrisingCampaignRepository();
   #userRepository = new UserRepository();
@@ -26,32 +27,40 @@ class FundrisingCampaignService {
    */
   async createFundrisingCampaign(campaign) {
     campaign.photos = [];
+    let dirImg = `${path.dirname(require.main.filename)}/img`;
+    let dirDocs = `${path.dirname(require.main.filename)}/documents`;
     campaign.photosDataURL.forEach(() => {
       let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
         8
       )}.webp`;
-      let dir = `${path.dirname(require.main.filename)}/img`;
-      while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+      while (fs.existsSync(`${dirImg}\\${imgFileName}`)) {
         imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
           8
         )}.webp}`;
       }
       campaign.photos.push(imgFileName);
     });
-    const photosDataURL = campaign.photosDataURL;
-    campaign.photosDataURL = undefined;
+    campaign.documentsForPayment = [];
+    campaign.documentsForPaymentURL.forEach(() => {
+      let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+        8
+      )}.webp`;
+      while (fs.existsSync(`${dirDocs}\\${imgFileName}`)) {
+        imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+          8
+        )}.webp}`;
+      }
+      campaign.documentsForPayment.push(imgFileName);
+    });
     let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
       8
     )}.webp`;
-    let dir = `${path.dirname(require.main.filename)}/img`;
-    while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+    while (fs.existsSync(`${dirImg}\\${imgFileName}`)) {
       imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
         8
       )}.webp}`;
     }
     campaign.mainPhoto = imgFileName;
-    const mainPhotoDataURL = campaign.mainPhotoDataURL;
-    campaign.mainPhotoDataURL = undefined;
     const created =
       await this.#fundrisingCampaignRepository.createFundrisingCampaign(
         campaign
@@ -64,22 +73,37 @@ class FundrisingCampaignService {
         subject: "Успешно създадена кампания",
         html: createdFundrisingCampaign(user.name.first, campaign.title),
       });
-      photosDataURL.forEach((photo, index) => {
+      campaign.photosDataURL.forEach((photo, index) => {
         let base64Data = photo.split("base64,")[1];
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir);
+        if (!fs.existsSync(dirImg)) {
+          fs.mkdirSync(dirImg);
         }
         sharp(Buffer.from(base64Data, "base64"))
           .webp()
-          .toFile(`${dir}/${campaign.photos[index]}`);
+          .toFile(`${dirImg}/${campaign.photos[index]}`);
       });
-      let base64Data = mainPhotoDataURL.split("base64,")[1];
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
+      campaign.documentsForPaymentURL.forEach((photo, index) => {
+        let base64Data = photo.split("base64,")[1];
+        if (!fs.existsSync(dirDocs)) {
+          fs.mkdirSync(dirDocs);
+        }
+        sharp(Buffer.from(base64Data, "base64"))
+          .webp()
+          .toFile(`${dirDocs}/${campaign.documentsForPayment[index]}`);
+      });
+      let base64Data = campaign.mainPhotoDataURL.split("base64,")[1];
+      if (!fs.existsSync(dirImg)) {
+        fs.mkdirSync(dirImg);
       }
       sharp(Buffer.from(base64Data, "base64"))
+        .extract({
+          top: campaign.mainPhotoCrop.y,
+          left: campaign.mainPhotoCrop.x,
+          width: campaign.mainPhotoCrop.width,
+          height: campaign.mainPhotoCrop.height,
+        })
         .webp()
-        .toFile(`${dir}/${campaign.mainPhoto}`);
+        .toFile(`${dirImg}/${campaign.mainPhoto}`);
     }
     return created;
   }
@@ -93,23 +117,7 @@ class FundrisingCampaignService {
     const campaigns = await this.#fundrisingCampaignRepository.getAllCampaigns(
       searchQuery
     );
-    const startIndex = pageNum * 10 - 10;
-    const endIndex = pageNum * 10;
-    const numPages = Math.ceil(campaigns.length / 10);
-    if (
-      pageNum < 1 ||
-      (campaigns.length < endIndex && campaigns.length < startIndex) ||
-      pageNum > numPages
-    ) {
-      return false;
-    } else if (campaigns.length < endIndex && campaigns.length > startIndex) {
-      return {
-        campaigns: campaigns.slice(startIndex, campaigns.length),
-        numPages,
-      };
-    } else {
-      return { campaigns: campaigns.slice(startIndex, endIndex), numPages };
-    }
+    return getPageFromArr(campaigns, 12, pageNum, "campaigns");
   }
   /**
    * Complete fudrising campaign

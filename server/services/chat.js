@@ -1,6 +1,7 @@
 "use strict";
 const chatRepository = require("../repositories/chat");
 const userRepository = require("../repositories/user");
+const getPageFromArr = require("../extensionMethods").getPageFromArr;
 class ChatService {
   #chatRepository = new chatRepository();
   #userRepository = new userRepository();
@@ -55,19 +56,7 @@ class ChatService {
     if (usersExists) {
       const messages = await this.#chatRepository.getMessages(userOne, userTwo);
       if (messages !== false) {
-        const startIndex = messages.length - pageNum * 10;
-        const endIndex = messages.length - (pageNum - 1) * 10;
-        const numPages = Math.ceil(messages.length / 10);
-        if (
-          pageNum < 1 ||
-          (messages.length < endIndex && messages.length < startIndex)
-        ) {
-          return false;
-        } else if (startIndex < 0 && endIndex > 0) {
-          return { messages: messages.slice(0, endIndex), numPages };
-        } else {
-          return { messages: messages.slice(startIndex, endIndex), numPages };
-        }
+        return getPageFromArr(messages, 10, pageNum, "messages");
       } else {
         return false;
       }

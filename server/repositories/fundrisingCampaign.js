@@ -64,7 +64,7 @@ class FundrisingCampaignRepository {
       };
     }
     return await FundrisingCampaign.find(query)
-      .select("title shortDescription mainPhoto value")
+      .select("title shortDescription mainPhoto value paypalDonationURL")
       .lean()
       .exec();
   }
@@ -75,7 +75,14 @@ class FundrisingCampaignRepository {
    */
   async getFundrisingCampaign(id) {
     try {
-      const campaign = await FundrisingCampaign.findById(id).exec();
+      const campaign = await FundrisingCampaign.findOne({
+        _id: id,
+        moderationVerified: true,
+        completed: false,
+      })
+        .populate("user", "_id name email imgFileName")
+        .select("-documentsForPayment -rejectedComment")
+        .exec();
       if (campaign !== null) {
         return campaign;
       } else {

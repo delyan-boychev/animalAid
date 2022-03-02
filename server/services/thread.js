@@ -1,5 +1,6 @@
 "use strict";
 const ThreadRepository = require("../repositories/thread");
+const getPageFromArr = require("../extensionMethods").getPageFromArr;
 class ThreadService {
   #threadRepository = new ThreadRepository();
   /**
@@ -42,40 +43,12 @@ class ThreadService {
   }
   async getAllThreads(topic, pageNum) {
     const threads = await this.#threadRepository.getAllThreads(topic);
-    const startIndex = pageNum * 10 - 10;
-    const endIndex = pageNum * 10;
-    const numPages = Math.ceil(threads.length / 10);
-    if (
-      pageNum < 1 ||
-      (threads.length < endIndex && threads.length < startIndex) ||
-      pageNum > numPages
-    ) {
-      return false;
-    } else if (threads.length < endIndex && threads.length > startIndex) {
-      return { threads: threads.slice(startIndex, threads.length), numPages };
-    } else {
-      return { threads: threads.slice(startIndex, endIndex), numPages };
-    }
+    return getPageFromArr(threads, 10, pageNum, "threads");
   }
   async getThreadPosts(id, pageNum) {
     const posts = await this.#threadRepository.getThreadPosts(id);
     if (posts !== false) {
-      const startIndex = pageNum * 10 - 10;
-      const endIndex = pageNum * 10;
-      const numPages = Math.ceil(posts.length / 10);
-      if (numPages === 0) {
-        return { posts: [], numPages: 0 };
-      } else if (
-        pageNum < 1 ||
-        (posts.length < endIndex && posts.length < startIndex) ||
-        pageNum > numPages
-      ) {
-        return false;
-      } else if (posts.length < endIndex && posts.length > startIndex) {
-        return { posts: posts.slice(startIndex, posts.length), numPages };
-      } else {
-        return { posts: posts.slice(startIndex, endIndex), numPages };
-      }
+      return getPageFromArr(posts, 10, pageNum, "posts");
     } else {
       return false;
     }

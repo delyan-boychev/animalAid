@@ -5,7 +5,7 @@ import DialogModal from "../components/DialogModal";
 import InfoModal from "../components/InfoModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  ListGroup,
+  Card,
   Col,
   Row,
   Spinner,
@@ -17,22 +17,21 @@ import {
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
-  faPen,
   faPlus,
   faSearch,
-  faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
+import { faPaypal } from "@fortawesome/free-brands-svg-icons";
 import PageTitle from "../components/PageTitle";
 const client = require("../clientRequests");
-const roles = require("../enums/roles");
-class Threads extends React.Component {
+const API_URL = require("../config.json").API_URL;
+class FundrisingCampaigns extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       userId: "",
       userRole: "",
       page: 1,
-      threads: [],
+      campaigns: [],
       numPages: 0,
       searchQuery: "",
       lastSearchQuery: "",
@@ -60,7 +59,7 @@ class Threads extends React.Component {
     let modal = this.state.modal;
     modal.show = false;
     this.setState({ modal });
-    this.getThreads(1);
+    this.getCampaigns(1);
   };
   openModal2 = (body, task) => {
     let modal2 = this.state.modal2;
@@ -74,8 +73,8 @@ class Threads extends React.Component {
     modal2.show = false;
     this.setState({ modal2 });
   };
-  onDeleteThread = (id) => {
-    const thread = this.state.threads.find((thread) => thread._id === id);
+  /*onDeleteThread = (id) => {
+    const thread = this.state.campaigns.find((thread) => thread._id === id);
     if (thread !== undefined) {
       this.openModal2(
         `Сигурни ли сте, че искате да изтриете темата-${thread.topic}?`,
@@ -94,10 +93,10 @@ class Threads extends React.Component {
     } else {
       this.openModal("Не успяхме да изтрием темата!");
     }
-  };
+  };*/
   componentDidMount() {
-    document.title = "Форум";
-    this.getThreads(1);
+    document.title = "Кампании за набиране на средства";
+    this.getCampaigns(1);
     this.getUserIdAndRole();
   }
   getUserIdAndRole = async () => {
@@ -106,8 +105,8 @@ class Threads extends React.Component {
       this.setState({ userId: user.id, userRole: user.role });
     }
   };
-  getThreads = async (page, search) => {
-    let url = `/thread/getAllThreads/${page}`;
+  getCampaigns = async (page, search) => {
+    let url = `/fundrisingCampaign/getAllCampaigns/${page}`;
     if (search === true)
       url += `/${encodeURIComponent(this.state.searchQuery)}`;
     else if (search === undefined && this.state.search === true)
@@ -117,10 +116,10 @@ class Threads extends React.Component {
       this.setState({
         page: page,
         numPages: data.numPages,
-        threads: data.threads,
+        campaigns: data.campaigns,
       });
     } else {
-      this.setState({ page: 1, numPages: 1, threads: [] });
+      this.setState({ page: 1, numPages: 1, campaigns: [] });
     }
   };
   handleOnChangeValue = (event) => {
@@ -130,10 +129,10 @@ class Threads extends React.Component {
     event.preventDefault();
     if (this.state.searchQuery === "") {
       this.setState({ search: false, lastSearchQuery: "" });
-      this.getThreads(1, false);
+      this.getCampaigns(1, false);
     } else {
       this.setState({ search: true, lastSearchQuery: this.state.searchQuery });
-      this.getThreads(1, true);
+      this.getCampaigns(1, true);
     }
   };
   formatDate = (date) => {
@@ -143,17 +142,14 @@ class Threads extends React.Component {
       .getMinutes()
       .pad()}:${date.getSeconds().pad()}ч.`;
   };
-  openThread = async (id) => {
-    this.props.navigate(`/thread?id=${id}`);
-  };
-  editThread = async (id) => {
-    this.props.navigate(`/user/editThread?id=${id}`);
+  openCampaign = async (id) => {
+    this.props.navigate(`/fundrisingCampaign?id=${id}`);
   };
   render() {
     const pagination = (
-      <Pagination className="mt-3" hidden={this.state.threads.length === 0}>
+      <Pagination className="mt-3" hidden={this.state.campaigns.length === 0}>
         <Pagination.Item
-          onClick={() => this.getThreads(this.state.page - 1)}
+          onClick={() => this.getCampaigns(this.state.page - 1)}
           disabled={this.state.page === 1}
         >
           <FontAwesomeIcon icon={faChevronCircleLeft}></FontAwesomeIcon>
@@ -164,7 +160,7 @@ class Threads extends React.Component {
           </span>
         </li>
         <Pagination.Item
-          onClick={() => this.getThreads(this.state.page + 1)}
+          onClick={() => this.getCampaigns(this.state.page + 1)}
           disabled={this.state.page === this.state.numPages}
         >
           <FontAwesomeIcon icon={faChevronCircleRight}></FontAwesomeIcon>
@@ -186,7 +182,7 @@ class Threads extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
         ></InfoModal>
-        <PageTitle title="Форум" />
+        <PageTitle title="Кампании за набиране на средства" />
         <Row>
           <Form onSubmit={this.search} className="mw-75 col-sm-9 mt-3">
             <div className="d-flex">
@@ -211,10 +207,12 @@ class Threads extends React.Component {
             <div className="col-sm-3 align-self-center justify-content-end mt-3">
               <Button
                 className="rounded-pill"
-                onClick={() => this.props.navigate("/user/createThread")}
+                onClick={() =>
+                  this.props.navigate("/user/createFundrisingCampaign")
+                }
               >
                 <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon> Създаване на
-                тема
+                кампания
               </Button>
             </div>
           ) : (
@@ -224,65 +222,54 @@ class Threads extends React.Component {
         {pagination}
         <h4
           className="text-center mt-3"
-          hidden={this.state.threads.length !== 0 || this.state.numPages === 0}
+          hidden={
+            this.state.campaigns.length !== 0 || this.state.numPages === 0
+          }
         >
-          Няма намерени теми!
+          Няма намерени кампании!
         </h4>
         <div className="text-center mt-3" hidden={this.state.numPages > 0}>
           <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
-        <ListGroup>
-          {this.state.threads.map((thread) => (
-            <ListGroup.Item key={thread._id} id={thread._id}>
-              <Row>
-                <Col
-                  xs={12}
-                  md={10}
-                  onClick={() => {
-                    this.openThread(thread._id);
-                  }}
+        <Row className="row-cols-1 row-cols-sm-2 row-cols-md-4">
+          {this.state.campaigns.map((campaign) => (
+            <Col xs={12} md={6} lg={3} key={campaign._id} className="mb-5 mt-3">
+              <Card
+                onClick={() => this.openCampaign(campaign._id)}
+                className="h-100"
+              >
+                <Card.Img
+                  variant="top"
+                  src={`${API_URL}/user/img/${campaign.mainPhoto}`}
+                />
+                <Card.Body>
+                  <Card.Title style={{ wordBreak: "break-all" }}>
+                    {campaign.title}
+                  </Card.Title>
+                  <Card.Text
+                    style={{ wordBreak: "break-all", fontSize: "14px" }}
+                    className="text-muted"
+                  >
+                    {campaign.shortDescription}
+                  </Card.Text>
+                </Card.Body>
+                <h5 className="text-primary text-center">
+                  Нужни средства: {campaign.value}лв.
+                </h5>
+              </Card>
+              <div className="d-grid gap-2">
+                <a
+                  className="btn btn-primary btn-lg"
+                  href={campaign.paypalDonationURL}
+                  rel="noreferrer"
+                  target="_blank"
                 >
-                  {thread.topic}
-                  <br />
-                  <span className="text-muted">
-                    {`${thread.author.name.first} ${thread.author.name.last}`},{" "}
-                    {thread.author.email}
-                  </span>
-                  <br />
-                  <span className="text-primary">
-                    Последна активност:{" "}
-                    {this.formatDate(new Date(thread.dateLastActivity))}
-                  </span>
-                </Col>
-                {this.state.userId === thread.author._id ? (
-                  <Col xs={2} md={1}>
-                    <Button
-                      className="rounded-circle"
-                      onClick={() => this.editThread(thread._id)}
-                    >
-                      <FontAwesomeIcon icon={faPen}></FontAwesomeIcon>
-                    </Button>
-                  </Col>
-                ) : (
-                  ""
-                )}
-                {this.state.userRole === roles.Admin ? (
-                  <Col xs={2} md={1}>
-                    <Button
-                      variant="danger"
-                      className="rounded-circle"
-                      onClick={() => this.onDeleteThread(thread._id)}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan}></FontAwesomeIcon>
-                    </Button>
-                  </Col>
-                ) : (
-                  ""
-                )}
-              </Row>
-            </ListGroup.Item>
+                  <FontAwesomeIcon icon={faPaypal}></FontAwesomeIcon> Дари
+                </a>
+              </div>
+            </Col>
           ))}
-        </ListGroup>
+        </Row>
         {pagination}
       </div>
     );
@@ -290,5 +277,5 @@ class Threads extends React.Component {
 }
 export default function WithNavigate(props) {
   let navigate = useNavigate();
-  return <Threads {...props} navigate={navigate} />;
+  return <FundrisingCampaigns {...props} navigate={navigate} />;
 }
