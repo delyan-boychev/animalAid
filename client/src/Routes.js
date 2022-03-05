@@ -305,26 +305,18 @@ const routes = (isLoggedIn) => [
   },
   {
     path: "/fundrisingCampaigns",
-    element: isLoggedIn ? (
+    element: (
       <div className="container mt-3">
         <FundrisingCampaings />
-      </div>
-    ) : (
-      <div className="container mt-3">
-        <NoAccess />
       </div>
     ),
     exact: true,
   },
   {
     path: "/fundrisingCampaign",
-    element: isLoggedIn ? (
+    element: (
       <div className="container mt-3">
         <FundrisingCampaign />
-      </div>
-    ) : (
-      <div className="container mt-3">
-        <NoAccess />
       </div>
     ),
     exact: true,
