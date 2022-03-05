@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const caesarCipher = require("./caesarCipher");
 const key = require("./config.json").OTHER_ENCRYPTION.key;
 const encryptString = (string) => {
   const iv = crypto.randomBytes(16).toString("hex");
@@ -8,10 +9,11 @@ const encryptString = (string) => {
     Buffer.from(iv, "hex")
   );
   const encrypted = Buffer.concat([cipher.update(string), cipher.final()]);
-  return iv + encrypted.toString("hex");
+  return caesarCipher(iv + encrypted.toString("hex"), 5);
 };
 const decryptString = (string) => {
   try {
+    string = caesarCipher(string, -5);
     const iv = string.slice(0, 32);
     const forDecrypt = string.slice(32);
     const decipher = crypto.createDecipheriv(
