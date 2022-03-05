@@ -150,7 +150,8 @@ class UserRepository {
       })
         .populate("city")
         .select("-password -__v -verified -moderationVerified")
-        .lean();
+        .lean()
+        .exec();
       if (user !== null) {
         return user;
       } else {

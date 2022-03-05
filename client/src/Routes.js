@@ -8,7 +8,7 @@ import Profile from "./pages/UserPages/Profile";
 import RequestForgotPassword from "./pages/RequestForgotPassword";
 import ChangeForgotPassword from "./pages/ChangeForgotPassword";
 import AdminPanel from "./pages/AdminPages/AdminPanel";
-import VetsAroundUser from "./pages/UserPages/VetsAroundUser";
+import VetsAroundMe from "./pages/UserPages/VetsAroundMe";
 import { useRoutes } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -18,6 +18,7 @@ import Thread from "./pages/Thread";
 import CreateThread from "./pages/UserPages/CreateThread";
 import FundrisingCampaings from "./pages/FundrisingCampaigns";
 import FundrisingCampaign from "./pages/FundrisingCampaign";
+import ViewFundrisingCampaign from "./pages/UserPages/ViewFundrisingCampaign";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import Cookies from "universal-cookie";
@@ -29,6 +30,7 @@ import EditUser from "./pages/AdminPages/EditUser";
 import EditThread from "./pages/UserPages/EditThread";
 import CreateFundrisingCampaign from "./pages/UserPages/CreateFundrisingCampaign";
 import NoAccess from "./pages/NoAccess";
+import EditFundrisingCampaign from "./pages/UserPages/EditFundrisingCampaign";
 const routes = (isLoggedIn) => [
   { path: "/", element: <Home />, exact: true },
   {
@@ -132,10 +134,10 @@ const routes = (isLoggedIn) => [
     exact: true,
   },
   {
-    path: "/user/vetsAroundUser",
+    path: "/user/vetsAroundMe",
     element: isLoggedIn ? (
       <div className="container mt-3">
-        <VetsAroundUser />
+        <VetsAroundMe />
       </div>
     ) : (
       <div className="container mt-3">
@@ -267,6 +269,32 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? (
       <div className="container mt-3">
         <CreateFundrisingCampaign />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/user/viewFundrisingCampaign",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <ViewFundrisingCampaign />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/user/editFundrisingCampaign",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <EditFundrisingCampaign />
       </div>
     ) : (
       <div className="container mt-3">

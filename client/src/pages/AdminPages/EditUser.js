@@ -117,7 +117,6 @@ export default class EditUser extends React.Component {
   }
   componentDidMount() {
     document.title = "Редактиране на потребител";
-
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     if (id !== null) {
@@ -224,11 +223,8 @@ export default class EditUser extends React.Component {
     if (fields["city"] === "") {
       errors["city"] = "Не сте избрали град!";
     }
-    if (errors["image"] !== "") {
-      errors["isValid"] = false;
-    } else if (fields["image"] === null || fields["image"] === undefined) {
+    if (fields["image"] === null || fields["image"] === undefined) {
       errors["image"] = "NOT_UPLOADED";
-      errors["isValid"] = false;
     }
     if (fields["role"] === roles.Vet) {
       if (fields["address"].length < 2 || fields["address"].length > 90) {
@@ -373,7 +369,7 @@ export default class EditUser extends React.Component {
     if (this.state.errors.image === "") {
       const res = await client.postRequestToken(`/admin/changeProfilePhoto`, {
         id: this.state.id,
-        imgDataURL: this.state.profile.image.data_url,
+        imgDataURL: this.state.profile.image,
         imageCrop: this.state.profile.imageCrop,
       });
       if (res === true) {
@@ -433,7 +429,7 @@ export default class EditUser extends React.Component {
   onImageChange = (image) => {
     if (image[0] !== undefined) {
       let profile = this.state.profile;
-      profile["image"] = image[0];
+      profile["image"] = image[0].data_url;
       let errors = this.state.errors;
       errors["image"] = "";
       this.setState({ profile, errors });
@@ -495,7 +491,7 @@ export default class EditUser extends React.Component {
               <Cropper
                 image={
                   this.state.profile.image !== null
-                    ? this.state.profile.image.data_url
+                    ? this.state.profile.image
                     : null
                 }
                 crop={this.state.crop}

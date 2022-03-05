@@ -1,4 +1,5 @@
 const express = require("express");
+const cron = require("node-cron");
 const config = require("./config.json");
 const mongoose = require("mongoose");
 const bodyParse = require("./parseJson/body-parse");
@@ -45,7 +46,7 @@ mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-cronJobs();
+cronJobs(cron);
 updateCaptchaEncryption();
 setInterval(updateCaptchaEncryption, 600000);
 httpServer.listen(port, () => {

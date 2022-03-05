@@ -102,7 +102,7 @@ export default function LoginAndRegPartial(props) {
                   style={{ fontSize: "19px" }}
                   eventKey="1"
                   as={Link}
-                  to="/user/vets?page=1"
+                  to="/user/vets"
                   className="text-primary"
                   onClick={props.onClick}
                 >

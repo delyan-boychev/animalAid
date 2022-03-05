@@ -15,8 +15,8 @@ const vetRegisterSchema = {
     imageCrop: {
       x: { type: "number" },
       y: { type: "number" },
-      width: { type: "number" },
-      height: { type: "number" },
+      width: { type: "number", minimum: 1 },
+      height: { type: "number", minimum: 1 },
       required: ["x", "y", "width", "height"],
     },
     URN: { type: "string", pattern: "^([А-Я,а-я,-,0-9]{2,20})/([0-9]{4})$" },

@@ -74,7 +74,7 @@ class CreateFundrisingCampaign extends React.Component {
           mainPhotoDataURL: fields.image,
           mainPhotoCrop: fields.imageCrop,
           photosDataURL: fields.images1,
-          documentsForPaymentURL: fields.images2,
+          documentsForPaymentDataURL: fields.images2,
         }
       );
       if (response === true) {

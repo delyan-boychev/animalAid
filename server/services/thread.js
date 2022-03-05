@@ -48,7 +48,12 @@ class ThreadService {
   async getThreadPosts(id, pageNum) {
     const posts = await this.#threadRepository.getThreadPosts(id);
     if (posts !== false) {
-      return getPageFromArr(posts, 10, pageNum, "posts");
+      const page = getPageFromArr(posts, 10, pageNum, "posts");
+      if (page === false) {
+        return { posts: [], numPages: 0 };
+      } else {
+        return page;
+      }
     } else {
       return false;
     }

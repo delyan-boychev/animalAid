@@ -1,7 +1,7 @@
 const decryptToken = require("../encryption/tokenEncryption").decryptToken;
 const UserService = require("../services/user");
 const userService = new UserService();
-const authenticate = async function (req, res, next) {
+const authenticateGet = async function (req, res, next) {
   const token = req.query.token;
   if (token) {
     let data = decryptToken(token).split(";");
@@ -25,4 +25,4 @@ const authenticate = async function (req, res, next) {
     res.sendStatus(401);
   }
 };
-module.exports = authenticate;
+module.exports = authenticateGet;

@@ -102,7 +102,7 @@ class AdminRepository {
    * @returns {[]|Boolean}
    */
   async getVetsForModerationVerify() {
-    const vets = await User.find({
+    return await User.find({
       role: roles.Vet,
       moderationVerified: false,
     })
@@ -110,11 +110,6 @@ class AdminRepository {
       .select("-password -__v -createdOn -verified")
       .lean()
       .exec();
-    if (vets !== null) {
-      return vets;
-    } else {
-      return false;
-    }
   }
   /**
    * Change user role
@@ -336,7 +331,7 @@ class AdminRepository {
           }
           campaign.moderationVerified = verified;
           await campaign.save();
-          return campaign;
+          return campaign.toObject();
         } else {
           return false;
         }

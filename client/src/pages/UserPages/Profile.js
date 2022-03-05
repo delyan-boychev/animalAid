@@ -1,9 +1,15 @@
 import React from "react";
 import { Tabs, Tab, Collapse } from "react-bootstrap";
-import { faInfoCircle, faAt, faLock } from "@fortawesome/free-solid-svg-icons";
+import {
+  faInfoCircle,
+  faAt,
+  faLock,
+  faHandHoldingHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
 import EditProfile from "./ProfileTabs/EditProfile";
+import MyCampaigns from "./ProfileTabs/MyCampaigns";
 import ChangeEmail from "./ProfileTabs/ChangeEmail";
 import ChangePassword from "./ProfileTabs/ChangePassword";
 import PageTitle from "../../components/PageTitle";
@@ -18,7 +24,7 @@ export default class Profile extends React.Component {
         <Tabs
           defaultActiveKey="profileInfo"
           className="mb-3"
-          id="uncontrolled-tab-example"
+          unmountOnExit={true}
           transition={Collapse}
         >
           <Tab
@@ -31,6 +37,17 @@ export default class Profile extends React.Component {
             }
           >
             <EditProfile></EditProfile>
+          </Tab>
+          <Tab
+            eventKey="myCampaigns"
+            title={
+              <p style={{ fontSize: 17, fontWeight: "bold" }}>
+                <FontAwesomeIcon icon={faHandHoldingHeart}></FontAwesomeIcon>{" "}
+                Моите кампании
+              </p>
+            }
+          >
+            <MyCampaigns />
           </Tab>
           <Tab
             eventKey="changeEmail"

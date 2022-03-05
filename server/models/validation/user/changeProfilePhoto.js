@@ -9,8 +9,8 @@ const changeProfilePhotoSchema = {
     imageCrop: {
       x: { type: "number" },
       y: { type: "number" },
-      width: { type: "number" },
-      height: { type: "number" },
+      width: { type: "number", minimum: 1 },
+      height: { type: "number", minimum: 1 },
       required: ["x", "y", "width", "height"],
     },
   },

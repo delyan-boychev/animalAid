@@ -2,29 +2,28 @@ const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
 const encryptCaptcha = (captcha) => {
-  const keyIv = fs
-    .readFileSync(path.resolve(__dirname, "captchaKeyIv"), "utf8")
-    .split(";");
+  const key = fs.readFileSync(path.resolve(__dirname, "captchaKey"), "utf8");
+  const iv = crypto.randomBytes(16).toString("hex");
   const cipher = crypto.createCipheriv(
     "aes128",
-    Buffer.from(keyIv[0], "hex"),
-    Buffer.from(keyIv[1], "hex")
+    Buffer.from(key, "hex"),
+    Buffer.from(iv, "hex")
   );
   const encrypted = Buffer.concat([cipher.update(captcha), cipher.final()]);
-  return encrypted.toString("hex");
+  return iv + encrypted.toString("hex");
 };
 const decryptCaptcha = (captchaKey) => {
-  const keyIv = fs
-    .readFileSync(path.resolve(__dirname, "captchaKeyIv"), "utf8")
-    .split(";");
+  const key = fs.readFileSync(path.resolve(__dirname, "captchaKey"), "utf8");
+  const iv = captchaKey.slice(0, 32);
+  const forDecrypt = captchaKey.slice(32);
   try {
     const decipher = crypto.createDecipheriv(
       "aes128",
-      Buffer.from(keyIv[0], "hex"),
-      Buffer.from(keyIv[1], "hex")
+      Buffer.from(key, "hex"),
+      Buffer.from(iv, "hex")
     );
     const decrypted = Buffer.concat([
-      decipher.update(Buffer.from(captchaKey, "hex")),
+      decipher.update(Buffer.from(forDecrypt, "hex")),
       decipher.final(),
     ]);
     return decrypted.toString();
@@ -33,9 +32,7 @@ const decryptCaptcha = (captchaKey) => {
   }
 };
 const updateCaptchaEncryption = () => {
-  const keyIv = `${crypto.randomBytes(16).toString("hex")};${crypto
-    .randomBytes(16)
-    .toString("hex")}`;
-  fs.writeFileSync(path.resolve(__dirname, "captchaKeyIv"), keyIv);
+  const key = crypto.randomBytes(16).toString("hex");
+  fs.writeFileSync(path.resolve(__dirname, "captchaKey"), key);
 };
 module.exports = { updateCaptchaEncryption, encryptCaptcha, decryptCaptcha };

@@ -321,7 +321,7 @@ class Thread extends React.Component {
           <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
         <div hidden={this.state.threadId === ""}>
-          <Card body style={{ wordBreak: "break-all" }}>
+          <Card body style={{ wordBreak: "break-word" }}>
             <Row>
               <Col sm={3}>
                 <img
@@ -390,7 +390,7 @@ class Thread extends React.Component {
               role="status"
             ></Spinner>
           </div>
-          <ListGroup style={{ wordBreak: "break-all" }}>
+          <ListGroup style={{ wordBreak: "break-word" }}>
             {this.state.posts.map((post) => (
               <ListGroup.Item key={post._id}>
                 <Row>

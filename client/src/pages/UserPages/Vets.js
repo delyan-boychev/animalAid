@@ -116,7 +116,7 @@ class Vets extends React.Component {
             </Form>
           </Col>
           <Col className="align-self-center mt-3" sm={4}>
-            <Button as={Link} to="/user/vetsAroundUser?page=1">
+            <Button as={Link} to="/user/vetsAroundMe">
               <FontAwesomeIcon
                 icon={faMagnifyingGlassLocation}
               ></FontAwesomeIcon>{" "}

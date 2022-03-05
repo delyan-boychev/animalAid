@@ -135,13 +135,6 @@ class FundrisingCampaigns extends React.Component {
       this.getCampaigns(1, true);
     }
   };
-  formatDate = (date) => {
-    return `${date.getDate().pad()}-${(
-      date.getMonth() + 1
-    ).pad()}-${date.getFullYear()} ${date.getHours().pad()}:${date
-      .getMinutes()
-      .pad()}:${date.getSeconds().pad()}ч.`;
-  };
   openCampaign = async (id) => {
     this.props.navigate(`/fundrisingCampaign?id=${id}`);
   };
@@ -243,11 +236,11 @@ class FundrisingCampaigns extends React.Component {
                   src={`${API_URL}/user/img/${campaign.mainPhoto}`}
                 />
                 <Card.Body>
-                  <Card.Title style={{ wordBreak: "break-all" }}>
+                  <Card.Title style={{ wordBreak: "break-word" }}>
                     {campaign.title}
                   </Card.Title>
                   <Card.Text
-                    style={{ wordBreak: "break-all", fontSize: "14px" }}
+                    style={{ wordBreak: "break-word", fontSize: "14px" }}
                     className="text-muted"
                   >
                     {campaign.shortDescription}

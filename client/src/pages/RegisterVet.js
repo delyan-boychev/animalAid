@@ -96,7 +96,7 @@ class RegisterVet extends React.Component {
         email: user.email,
         city: user.city,
         typeAnimals: user.typeAnimals,
-        imgDataURL: user.image.data_url,
+        imgDataURL: user.image,
         imageCrop: user.imageCrop,
         vetDescription: user.vetDescription,
         address: user.address,
@@ -186,7 +186,7 @@ class RegisterVet extends React.Component {
   onImageChange = (image) => {
     if (image[0] !== undefined) {
       let fields = this.state.fields;
-      fields["image"] = image[0];
+      fields["image"] = image[0].data_url;
       let errors = this.state.errors;
       errors["image"] = "";
       this.setState({ fields, errors });
@@ -362,7 +362,7 @@ class RegisterVet extends React.Component {
               <Cropper
                 image={
                   this.state.fields.image !== null
-                    ? this.state.fields.image.data_url
+                    ? this.state.fields.image
                     : null
                 }
                 crop={this.state.crop}

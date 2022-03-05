@@ -315,7 +315,7 @@ export default class EditProfile extends React.Component {
   changeProfilePhoto = async () => {
     if (this.state.errors.image === "") {
       const res = await client.postRequestToken(`/user/changeProfilePhoto`, {
-        imgDataURL: this.state.profile.image.data_url,
+        imgDataURL: this.state.profile.image,
         imageCrop: this.state.profile.imageCrop,
       });
       if (res === true) {
@@ -362,7 +362,7 @@ export default class EditProfile extends React.Component {
   onImageChange = (image) => {
     if (image[0] !== undefined) {
       let profile = this.state.profile;
-      profile["image"] = image[0];
+      profile["image"] = image[0].data_url;
       let errors = this.state.errors;
       errors["image"] = "";
       this.setState({ profile, errors });
@@ -424,7 +424,7 @@ export default class EditProfile extends React.Component {
               <Cropper
                 image={
                   this.state.profile.image !== null
-                    ? this.state.profile.image.data_url
+                    ? this.state.profile.image
                     : null
                 }
                 crop={this.state.crop}

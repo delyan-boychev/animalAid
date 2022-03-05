@@ -121,7 +121,9 @@ class AdminService {
         .toFile(`${dir}/${imgFileName}`, function (err) {
           if (err) console.log(err);
         });
-      fs.unlinkSync(`${dir}/${oldImgFileName}`);
+      if (fs.existsSync(`${dir}/${oldImgFileName}`)) {
+        fs.unlinkSync(`${dir}/${oldImgFileName}`);
+      }
       return true;
     } else {
       return false;

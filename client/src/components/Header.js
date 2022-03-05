@@ -8,6 +8,7 @@ import {
   faEnvelopeOpenText,
   faHome,
   faCommentDots,
+  faHandHoldingHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 export default function Header() {
@@ -77,6 +78,17 @@ export default function Header() {
           >
             <span className="nav-link-effect shadow-navbar">
               <FontAwesomeIcon icon={faCommentDots}></FontAwesomeIcon> Форум
+            </span>
+          </Nav.Link>
+          <Nav.Link
+            as={NavLink}
+            to="/fundrisingCampaigns"
+            className="navLink text-secondary"
+            onClick={autoCloseCollapse}
+          >
+            <span className="nav-link-effect shadow-navbar">
+              <FontAwesomeIcon icon={faHandHoldingHeart}></FontAwesomeIcon>{" "}
+              Кампании за дарение
             </span>
           </Nav.Link>
         </Nav>

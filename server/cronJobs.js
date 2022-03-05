@@ -1,10 +1,11 @@
-const cron = require("node-cron");
 const FundrisingCampaign = require("./models/fundrisingCampaign");
-const cronJobs = () => {
-  cron.schedule("*/1 * * * *", () => {
-    FundrisingCampaign.updateMany(
+const cronJobs = (cron) => {
+  cron.schedule("*/1 * * * *", async () => {
+    await FundrisingCampaign.updateMany(
       {
-        expireAt: { $gte: parseInt(new Date().getTime() / 1000) },
+        moderationVerified: true,
+        completed: false,
+        expireAt: { $lte: parseInt(new Date().getTime() / 1000) },
       },
       { $set: { completed: true } }
     );

@@ -20,7 +20,7 @@ import PageTitle from "../../components/PageTitle";
 const API_URL = require("../../config.json").API_URL;
 const client = require("../../clientRequests");
 const animalsTranslate = require("../../enums/animalsTranslate");
-class VetsAroundUser extends React.Component {
+class VetsAroundMe extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +34,7 @@ class VetsAroundUser extends React.Component {
     this.getVets(1);
   }
   getVets = async (page, search) => {
-    let url = `/user/getVetsAroundUser/${page}`;
+    let url = `/user/getVetsAroundMe/${page}`;
     if (search === true)
       url += `/${encodeURIComponent(this.state.searchQuery)}`;
     else if (search === undefined && this.state.search === true)
@@ -158,6 +158,6 @@ class VetsAroundUser extends React.Component {
 }
 function WithNavigate(props) {
   let navigate = useNavigate();
-  return <VetsAroundUser {...props} navigate={navigate} />;
+  return <VetsAroundMe {...props} navigate={navigate} />;
 }
 export default WithNavigate;

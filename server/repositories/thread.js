@@ -32,11 +32,13 @@ class ThreadRepository {
       })
         .populate("author", "name email")
         .select("topic author dateLastActivity")
+        .lean()
         .exec();
     } else {
       return await Thread.find()
         .populate("author", "name email")
         .select("topic author dateLastActivity")
+        .lean()
         .exec();
     }
   }

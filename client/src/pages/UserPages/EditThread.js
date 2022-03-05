@@ -75,7 +75,6 @@ class EditThread extends React.Component {
     }
   };
   async validate() {
-    console.log(this.submitted);
     if (this.submitted === true) {
       const fields = this.state.fields;
       let errors = {
@@ -97,7 +96,6 @@ class EditThread extends React.Component {
         errors["isValid"] = false;
       }
       await this.setState({ errors });
-      console.log(this.state.errors);
     }
   }
   openModal = (body) => {

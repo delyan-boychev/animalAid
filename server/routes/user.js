@@ -72,7 +72,7 @@ router.get(
   }
 );
 router.get(
-  "/getVetsAroundUser/:pageNum/:searchQuery?",
+  "/getVetsAroundMe/:pageNum/:searchQuery?",
   authenticate,
   async (req, res) => {
     if (req.user.role !== roles.Vet) {

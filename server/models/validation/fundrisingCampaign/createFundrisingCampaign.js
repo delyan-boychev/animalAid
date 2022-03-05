@@ -18,11 +18,11 @@ const createFundrisingCampaignSchema = {
     mainPhotoCrop: {
       x: { type: "number" },
       y: { type: "number" },
-      width: { type: "number" },
-      height: { type: "number" },
+      width: { type: "number", minimum: 1 },
+      height: { type: "number", minimum: 1 },
       required: ["x", "y", "width", "height"],
     },
-    documentsForPaymentURL: {
+    documentsForPaymentDataURL: {
       type: "array",
       minItems: 1,
       maxItems: 5,
@@ -45,7 +45,7 @@ const createFundrisingCampaignSchema = {
     "mainPhotoDataURL",
     "mainPhotoCrop",
     "photosDataURL",
-    "documentsForPaymentURL",
+    "documentsForPaymentDataURL",
   ],
 };
 module.exports = createFundrisingCampaignSchema;

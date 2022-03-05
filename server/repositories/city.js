@@ -8,7 +8,7 @@ class CityRepository {
    * @returns {Object[]}
    */
   async getAllRegions() {
-    return await Region.find();
+    return await Region.find().lean().exec();
   }
   /**
    * Get municipalities
@@ -18,7 +18,9 @@ class CityRepository {
   async getMunicipalitiesByRegion(region) {
     const municipalities = await Municipality.find({
       municipality: { $regex: region },
-    });
+    })
+      .lean()
+      .exec();
     if (municipalities !== null) {
       return municipalities;
     } else {
@@ -31,7 +33,7 @@ class CityRepository {
    * @returns {[]|Boolean}
    */
   async getCitiesByMunicipality(municipality) {
-    const cities = await City.find({ municipality });
+    const cities = await City.find({ municipality }).lean().exec();
     if (cities !== null) {
       return cities;
     } else {
