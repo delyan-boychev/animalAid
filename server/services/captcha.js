@@ -9,7 +9,7 @@ class CaptchaService {
    */
   getCaptcha() {
     const charsArray =
-      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*";
+      "023456789abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*";
     let captcha = [];
     let charsLength = charsArray.length;
     let index;
