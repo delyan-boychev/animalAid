@@ -384,7 +384,7 @@ class AdminRepository {
    */
   async completeFundrisingCampaign(campaignId) {
     try {
-      const campaign = await FundrisingCampaign.findOneById(campaignId).exec();
+      const campaign = await FundrisingCampaign.findById(campaignId).exec();
       if (campaign !== null) {
         if (campaign.completed === false) {
           campaign.completed = true;
