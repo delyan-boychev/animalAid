@@ -387,6 +387,7 @@ class AdminRepository {
       const campaign = await FundrisingCampaign.findById(campaignId).exec();
       if (campaign !== null) {
         if (campaign.completed === false) {
+          campaign.rejectedComment = "";
           campaign.completed = true;
           await campaign.save();
           return true;
