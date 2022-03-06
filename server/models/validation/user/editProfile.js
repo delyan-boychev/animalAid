@@ -63,12 +63,7 @@ const typeAnimals = {
     typeAnimals: {
       type: "array",
       items: {
-        enum: [
-          animals.Cats,
-          animals.Dogs,
-          animals.ExoticAnimals,
-          animals.Birds,
-        ],
+        enum: Object.values(animals),
       },
     },
   },

@@ -25,12 +25,7 @@ const vetRegisterSchema = {
     typeAnimals: {
       type: "array",
       items: {
-        enum: [
-          typeAnimals.Cats,
-          typeAnimals.Dogs,
-          typeAnimals.ExoticAnimals,
-          typeAnimals.Birds,
-        ],
+        enum: Object.values(typeAnimals),
       },
     },
     city: { type: "string", pattern: "^[a-f\\d]{24}$" },

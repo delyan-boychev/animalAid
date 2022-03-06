@@ -479,7 +479,7 @@ class RegisterUser extends React.Component {
                 maxNumber={1}
                 maxFileSize={1048576}
                 onError={this.onError}
-                acceptType={["png", "jpg", "jpeg"]}
+                acceptType={["png", "jpg", "jpeg", "webp"]}
                 onChange={this.onImageChange}
                 dataURLKey="data_url"
               >

@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router";
 import ImageUploading from "react-images-uploading";
 import Cropper from "react-easy-crop";
+const animalsTranslate = require("../enums/animalsTranslate");
 const client = require("../clientRequests");
 class RegisterVet extends React.Component {
   submitted = false;
@@ -584,48 +585,18 @@ class RegisterVet extends React.Component {
               </Form.Label>
               <br />
               <div key="inline-checkbox" className="mb-3">
-                <Form.Check
-                  inline
-                  label="Кучета"
-                  name="typeAnimals"
-                  type="checkbox"
-                  id="checkbox-dogs"
-                  value="DOGS"
-                  checked={this.state.fields.typeAnimals.includes("DOGS")}
-                  onChange={this.onCheckUncheck}
-                />
-                <Form.Check
-                  inline
-                  label="Котки"
-                  name="typeAnimals"
-                  type="checkbox"
-                  id="checkbox-cats"
-                  value="CATS"
-                  checked={this.state.fields.typeAnimals.includes("CATS")}
-                  onChange={this.onCheckUncheck}
-                />
-                <Form.Check
-                  inline
-                  label="Птици"
-                  name="typeAnimals"
-                  type="checkbox"
-                  id="checkbox-birds"
-                  value="BIRDS"
-                  checked={this.state.fields.typeAnimals.includes("BIRDS")}
-                  onChange={this.onCheckUncheck}
-                />
-                <Form.Check
-                  inline
-                  label="Екзотични животни"
-                  name="typeAnimals"
-                  type="checkbox"
-                  id="checkbox-exoticanimals"
-                  value="EXOTICANIMALS"
-                  checked={this.state.fields.typeAnimals.includes(
-                    "EXOTICANIMALS"
-                  )}
-                  onChange={this.onCheckUncheck}
-                />
+                {Object.keys(animalsTranslate).map((type) => (
+                  <Form.Check
+                    inline
+                    label={animalsTranslate[type]}
+                    name="typeAnimals"
+                    type="checkbox"
+                    id={`checkbox-${type.toLowerCase()}`}
+                    value={type}
+                    checked={this.state.fields.typeAnimals.includes(type)}
+                    onChange={this.onCheckUncheck}
+                  />
+                ))}
               </div>
               <span className="text-danger">
                 {this.state.errors.typeAnimals}
@@ -641,7 +612,7 @@ class RegisterVet extends React.Component {
                 maxNumber={1}
                 maxFileSize={1048576}
                 onError={this.onError}
-                acceptType={["png", "jpg", "jpeg"]}
+                acceptType={["png", "jpg", "jpeg", "webp"]}
                 onChange={this.onImageChange}
                 dataURLKey="data_url"
               >

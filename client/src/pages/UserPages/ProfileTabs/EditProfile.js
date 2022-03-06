@@ -34,6 +34,7 @@ const client = require("../../../clientRequests");
 const roles = require("../../../enums/roles");
 const API_URL = require("../../../config.json").API_URL;
 const rolesTranslate = require("../../../enums/rolesTranslate");
+const animalsTranslate = require("../../../enums/animalsTranslate");
 export default class EditProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -784,54 +785,21 @@ export default class EditProfile extends React.Component {
                     </Col>
                     <Col md={7} xs={6}>
                       <div key="inline-checkbox" className="mb-3">
-                        <Form.Check
-                          inline
-                          label="Кучета"
-                          name="typeAnimals"
-                          type="checkbox"
-                          id="checkbox-dogs"
-                          value="DOGS"
-                          checked={this.state.profile.typeAnimals.includes(
-                            "DOGS"
-                          )}
-                          onChange={this.onCheckUncheck}
-                        />
-                        <Form.Check
-                          inline
-                          label="Котки"
-                          name="typeAnimals"
-                          type="checkbox"
-                          id="checkbox-cats"
-                          value="CATS"
-                          checked={this.state.profile.typeAnimals.includes(
-                            "CATS"
-                          )}
-                          onChange={this.onCheckUncheck}
-                        />
-                        <Form.Check
-                          inline
-                          label="Птици"
-                          name="typeAnimals"
-                          type="checkbox"
-                          id="checkbox-birds"
-                          value="BIRDS"
-                          checked={this.state.profile.typeAnimals.includes(
-                            "BIRDS"
-                          )}
-                          onChange={this.onCheckUncheck}
-                        />
-                        <Form.Check
-                          inline
-                          label="Екзотични животни"
-                          name="typeAnimals"
-                          type="checkbox"
-                          id="checkbox-exoticanimals"
-                          value="EXOTICANIMALS"
-                          checked={this.state.profile.typeAnimals.includes(
-                            "EXOTICANIMALS"
-                          )}
-                          onChange={this.onCheckUncheck}
-                        />
+                        {Object.keys(animalsTranslate).map((type) => (
+                          <Form.Check
+                            inline
+                            key={type}
+                            label={animalsTranslate[type]}
+                            name="typeAnimals"
+                            type="checkbox"
+                            id={`checkbox-${type.toLowerCase()}`}
+                            value={type}
+                            checked={this.state.profile.typeAnimals.includes(
+                              type
+                            )}
+                            onChange={this.onCheckUncheck}
+                          />
+                        ))}
                       </div>
                       <span className="text-danger">
                         {this.state.errors.typeAnimals}
@@ -893,7 +861,7 @@ export default class EditProfile extends React.Component {
                       maxNumber={1}
                       maxFileSize={1048576}
                       onError={this.onError}
-                      acceptType={["png", "jpg", "jpeg"]}
+                      acceptType={["png", "jpg", "jpeg", "webp"]}
                       onChange={this.onImageChange}
                       dataURLKey="data_url"
                     >
