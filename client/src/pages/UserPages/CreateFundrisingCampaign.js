@@ -63,6 +63,24 @@ class CreateFundrisingCampaign extends React.Component {
     await this.validate();
     if (this.state.errors.isValid) {
       const fields = this.state.fields;
+      this.setState({
+        fields: {
+          title: "",
+          shortDescription: "",
+          fullDescription: "",
+          value: "0",
+          paypalDonationURL: "",
+          image: null,
+          imageCrop: {
+            x: null,
+            y: null,
+            width: null,
+            height: null,
+          },
+          images1: null,
+          images2: null,
+        },
+      });
       const response = await client.postRequestToken(
         "/fundrisingCampaign/createFundrisingCampaign",
         {
@@ -86,6 +104,11 @@ class CreateFundrisingCampaign extends React.Component {
           "Не успяхме да създадем кампанията за набиране на средства!"
         );
       }
+    } else {
+      let keys = Object.keys(this.state.errors).filter((key) => {
+        return this.state.errors[key] !== "";
+      });
+      document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
   };
   openModal = (body) => {

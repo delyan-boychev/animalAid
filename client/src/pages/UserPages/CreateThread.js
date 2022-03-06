@@ -46,6 +46,11 @@ class CreateThread extends React.Component {
         this.openModal("Темата Ви беше създадена успешно!");
         this.createdComplete = true;
       }
+    } else {
+      let keys = Object.keys(this.state.errors).filter((key) => {
+        return this.state.errors[key] !== "";
+      });
+      document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
   };
   async validate() {
@@ -105,7 +110,7 @@ class CreateThread extends React.Component {
         ></InfoModal>
         <Form onSubmit={this.submitForm}>
           <Form.Group className="mb-3">
-            <FloatingLabel controlId="topic" label="Тема" className="mb-3">
+            <FloatingLabel controlId="topic" label="Тема">
               <Form.Control
                 placeholder="Тема"
                 type="text"

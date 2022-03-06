@@ -1,13 +1,20 @@
 import {
-  faCaretUp,
+  faCircleCheck,
+  faCircleXmark,
   faEye,
   faFlagCheckered,
-  faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CampaignStatus from "../../components/CampaignStatus";
+import CampaignStatusAdminModeratorPanel from "../../components/CampaignStatusAdminModeratorPanel";
 import React from "react";
-import { Row, Col, Spinner, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Spinner,
+  Button,
+  Form,
+  FloatingLabel,
+} from "react-bootstrap";
 import { useNavigate } from "react-router";
 import PageTitle from "../../components/PageTitle";
 import Cookies from "universal-cookie";
@@ -16,7 +23,7 @@ import DialogModal from "../../components/DialogModal";
 import InfoModal from "../../components/InfoModal";
 const client = require("../../clientRequests");
 const API_URL = require("../../config.json").API_URL;
-class ViewFundrisingCampaign extends React.Component {
+class ViewFundrisingCampaignAdmin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,12 +35,22 @@ class ViewFundrisingCampaign extends React.Component {
         value: 0,
         mainPhoto: "",
         photos: [],
+        user: {
+          name: {
+            first: "",
+            last: "",
+          },
+          email: "",
+          imgFileName: "",
+        },
         documentsForPayment: [],
         moderationVerified: null,
         completed: null,
         rejectedComment: "",
         expireAt: 0,
       },
+      rejectedComment: "",
+      errorRejectedComment: "",
       modal: {
         show: false,
         title: "Съобщение",
@@ -62,11 +79,21 @@ class ViewFundrisingCampaign extends React.Component {
       date.getMonth() + 1
     ).pad()}-${date.getFullYear()}`;
   };
-
+  validateReject = async () => {
+    let errorRejectedComment = "";
+    let rejectedComment = this.state.rejectedComment;
+    if (rejectedComment.length < 10 || rejectedComment.length > 130) {
+      errorRejectedComment =
+        "Коментарът трябва да е поне 10 символа и да е максимум 130 символа!";
+    }
+    await this.setState({ errorRejectedComment });
+  };
+  handleOnChangeRejectedComment = async (event) => {
+    await this.setState({ rejectedComment: event.target.value });
+    await this.validateReject();
+  };
   getCampaign = async (id) => {
-    const data = await client.getRequestToken(
-      `/fundrisingCampaign/getMyCampaign/${id}`
-    );
+    const data = await client.getRequestToken(`/admin/getCampaign/${id}`);
     if (data === false) {
       this.props.navigate("/");
     } else {
@@ -129,6 +156,41 @@ class ViewFundrisingCampaign extends React.Component {
       this.openModal("Не успяхме да изпратим кампанията за повторен преглед!");
     }
   };
+  approveCampaign = async () => {
+    const res = client.postRequestToken(
+      "/admin/moderationVerifyFundrisingCampaign",
+      {
+        campaignId: this.state.campaign._id,
+        verified: true,
+      }
+    );
+    if (res === true) {
+      this.openModal("Кампанията е одобрена!");
+    } else {
+      this.openModal("Не успяхме да одобрим кампанията! Моля опитайте отново!");
+    }
+  };
+  submitReject = async (event) => {
+    event.preventDefault();
+    await this.validateReject();
+    if (this.state.errorRejectedComment === "") {
+      const res = await client.postRequestToken(
+        "/admin/moderationVerifyFundrisingCampaign",
+        {
+          campaignId: this.state.campaign._id,
+          verified: false,
+          rejectedComment: this.state.rejectedComment,
+        }
+      );
+      if (res === true) {
+        this.openModal("Кампанията е отхвърлена!");
+      } else {
+        this.openModal(
+          "Не успяхме да отхвърлим кампанията! Моля опитайте отново!"
+        );
+      }
+    }
+  };
   render() {
     const cookies = new Cookies();
     const token = cookies.get("authorization");
@@ -185,26 +247,68 @@ class ViewFundrisingCampaign extends React.Component {
                 Линк за дарение в Paypal:{" "}
                 {this.state.campaign.paypalDonationURL}
               </div>
-              {this.state.campaign.rejectedComment !== "" ? (
+              <div className="h5 mt-3">Създател на кампанията</div>
+              <Row className="mb-3">
+                <Col xs={3} sm={2}>
+                  <img
+                    className="rounded-circle"
+                    src={
+                      this.state.campaign.user.imgFileName !== ""
+                        ? `${API_URL}/user/img/${this.state.campaign.user.imgFileName}`
+                        : ""
+                    }
+                    height="60px"
+                    weight="60px"
+                    alt="avatar"
+                  />
+                </Col>
+                <Col>
+                  {this.state.campaign.user.name.first}{" "}
+                  {this.state.campaign.user.name.last}
+                  <br />
+                  <span className="text-muted">
+                    {this.state.campaign.user.email}
+                  </span>
+                </Col>
+              </Row>
+              {this.state.campaign.rejectedComment === "" &&
+              this.state.campaign.moderationVerified === false &&
+              this.state.campaign.completed === false ? (
                 <div className="mb-3">
-                  <Button
-                    variant="primary"
-                    as={Link}
-                    to={`/user/editFundrisingCampaign?id=${this.state.campaign._id}`}
-                  >
-                    <FontAwesomeIcon icon={faPen}></FontAwesomeIcon> Редактиране
-                    на кампанията
-                  </Button>
-                </div>
-              ) : (
-                ""
-              )}
-              {this.state.campaign.rejectedComment !== "" ? (
-                <div className="mb-3">
-                  <Button variant="primary" onClick={this.sendForVerification}>
-                    <FontAwesomeIcon icon={faCaretUp}></FontAwesomeIcon>{" "}
-                    Изпращане за повторен преглед
-                  </Button>
+                  <div className="mb-3">
+                    <Button variant="primary" onClick={this.approveCampaign}>
+                      <FontAwesomeIcon icon={faCircleCheck}></FontAwesomeIcon>{" "}
+                      Одобряване на кампания
+                    </Button>
+                  </div>
+                  <div>
+                    <div className="h6">Отхвърляне на кампания</div>
+                    <Form onSubmit={this.submitReject}>
+                      <Row className="mb-3">
+                        <Form.Group as={Col}>
+                          <FloatingLabel
+                            controlId="rejectedComment"
+                            label="Коментар"
+                          >
+                            <Form.Control
+                              as="textarea"
+                              placeholder="Коментар"
+                              onChange={this.handleOnChangeRejectedComment}
+                              value={this.state.rejectedComment}
+                              style={{ resize: "none", height: "100px" }}
+                            />
+                          </FloatingLabel>
+                          <span className="text-danger">
+                            {this.state.errorRejectedComment}
+                          </span>
+                        </Form.Group>
+                      </Row>
+                      <Button variant="primary" type="submit">
+                        <FontAwesomeIcon icon={faCircleXmark}></FontAwesomeIcon>{" "}
+                        Отхвърляне на кампания
+                      </Button>
+                    </Form>
+                  </div>
                 </div>
               ) : (
                 ""
@@ -237,7 +341,7 @@ class ViewFundrisingCampaign extends React.Component {
 
               <div className="h4 text-center card">
                 <div className="card-body">
-                  <CampaignStatus
+                  <CampaignStatusAdminModeratorPanel
                     moderationVerified={this.state.campaign.moderationVerified}
                     completed={this.state.campaign.completed}
                     rejectedComment={this.state.campaign.rejectedComment}
@@ -259,7 +363,7 @@ class ViewFundrisingCampaign extends React.Component {
               return (
                 <div key={photo}>
                   <img
-                    src={`${API_URL}/fundrisingCampaign/document/${this.state.campaign._id}/${photo}?token=${token}`}
+                    src={`${API_URL}/admin/document/${photo}?token=${token}`}
                     className="img-thumbnail mt-2"
                     alt="Снимки на документи за плащане"
                   />
@@ -288,6 +392,6 @@ class ViewFundrisingCampaign extends React.Component {
 }
 function WithNavigate(props) {
   let navigate = useNavigate();
-  return <ViewFundrisingCampaign {...props} navigate={navigate} />;
+  return <ViewFundrisingCampaignAdmin {...props} navigate={navigate} />;
 }
 export default WithNavigate;

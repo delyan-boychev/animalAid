@@ -47,6 +47,11 @@ export default class ChangeEmail extends React.Component {
       } else {
         this.openModal("Въвели сте неправилна парола!");
       }
+    } else {
+      let keys = Object.keys(this.state.errors).filter((key) => {
+        return this.state.errors[key] !== "";
+      });
+      document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
   };
   async validate() {

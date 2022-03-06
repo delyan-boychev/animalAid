@@ -1,10 +1,18 @@
 import React from "react";
 import { Tab, Row, Nav, Col, Collapse } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaw, faUserCheck, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClipboardCheck,
+  faHandHoldingHeart,
+  faPaw,
+  faUserCheck,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import ViewAllUsers from "./AdminPanelTabs/ViewAllUsers";
 import ViewAllVets from "./AdminPanelTabs/ViewAllVets";
+import ViewAllCampaigns from "./AdminPanelTabs/ViewAllCampaigns";
 import ViewVetsForModerationVerify from "./AdminPanelTabs/ViewVetsForModerationVerify";
+import ViewCampaignsForModerationVerify from "./AdminPanelTabs/ViewCampaignsForModerationVerify";
 export default class AdminPanel extends React.Component {
   componentDidMount() {
     document.title = "Администраторски панел";
@@ -38,6 +46,18 @@ export default class AdminPanel extends React.Component {
                   на ветеринарни лекари за одоборение
                 </Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="fourth">
+                  <FontAwesomeIcon icon={faHandHoldingHeart}></FontAwesomeIcon>{" "}
+                  Преглед на кампании зa набиране на средства
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="fifth">
+                  <FontAwesomeIcon icon={faClipboardCheck}></FontAwesomeIcon>{" "}
+                  Преглед на кампании за одобрение
+                </Nav.Link>
+              </Nav.Item>
             </Nav>
           </Col>
           <Col sm={9}>
@@ -50,6 +70,12 @@ export default class AdminPanel extends React.Component {
               </Tab.Pane>
               <Tab.Pane eventKey="third">
                 <ViewVetsForModerationVerify></ViewVetsForModerationVerify>
+              </Tab.Pane>
+              <Tab.Pane eventKey="fourth">
+                <ViewAllCampaigns></ViewAllCampaigns>
+              </Tab.Pane>
+              <Tab.Pane eventKey="fifth">
+                <ViewCampaignsForModerationVerify></ViewCampaignsForModerationVerify>
               </Tab.Pane>
             </Tab.Content>
           </Col>

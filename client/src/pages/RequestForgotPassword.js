@@ -41,6 +41,11 @@ export default class RequestForgotPassword extends React.Component {
       } else {
         this.openModal("Не съществува профил с този имейл адрес!");
       }
+    } else {
+      let keys = Object.keys(this.state.errors).filter((key) => {
+        return this.state.errors[key] !== "";
+      });
+      document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
   };
   validate() {

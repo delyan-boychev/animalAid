@@ -72,6 +72,11 @@ class EditThread extends React.Component {
         this.openModal("Темата Ви беше редактирана успешно!");
         this.editedComplete = true;
       }
+    } else {
+      let keys = Object.keys(this.state.errors).filter((key) => {
+        return this.state.errors[key] !== "";
+      });
+      document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
   };
   async validate() {

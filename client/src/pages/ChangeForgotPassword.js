@@ -56,6 +56,11 @@ export default class ChangeForgotPassword extends React.Component {
           "Не успяхме да променим паролата! Моля опитайте отново! Извиняваме се за неудобството!"
         );
       }
+    } else {
+      let keys = Object.keys(this.state.errors).filter((key) => {
+        return this.state.errors[key] !== "";
+      });
+      document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
   };
   async validate() {

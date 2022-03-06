@@ -166,6 +166,39 @@ router.post("/deleteThreadPost", authenticateAdmin, async (req, res) => {
     );
   });
 });
+router.get("/getAllCampaigns/:pageNum/:searchQuery?", async (req, res) => {
+  try {
+    const pageNum = parseInt(req.params.pageNum);
+    if (pageNum > 0) {
+      res.send(
+        await adminService.getAllCampaigns(req.params.searchQuery, pageNum)
+      );
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+});
+router.get(
+  "/getCampaignsForModerationVerify/:pageNum",
+  authenticateAdmin,
+  async (req, res) => {
+    try {
+      const pageNum = parseInt(req.params.pageNum);
+      if (pageNum > 0) {
+        res.send(await adminService.getCampaignsForModerationVerify(pageNum));
+      } else {
+        res.sendStatus(400);
+      }
+    } catch {
+      res.sendStatus(400);
+    }
+  }
+);
+router.get("/getCampaign/:id", authenticateAdmin, async (req, res) => {
+  res.send(await adminService.getCampaign(req.params.id));
+});
 router.post(
   "/moderationVerifyFundrisingCampaign",
   authenticateAdmin,
@@ -178,7 +211,7 @@ router.post(
         res.send(
           await adminService.moderationVerifyFundrisingCampaign(
             req.body.campaignId,
-            req.body.verfied,
+            req.body.verified,
             req.body.rejectedComment
           )
         );

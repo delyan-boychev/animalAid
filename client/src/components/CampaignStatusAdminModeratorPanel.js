@@ -5,7 +5,7 @@ import {
   faCircleXmark,
   faFlagCheckered,
 } from "@fortawesome/free-solid-svg-icons";
-export default function CampaignStatus(props) {
+export default function CampaignStatusAdminModeratorPanel(props) {
   if (props.moderationVerified === true) {
     if (props.completed === true) {
       return (
@@ -30,14 +30,13 @@ export default function CampaignStatus(props) {
     } else if (props.rejectedComment === "") {
       return (
         <span className="text-warning">
-          <FontAwesomeIcon icon={faEye} /> Кампанията все още се проверява!
+          <FontAwesomeIcon icon={faEye} /> Кампанията чака одобрение!
         </span>
       );
     } else {
       return (
         <span className="text-danger">
-          <FontAwesomeIcon icon={faCircleXmark} /> Кампанията е отхвърлена! Моля
-          редактирайте я!
+          <FontAwesomeIcon icon={faCircleXmark} /> Кампанията е отхвърлена!
         </span>
       );
     }

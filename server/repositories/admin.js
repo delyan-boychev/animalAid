@@ -298,6 +298,41 @@ class AdminRepository {
       return false;
     }
   }
+  async getCampaign(campaignId) {
+    try {
+      const campaign = FundrisingCampaign.findById(campaignId)
+        .populate("user", "-password")
+        .lean()
+        .exec();
+      if (campaign !== null) {
+        return campaign;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  /**
+   * Get all fundrising campaigns
+   * @param {String} searchQuery
+   * @returns {Object[]}
+   */
+  async getAllCampaigns(searchQuery) {
+    let query = {};
+    if (searchQuery !== undefined) {
+      query = {
+        $or: [
+          { title: { $regex: searchQuery, $options: "i" } },
+          { shortDescription: { $regex: searchQuery, $options: "i" } },
+        ],
+      };
+    }
+    return await FundrisingCampaign.find(query)
+      .select("title shortDescription mainPhoto")
+      .lean()
+      .exec();
+  }
   /**
    * Get fundrising campaigns for moderation verify
    * @returns {Object[]}

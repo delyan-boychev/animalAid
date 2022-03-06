@@ -83,6 +83,11 @@ export default class Login extends React.Component {
         });
         this.loginComplete = true;
       }
+    } else {
+      let keys = Object.keys(this.state.errors).filter((key) => {
+        return this.state.errors[key] !== "";
+      });
+      document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
   };
   getCaptcha = async () => {

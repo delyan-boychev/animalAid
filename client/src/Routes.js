@@ -19,6 +19,7 @@ import CreateThread from "./pages/UserPages/CreateThread";
 import FundrisingCampaings from "./pages/FundrisingCampaigns";
 import FundrisingCampaign from "./pages/FundrisingCampaign";
 import ViewFundrisingCampaign from "./pages/UserPages/ViewFundrisingCampaign";
+import ViewFundrisingCampaignAdmin from "./pages/AdminPages/ViewFundrisingCampaignAdmin";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import Cookies from "universal-cookie";
@@ -95,6 +96,90 @@ const routes = (isLoggedIn) => [
     exact: true,
   },
   {
+    path: "/fundrisingCampaigns",
+    element: (
+      <div className="container mt-3">
+        <FundrisingCampaings />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/fundrisingCampaign",
+    element: (
+      <div className="container mt-3">
+        <FundrisingCampaign />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/threads",
+    element: (
+      <div className="container mt-3">
+        <Threads />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/thread",
+    element: (
+      <div className="container mt-3">
+        <Thread />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/contacts",
+    element: (
+      <div className="container mt-3">
+        <Contacts />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/verifyProfile",
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <VerifyProfile />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/requestForgotPassword",
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <RequestForgotPassword />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/changeForgotPassword",
+    element: !isLoggedIn ? (
+      <div className="container mt-3">
+        <ChangeForgotPassword />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
     path: "/user/profile",
     element: isLoggedIn ? (
       <div className="container mt-3">
@@ -155,85 +240,6 @@ const routes = (isLoggedIn) => [
     ) : (
       <div className="container mt-3">
         <NoAccess />
-      </div>
-    ),
-    exact: true,
-  },
-  {
-    path: "/contacts",
-    element: (
-      <div className="container mt-3">
-        <Contacts />
-      </div>
-    ),
-    exact: true,
-  },
-  {
-    path: "/verifyProfile",
-    element: !isLoggedIn ? (
-      <div className="container mt-3">
-        <VerifyProfile />
-      </div>
-    ) : (
-      <div className="container mt-3">
-        <NoAccess />
-      </div>
-    ),
-    exact: true,
-  },
-  {
-    path: "/requestForgotPassword",
-    element: !isLoggedIn ? (
-      <div className="container mt-3">
-        <RequestForgotPassword />
-      </div>
-    ) : (
-      <div className="container mt-3">
-        <NoAccess />
-      </div>
-    ),
-    exact: true,
-  },
-  {
-    path: "/changeForgotPassword",
-    element: !isLoggedIn ? (
-      <div className="container mt-3">
-        <ChangeForgotPassword />
-      </div>
-    ) : (
-      <div className="container mt-3">
-        <NoAccess />
-      </div>
-    ),
-    exact: true,
-  },
-  {
-    path: "/admin/adminPanel",
-    element: isLoggedIn ? (
-      <div className="container mt-3">
-        <AdminPanel />
-      </div>
-    ) : (
-      <div className="container mt-3">
-        <NoAccess />
-      </div>
-    ),
-    exact: true,
-  },
-  {
-    path: "/threads",
-    element: (
-      <div className="container mt-3">
-        <Threads />
-      </div>
-    ),
-    exact: true,
-  },
-  {
-    path: "/thread",
-    element: (
-      <div className="container mt-3">
-        <Thread />
       </div>
     ),
     exact: true,
@@ -304,19 +310,14 @@ const routes = (isLoggedIn) => [
     exact: true,
   },
   {
-    path: "/fundrisingCampaigns",
-    element: (
+    path: "/admin/adminPanel",
+    element: isLoggedIn ? (
       <div className="container mt-3">
-        <FundrisingCampaings />
+        <AdminPanel />
       </div>
-    ),
-    exact: true,
-  },
-  {
-    path: "/fundrisingCampaign",
-    element: (
+    ) : (
       <div className="container mt-3">
-        <FundrisingCampaign />
+        <NoAccess />
       </div>
     ),
     exact: true,
@@ -326,6 +327,19 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? (
       <div className="container mt-3">
         <EditUser />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/admin/viewFundrisingCampaign",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <ViewFundrisingCampaignAdmin />
       </div>
     ) : (
       <div className="container mt-3">

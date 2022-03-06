@@ -134,6 +134,11 @@ class RegisterUser extends React.Component {
         this.openModal("Вече съществува профил с този имейл адрес!");
         this.getCaptcha();
       }
+    } else {
+      let keys = Object.keys(this.state.errors).filter((key) => {
+        return this.state.errors[key] !== "";
+      });
+      document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
   };
   openModal = (body) => {

@@ -1,30 +1,38 @@
-import CampaignStatus from "../../../components/CampaignStatus";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import InfoModal from "../../../components/InfoModal";
+import DialogModal from "../../../components/DialogModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Card, Col, Row, Spinner, Pagination } from "react-bootstrap";
+import { Col, Row, Pagination, Card, Spinner } from "react-bootstrap";
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
 } from "@fortawesome/free-solid-svg-icons";
-import PageTitle from "../../../components/PageTitle";
-const client = require("../../../clientRequests");
 const API_URL = require("../../../config.json").API_URL;
-class FundrisingCampaigns extends React.Component {
+const client = require("../../../clientRequests");
+class ViewCampaignsForModerationVerify extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       page: 1,
       campaigns: [],
       numPages: 0,
+      modal: {
+        show: false,
+        title: "Съобщение",
+        body: "",
+      },
+      modal2: {
+        show: false,
+        title: "Съобщение",
+        body: "",
+        task: () => {},
+      },
     };
-  }
-  componentDidMount() {
-    document.title = "Кампании за набиране на средства";
     this.getCampaigns(1);
   }
   getCampaigns = async (page) => {
-    let url = `/fundrisingCampaign/getMyCampaigns/${page}`;
+    let url = `/admin/getCampaignsForModerationVerify/${page}`;
     const data = await client.getRequestToken(url);
     if (data !== false) {
       this.setState({
@@ -36,8 +44,32 @@ class FundrisingCampaigns extends React.Component {
       this.setState({ page: 1, numPages: 1, campaigns: [] });
     }
   };
-  openCampaign = async (id) => {
-    this.props.navigate(`/user/viewFundrisingCampaign?id=${id}`);
+  openModal = (body) => {
+    let modal = this.state.modal;
+    modal.show = true;
+    modal.body = body;
+    this.setState({ modal });
+  };
+  closeModal = () => {
+    let modal = this.state.modal;
+    modal.show = false;
+    this.setState({ modal });
+    this.getCampaigns(1);
+  };
+  openModal2 = (body, task) => {
+    let modal2 = this.state.modal2;
+    modal2.show = true;
+    modal2.body = body;
+    modal2.task = task;
+    this.setState({ modal2 });
+  };
+  closeModal2 = () => {
+    let modal2 = this.state.modal2;
+    modal2.show = false;
+    this.setState({ modal2 });
+  };
+  openCampaign = (id) => {
+    this.props.navigate(`/admin/ViewFundrisingCampaign?id=${id}`);
   };
   render() {
     const pagination = (
@@ -63,7 +95,19 @@ class FundrisingCampaigns extends React.Component {
     );
     return (
       <div>
-        <PageTitle title="Кампании за набиране на средства" />
+        <DialogModal
+          show={this.state.modal2.show}
+          title={this.state.modal2.title}
+          body={this.state.modal2.body}
+          closeModal={this.closeModal2}
+          task={this.state.modal2.task}
+        ></DialogModal>
+        <InfoModal
+          show={this.state.modal.show}
+          title={this.state.modal.title}
+          body={this.state.modal.body}
+          closeModal={this.closeModal}
+        ></InfoModal>
         {pagination}
         <h4
           className="text-center mt-3"
@@ -71,7 +115,7 @@ class FundrisingCampaigns extends React.Component {
             this.state.campaigns.length !== 0 || this.state.numPages === 0
           }
         >
-          Няма намерени кампании!
+          Няма намерени кампании за одоборение!
         </h4>
         <div className="text-center mt-3" hidden={this.state.numPages > 0}>
           <Spinner animation="border" variant="primary" role="status"></Spinner>
@@ -92,21 +136,10 @@ class FundrisingCampaigns extends React.Component {
                     {campaign.title}
                   </Card.Title>
                   <Card.Text
-                    style={{ fontSize: "14px" }}
+                    style={{ fontSize: "14px", wordBreak: "break-word" }}
                     className="text-muted"
                   >
-                    <span className="fw-bold">
-                      <CampaignStatus
-                        moderationVerified={campaign.moderationVerified}
-                        completed={campaign.completed}
-                        rejectedComment={campaign.rejectedComment}
-                      />
-                      {campaign.rejectedComment !== "" ? (
-                        <span>Причини: {campaign.rejectedComment}</span>
-                      ) : (
-                        ""
-                      )}
-                    </span>
+                    {campaign.shortDescription}
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -120,5 +153,5 @@ class FundrisingCampaigns extends React.Component {
 }
 export default function WithNavigate(props) {
   let navigate = useNavigate();
-  return <FundrisingCampaigns {...props} navigate={navigate} />;
+  return <ViewCampaignsForModerationVerify {...props} navigate={navigate} />;
 }

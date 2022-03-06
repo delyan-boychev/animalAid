@@ -146,6 +146,28 @@ class AdminService {
   async deleteThreadPost(threadId, postId) {
     return await this.#adminRepository.deleteThreadPost(threadId, postId);
   }
+  async getCampaign(campaignId) {
+    return await this.#adminRepository.getCampaign(campaignId);
+  }
+  /**
+   * Get all fundrising campaigns
+   * @param {String} searchQuery
+   * @param {Number} pageNum
+   * @returns {Object[]|Boolean}
+   */
+  async getAllCampaigns(searchQuery, pageNum) {
+    const campaigns = await this.#adminRepository.getAllCampaigns(searchQuery);
+    return getPageFromArr(campaigns, 12, pageNum, "campaigns");
+  }
+  async getCampaignsForModerationVerify(pageNum) {
+    const campaigns =
+      await this.#adminRepository.getCampaignsForModerationVerify();
+    if (campaigns !== false) {
+      return getPageFromArr(campaigns, 12, pageNum, "campaigns");
+    } else {
+      return false;
+    }
+  }
   /**
    * Moderation verify fundrising campaign
    * @param {String} campaignId

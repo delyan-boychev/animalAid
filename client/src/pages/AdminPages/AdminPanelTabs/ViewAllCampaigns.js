@@ -1,30 +1,42 @@
-import CampaignStatus from "../../../components/CampaignStatus";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Card, Col, Row, Spinner, Pagination } from "react-bootstrap";
+import {
+  Card,
+  Col,
+  Row,
+  Spinner,
+  Pagination,
+  Form,
+  FloatingLabel,
+  Button,
+} from "react-bootstrap";
 import {
   faChevronCircleLeft,
   faChevronCircleRight,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import PageTitle from "../../../components/PageTitle";
-const client = require("../../../clientRequests");
 const API_URL = require("../../../config.json").API_URL;
-class FundrisingCampaigns extends React.Component {
+const client = require("../../../clientRequests");
+class ViewAllCampaigns extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       page: 1,
       campaigns: [],
       numPages: 0,
+      searchQuery: "",
+      lastSearchQuery: "",
+      search: false,
     };
-  }
-  componentDidMount() {
-    document.title = "Кампании за набиране на средства";
     this.getCampaigns(1);
   }
-  getCampaigns = async (page) => {
-    let url = `/fundrisingCampaign/getMyCampaigns/${page}`;
+  getCampaigns = async (page, search) => {
+    let url = `/admin/getAllCampaigns/${page}`;
+    if (search === true)
+      url += `/${encodeURIComponent(this.state.searchQuery)}`;
+    else if (search === undefined && this.state.search === true)
+      url += `/${this.state.lastSearchQuery}`;
     const data = await client.getRequestToken(url);
     if (data !== false) {
       this.setState({
@@ -36,8 +48,21 @@ class FundrisingCampaigns extends React.Component {
       this.setState({ page: 1, numPages: 1, campaigns: [] });
     }
   };
+  handleOnChangeValue = (event) => {
+    this.setState({ searchQuery: event.target.value });
+  };
+  search = (event) => {
+    event.preventDefault();
+    if (this.state.searchQuery === "") {
+      this.setState({ search: false, lastSearchQuery: "" });
+      this.getCampaigns(1, false);
+    } else {
+      this.setState({ search: true, lastSearchQuery: this.state.searchQuery });
+      this.getCampaigns(1, true);
+    }
+  };
   openCampaign = async (id) => {
-    this.props.navigate(`/user/viewFundrisingCampaign?id=${id}`);
+    this.props.navigate(`/admin/viewFundrisingCampaign?id=${id}`);
   };
   render() {
     const pagination = (
@@ -63,7 +88,27 @@ class FundrisingCampaigns extends React.Component {
     );
     return (
       <div>
-        <PageTitle title="Кампании за набиране на средства" />
+        <Row>
+          <Form onSubmit={this.search} className="mw-75">
+            <div className="d-flex">
+              <div className="col-sm-8">
+                <FloatingLabel controlId="searchQuery" label="Търсене">
+                  <Form.Control
+                    placeholder="Търсене"
+                    type="text"
+                    value={this.state.searchQuery}
+                    onChange={this.handleOnChangeValue}
+                  />
+                </FloatingLabel>
+              </div>
+              <div className="align-self-center ms-3">
+                <Button type="submit">
+                  <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
+                </Button>
+              </div>
+            </div>
+          </Form>
+        </Row>
         {pagination}
         <h4
           className="text-center mt-3"
@@ -92,21 +137,10 @@ class FundrisingCampaigns extends React.Component {
                     {campaign.title}
                   </Card.Title>
                   <Card.Text
-                    style={{ fontSize: "14px" }}
+                    style={{ fontSize: "14px", wordBreak: "break-word" }}
                     className="text-muted"
                   >
-                    <span className="fw-bold">
-                      <CampaignStatus
-                        moderationVerified={campaign.moderationVerified}
-                        completed={campaign.completed}
-                        rejectedComment={campaign.rejectedComment}
-                      />
-                      {campaign.rejectedComment !== "" ? (
-                        <span>Причини: {campaign.rejectedComment}</span>
-                      ) : (
-                        ""
-                      )}
-                    </span>
+                    {campaign.shortDescription}
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -120,5 +154,5 @@ class FundrisingCampaigns extends React.Component {
 }
 export default function WithNavigate(props) {
   let navigate = useNavigate();
-  return <FundrisingCampaigns {...props} navigate={navigate} />;
+  return <ViewAllCampaigns {...props} navigate={navigate} />;
 }
