@@ -29,6 +29,7 @@ class FundrisingCampaignRepository {
       if (campaign !== null) {
         if (campaign.completed === false) {
           campaign.completed = true;
+          campaign.rejectedComment = "";
           campaign.expireAt = parseInt(new Date().getTime() / 1000);
           await campaign.save();
           return true;

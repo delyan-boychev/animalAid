@@ -388,6 +388,7 @@ class AdminRepository {
       if (campaign !== null) {
         if (campaign.completed === false) {
           campaign.rejectedComment = "";
+          campaign.expireAt = parseInt(new Date().getTime() / 1000);
           campaign.completed = true;
           await campaign.save();
           return true;
