@@ -134,7 +134,7 @@ class ViewFundrisingCampaignAdmin extends React.Component {
   };
   completeCampaign = async () => {
     const res = await client.postRequestToken(
-      "/fundrisingCampaign/completeFundrisingCampaign",
+      "/admin/completeFundrisingCampaign",
       { campaignId: this.state.campaign._id }
     );
     if (res === true) {
