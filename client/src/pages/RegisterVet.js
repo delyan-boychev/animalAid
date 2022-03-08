@@ -121,7 +121,7 @@ class RegisterVet extends React.Component {
       }
     } else {
       let keys = Object.keys(this.state.errors).filter((key) => {
-        return this.state.errors[key] !== "";
+        return this.state.errors[key] !== "" && key !== "isValid";
       });
       document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
@@ -579,7 +579,7 @@ class RegisterVet extends React.Component {
             </Form.Group>
           </Row>
           <Row className="mb-3">
-            <Form.Group as={Col} controlId="image">
+            <Form.Group as={Col}>
               <Form.Label>
                 Животни, с които ветеринарният лекар практикува
               </Form.Label>

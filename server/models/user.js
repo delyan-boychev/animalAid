@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const roles = require("./roles");
 const typeAnimals = require("./typeAnimals");
+const scheduleVet = require("./scheduleVet");
 const schema = new mongoose.Schema({
   name: {
     first: { type: String, required: true },
@@ -26,12 +27,7 @@ const schema = new mongoose.Schema({
     required: () => {
       return this.role === roles.Vet;
     },
-    enum: [
-      typeAnimals.Cats,
-      typeAnimals.Dogs,
-      typeAnimals.ExoticAnimals,
-      typeAnimals.Birds,
-    ],
+    enum: Object.values(typeAnimals),
   },
   vetDescription: {
     type: String,
@@ -50,6 +46,11 @@ const schema = new mongoose.Schema({
     required: () => {
       return this.role === roles.Vet;
     },
+  },
+  scheduleVet: {
+    type: scheduleVet,
+    required: false,
+    default: undefined,
   },
   imgFileName: { type: String, required: true },
   verified: { type: Boolean, required: true },

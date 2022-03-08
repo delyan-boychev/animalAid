@@ -784,7 +784,7 @@ export default class EditProfile extends React.Component {
                       </Form.Label>
                     </Col>
                     <Col md={7} xs={6}>
-                      <div key="inline-checkbox" className="mb-3">
+                      <div className="mb-3">
                         {Object.keys(animalsTranslate).map((type) => (
                           <Form.Check
                             inline

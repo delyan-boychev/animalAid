@@ -19,6 +19,7 @@ const adminRoute = require("./routes/admin");
 const cityRoute = require("./routes/city");
 const threadRoute = require("./routes/thread");
 const fundrisingCampaignRoute = require("./routes/fundrisingCampaign");
+const vetRoute = require("./routes/vet");
 const credentials = {
   key: privateKey,
   cert: certificate,
@@ -42,6 +43,7 @@ app.use("/admin", adminRoute);
 app.use("/city", cityRoute);
 app.use("/thread", threadRoute);
 app.use("/fundrisingCampaign", fundrisingCampaignRoute);
+app.use("/vet", vetRoute);
 mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

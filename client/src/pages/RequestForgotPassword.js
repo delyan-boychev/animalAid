@@ -43,7 +43,7 @@ export default class RequestForgotPassword extends React.Component {
       }
     } else {
       let keys = Object.keys(this.state.errors).filter((key) => {
-        return this.state.errors[key] !== "";
+        return this.state.errors[key] !== "" && key !== "isValid";
       });
       document.getElementById(keys[0]).scrollIntoView({ behavior: "smooth" });
     }
