@@ -40,4 +40,42 @@ router.get("/getHours/:vetId/:date", authenticate, async (req, res) => {
     res.sendStatus(403);
   }
 });
+router.get(
+  "/myUpcomingAppointments/:pageNum",
+  authenticate,
+  async (req, res) => {
+    if (req.user.role !== roles.Vet) {
+      try {
+        const pageNum = parseInt(req.params.pageNum);
+        if (pageNum > 0) {
+          res.send(
+            await vetService.getUpcomingAppointments(req.user.id, pageNum)
+          );
+        } else {
+          res.sendStatus(400);
+        }
+      } catch {
+        res.sendStatus(400);
+      }
+    } else {
+      res.sendStatus(403);
+    }
+  }
+);
+router.get("/myPastAppointments/:pageNum", authenticate, async (req, res) => {
+  if (req.user.role !== roles.Vet) {
+    try {
+      const pageNum = parseInt(req.params.pageNum);
+      if (pageNum > 0) {
+        res.send(await vetService.getPastAppointments(req.user.id, pageNum));
+      } else {
+        res.sendStatus(400);
+      }
+    } catch {
+      res.sendStatus(400);
+    }
+  } else {
+    res.sendStatus(403);
+  }
+});
 module.exports = router;

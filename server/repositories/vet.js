@@ -90,20 +90,40 @@ class VetRepository {
             })
               .lean()
               .exec();
-            return vet.scheduleVet[day].map((hour) => {
-              let index = appointments.findIndex(
-                (a) => a.hour === hour._id.toString()
-              );
-              if (index === -1) {
-                hour["free"] = true;
-              } else {
-                hour["free"] = false;
-                appointments.splice(index, 1);
-              }
-              return hour;
-            });
+            return {
+              hours: vet.scheduleVet[day].map((hour) => {
+                let index = appointments.findIndex(
+                  (a) => a.hour === hour._id.toString()
+                );
+                if (index === -1) {
+                  hour["free"] = true;
+                } else {
+                  hour["free"] = false;
+                  appointments.splice(index, 1);
+                }
+                return hour;
+              }),
+              vetInfo: {
+                name: `${vet.name.first} ${vet.name.last}`,
+                typeAnimals: vet.typeAnimals,
+                typeAppointments: vet.scheduleVet.typeAppointments,
+              },
+              workingDays: Object.keys(vet.scheduleVet)
+                .filter((e) => e !== "typeAppointments" && e !== "_id")
+                .filter((e) => vet.scheduleVet[e].length > 0),
+            };
           } else {
-            return false;
+            return {
+              hours: [],
+              vetInfo: {
+                name: `${vet.name.first} ${vet.name.last}`,
+                typeAnimals: vet.typeAnimals,
+                typeAppointments: vet.scheduleVet.typeAppointments,
+              },
+              workingDays: Object.keys(vet.scheduleVet)
+                .filter((e) => e !== "typeAppointments" && e !== "_id")
+                .filter((e) => vet.scheduleVet[e].length > 0),
+            };
           }
         } else {
           return false;
@@ -111,6 +131,23 @@ class VetRepository {
       } else {
         return false;
       }
+    } catch {
+      return false;
+    }
+  }
+  async getAppointments(query) {
+    try {
+      const appointments = await VetAppointment.find(query)
+        .populate("vet", "name email imgFileName scheduleVet")
+        .exec();
+      const appointments2 = [];
+      appointments.forEach((appointment) => {
+        let day = daysOfWeek[new Date(appointment.date).getDay()];
+        let app = appointment.toObject();
+        app.hour = appointment.vet.scheduleVet[day].id(app.hour);
+        appointments2.push(app);
+      });
+      return appointments2;
     } catch {
       return false;
     }

@@ -1,5 +1,6 @@
 "use strict";
 const VetRepository = require("../repositories/vet");
+const getPageFromArr = require("../extensionMethods").getPageFromArr;
 const moment = require("moment");
 class VetService {
   #vetRepository = new VetRepository();
@@ -96,6 +97,28 @@ class VetService {
     date = moment(date, "DD-MM-YYYY").toDate();
     if (d1 <= date.getTime() && d2 >= date.getTime()) {
       return this.#vetRepository.getHours(vetId, date);
+    } else {
+      return false;
+    }
+  }
+  async getUpcomingAppointments(userId, pageNum) {
+    const appointments = await this.#vetRepository.getAppointments({
+      user: userId,
+      date: { $gt: new Date().toISOString() },
+    });
+    if (appointments !== false) {
+      return getPageFromArr(appointments, 10, pageNum, "appointments");
+    } else {
+      return false;
+    }
+  }
+  async getPastAppointments(userId, pageNum) {
+    const appointments = await this.#vetRepository.getAppointments({
+      user: userId,
+      date: { $lte: new Date().toISOString() },
+    });
+    if (appointments !== false) {
+      return getPageFromArr(appointments, 10, pageNum, "appointments");
     } else {
       return false;
     }

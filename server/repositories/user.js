@@ -128,7 +128,14 @@ class UserRepository {
             return 0;
           }
         });
-        return vets;
+        return vets.map((vet) => {
+          if (vet.scheduleVet) {
+            vet.scheduleVet = true;
+          } else {
+            vet.scheduleVet = false;
+          }
+          return vet;
+        });
       } else {
         return false;
       }
@@ -292,22 +299,25 @@ class UserRepository {
       });
       const cityIds = cities.map((city) => city._id);
       query["$or"].push({ city: cityIds });
-      return await User.find(query)
-        .populate("city")
-        .select("-password -__v -createdOn -verified")
-        .lean()
-        .exec();
     } else {
       query = {
         role: roles.Vet,
         moderationVerified: true,
       };
-      return await User.find(query)
-        .populate("city")
-        .select("-password -__v -createdOn -verified")
-        .lean()
-        .exec();
     }
+    const vets = await User.find(query)
+      .populate("city")
+      .select("-password -__v -createdOn -verified")
+      .lean()
+      .exec();
+    return vets.map((vet) => {
+      if (vet.scheduleVet) {
+        vet.scheduleVet = true;
+      } else {
+        vet.scheduleVet = false;
+      }
+      return vet;
+    });
   }
   /**
    * Change email address

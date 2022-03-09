@@ -5,11 +5,13 @@ import {
   faAt,
   faLock,
   faHandHoldingHeart,
+  faClockRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
 import EditProfile from "./ProfileTabs/EditProfile";
 import MyCampaigns from "./ProfileTabs/MyCampaigns";
+import UpcomingAppointments from "./ProfileTabs/UpcomingAppointments";
 import ChangeEmail from "./ProfileTabs/ChangeEmail";
 import ChangePassword from "./ProfileTabs/ChangePassword";
 import PageTitle from "../../components/PageTitle";
@@ -48,6 +50,28 @@ export default class Profile extends React.Component {
             }
           >
             <MyCampaigns />
+          </Tab>
+          <Tab
+            eventKey="upcomingAppointments"
+            title={
+              <p style={{ fontSize: 17, fontWeight: "bold" }}>
+                <FontAwesomeIcon icon={faHandHoldingHeart}></FontAwesomeIcon>{" "}
+                Предстоящи записани часове
+              </p>
+            }
+          >
+            <UpcomingAppointments />
+          </Tab>
+          <Tab
+            eventKey="pastAppointments"
+            title={
+              <p style={{ fontSize: 17, fontWeight: "bold" }}>
+                <FontAwesomeIcon icon={faClockRotateLeft}></FontAwesomeIcon>{" "}
+                Минали записани часове
+              </p>
+            }
+          >
+            <UpcomingAppointments />
           </Tab>
           <Tab
             eventKey="changeEmail"

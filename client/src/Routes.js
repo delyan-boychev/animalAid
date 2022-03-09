@@ -28,6 +28,7 @@ import Contacts from "./pages/Contacts";
 import Vets from "./pages/UserPages/Vets";
 import Vet from "./pages/UserPages/Vet";
 import CreateSchedule from "./pages/VetPages/CreateSchedule";
+import CreateAppointment from "./pages/UserPages/CreateAppointment";
 import EditUser from "./pages/AdminPages/EditUser";
 import EditThread from "./pages/UserPages/EditThread";
 import CreateFundrisingCampaign from "./pages/UserPages/CreateFundrisingCampaign";
@@ -302,6 +303,19 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? (
       <div className="container mt-3">
         <EditFundrisingCampaign />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/user/createAppointment",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <CreateAppointment />
       </div>
     ) : (
       <div className="container mt-3">

@@ -1,4 +1,5 @@
 import {
+  faCalendarDays,
   faChevronCircleLeft,
   faChevronCircleRight,
   faMagnifyingGlassLocation,
@@ -150,6 +151,17 @@ class Vets extends React.Component {
                 </Col>
                 <Col>
                   {vet.name.first} {vet.name.last}
+                  {vet.scheduleVet === true ? (
+                    <span className="text-primary">
+                      {" "}
+                      <FontAwesomeIcon
+                        icon={faCalendarDays}
+                      ></FontAwesomeIcon>{" "}
+                      Опция за запазване на часове
+                    </span>
+                  ) : (
+                    ""
+                  )}
                   <br />
                   <small className="text-muted">
                     {vet.typeAnimals.map(
@@ -159,6 +171,7 @@ class Vets extends React.Component {
                         }`
                     )}
                     <br /> {vet.city.type} {vet.city.name}, {vet.city.region}
+                    <br />
                   </small>
                 </Col>
               </Row>

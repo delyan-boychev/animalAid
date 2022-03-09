@@ -9,6 +9,6 @@ function hoursToNum(string) {
 function numToHours(num) {
   let hours = parseInt(num).toString();
   let minutes = parseInt((num % 1) * 60).toString();
-  return `${hours}:${("0" + minutes).slice(-2)}`;
+  return `${("0" + hours).slice(-2)}:${("0" + minutes).slice(-2)}`;
 }
 module.exports = { hoursToNum, numToHours };

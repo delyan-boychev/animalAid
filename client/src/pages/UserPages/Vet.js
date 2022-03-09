@@ -10,11 +10,13 @@ import {
   faCommentMedical,
   faPhoneAlt,
   faPaw,
+  faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
 import DialogModal from "../../components/DialogModal";
 import PageTitle from "../../components/PageTitle";
+import { Link } from "react-router-dom";
 const client = require("../../clientRequests");
 const API_URL = require("../../config.json").API_URL;
 const animalsTranslate = require("../../enums/animalsTranslate");
@@ -111,8 +113,9 @@ class Vet extends React.Component {
               alt="profilePicture"
             />
           </div>
-          <div className="d-flex flex-row mb-3">
+          <div className="mb-3">
             <Button
+              className="d-inline"
               onClick={() =>
                 this.openModal(
                   `Сигурни ли сте, че искате да започнете чат с ${this.state.vet.name.first} ${this.state.vet.name.last}?`
@@ -124,10 +127,22 @@ class Vet extends React.Component {
             </Button>
             <Button
               onClick={() => window.open(`tel:${this.state.vet.phoneNumber}`)}
-              className="ms-3"
+              className="d-inline ms-3"
             >
               <FontAwesomeIcon icon={faPhoneAlt}></FontAwesomeIcon> Обади се
             </Button>
+            {this.state.vet.scheduleVet !== undefined ? (
+              <Button
+                as={Link}
+                to={`/user/createAppointment?id=${this.state.vet._id}`}
+                className="d-inline ms-3"
+              >
+                <FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon> Запази
+                час
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
           <ListGroup>
             <ListGroup.Item>

@@ -24,9 +24,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   scrollbar-width: thin;
 }
-html,
+html {
+  overflow-x: hidden;
+  height: 100%;
+  margin: 0;
+}
 body {
   overflow-x: hidden;
+  overflow: visible;
   height: 100%;
   margin: 0;
 }
