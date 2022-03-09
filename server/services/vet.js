@@ -74,7 +74,7 @@ class VetService {
     date.setHours(0, 0, 0, 0);
     date.setDate(date.getDate() + 1);
     let date1 = date.getTime();
-    date.setMonth(date.getMonth + 1);
+    date.setDate(date.getDate() + 14);
     let date2 = date.getTime();
     appointment.date = moment(appointment.date, "DD-MM-YYYY").toDate();
     if (
@@ -82,6 +82,20 @@ class VetService {
       date2 >= appointment.date.getTime()
     ) {
       return this.#vetRepository.createAppointment(userId, appointment);
+    } else {
+      return false;
+    }
+  }
+  async getHours(vetId, date) {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + 1);
+    let d1 = d.getTime();
+    d.setDate(d.getDate() + 14);
+    let d2 = d.getTime();
+    date = moment(date, "DD-MM-YYYY").toDate();
+    if (d1 <= date.getTime() && d2 >= date.getTime()) {
+      return this.#vetRepository.getHours(vetId, date);
     } else {
       return false;
     }

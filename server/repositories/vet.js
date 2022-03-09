@@ -75,5 +75,45 @@ class VetRepository {
       return false;
     }
   }
+  async getHours(vetId, date) {
+    try {
+      const vet = await User.findOne({ _id: vetId, role: roles.Vet })
+        .lean()
+        .exec();
+      if (vet !== null) {
+        if (vet.scheduleVet !== undefined) {
+          let day = daysOfWeek[date.getDay()];
+          if (vet.scheduleVet[day].length > 0) {
+            const appointments = await VetAppointment.find({
+              vet: vetId,
+              date,
+            })
+              .lean()
+              .exec();
+            return vet.scheduleVet[day].map((hour) => {
+              let index = appointments.findIndex(
+                (a) => a.hour === hour._id.toString()
+              );
+              if (index === -1) {
+                hour["free"] = true;
+              } else {
+                hour["free"] = false;
+                appointments.splice(index, 1);
+              }
+              return hour;
+            });
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
 }
 module.exports = VetRepository;
