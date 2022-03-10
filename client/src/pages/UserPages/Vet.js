@@ -108,6 +108,7 @@ class Vet extends React.Component {
                   ? `${API_URL}/user/img/${this.state.vet.imgFileName}`
                   : ""
               }
+              crossOrigin={window.location.origin}
               height="150px"
               width="150px"
               alt="profilePicture"

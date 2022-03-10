@@ -2,7 +2,7 @@ import { Form, FloatingLabel, Row, Col } from "react-bootstrap";
 const daysTranslate = require("../../enums/daysTranslate");
 export default function WorkingDay(props) {
   return (
-    <div>
+    <div id={`${props.day}-timing`}>
       <h5>{daysTranslate[props.day]}</h5>
       <hr />
       <Form.Group className="mb-3">

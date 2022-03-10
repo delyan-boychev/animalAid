@@ -32,9 +32,9 @@ class Vets extends React.Component {
       numPages: 0,
       searchQuery: "",
       lastSearchQuery: "",
+      createAppointments: false,
       search: false,
     };
-    this.getVets(1);
   }
   getVets = async (page, search) => {
     let url = `/user/getVets/${page}`;
@@ -42,12 +42,19 @@ class Vets extends React.Component {
       url += `/${encodeURIComponent(this.state.searchQuery)}`;
     else if (search === undefined && this.state.search === true)
       url += `/${this.state.lastSearchQuery}`;
+    if (this.state.createAppointments === true) {
+      url += `?createAppointments=true`;
+    }
     const data = await client.getRequestToken(url);
     if (data !== false) {
       this.setState({ page: page, numPages: data.numPages, vets: data.vets });
     } else {
       this.setState({ page: 1, numPages: 1, vets: [] });
     }
+  };
+  onCheckUncheck = async () => {
+    await this.setState({ createAppointments: !this.state.createAppointments });
+    this.getVets(1);
   };
   handleOnChangeValue = (event) => {
     this.setState({ searchQuery: event.target.value });
@@ -123,6 +130,15 @@ class Vets extends React.Component {
               ></FontAwesomeIcon>{" "}
               Най-близки ветеринарни лекари
             </Button>
+          </Col>
+        </Row>
+        <Row className="mt-3">
+          <Col>
+            <Form.Check
+              label="Опция за запазване на часове"
+              onChange={this.onCheckUncheck}
+              checked={this.state.createAppointments}
+            ></Form.Check>
           </Col>
         </Row>
         {pagination}

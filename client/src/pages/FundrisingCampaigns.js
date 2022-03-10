@@ -154,7 +154,7 @@ class FundrisingCampaigns extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
         ></InfoModal>
-        <PageTitle title="Кампании за набиране на средства" />
+        <PageTitle title="Дарения" />
         <Row>
           <Form onSubmit={this.search} className="mw-75 col-sm-9 mt-3">
             <div className="d-flex">

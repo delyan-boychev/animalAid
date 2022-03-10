@@ -56,9 +56,21 @@ router.get(
         if (pageNum > 0) {
           const searchQuery = req.params.searchQuery;
           if (searchQuery !== undefined) {
-            res.send(await userService.getVets(pageNum, searchQuery));
+            res.send(
+              await userService.getVets(
+                pageNum,
+                searchQuery,
+                req.query.createAppointments === "true"
+              )
+            );
           } else {
-            res.send(await userService.getVets(pageNum));
+            res.send(
+              await userService.getVets(
+                pageNum,
+                undefined,
+                req.query.createAppointments === "true"
+              )
+            );
           }
         } else {
           res.sendStatus(400);

@@ -87,6 +87,9 @@ class VetService {
       return false;
     }
   }
+  async checkVetAndSchedule(vetId) {
+    return await this.#vetRepository.checkVetAndSchedule(vetId);
+  }
   async getHours(vetId, date) {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -97,6 +100,19 @@ class VetService {
     date = moment(date, "DD-MM-YYYY").toDate();
     if (d1 <= date.getTime() && d2 >= date.getTime()) {
       return this.#vetRepository.getHours(vetId, date);
+    } else {
+      return false;
+    }
+  }
+  async getAppointments(vetId, date) {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    let d1 = d.getTime();
+    d.setDate(d.getDate() + 14);
+    let d2 = d.getTime();
+    date = moment(date, "DD-MM-YYYY").toDate();
+    if (d1 <= date.getTime() && d2 >= date.getTime()) {
+      return this.#vetRepository.getAppointmentsByVet(vetId, date);
     } else {
       return false;
     }
@@ -122,6 +138,15 @@ class VetService {
     } else {
       return false;
     }
+  }
+  async removeAppointment(userId, appointmentId) {
+    return await this.#vetRepository.removeAppointment(userId, appointmentId);
+  }
+  async removeAppointmentByVet(vetId, appointmentId) {
+    return await this.#vetRepository.removeAppointmentByVet(
+      vetId,
+      appointmentId
+    );
   }
 }
 module.exports = VetService;

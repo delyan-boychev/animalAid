@@ -160,6 +160,7 @@ class ViewFundrisingCampaign extends React.Component {
                     ? `${API_URL}/user/img/${this.state.campaign.mainPhoto}`
                     : ""
                 }
+                crossOrigin={window.location.origin}
                 alt="Главна снимка"
               />
             </Col>

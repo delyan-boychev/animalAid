@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const roles = require("../models/roles");
 const City = require("../models/city");
+const animalsTranslate = require("../models/animalsTranslate");
 class UserRepository {
   /**
    * Register user
@@ -276,9 +277,15 @@ class UserRepository {
    * @param {String} searchQuery
    * @returns {Object[]}
    */
-  async getVets(searchQuery) {
+  async getVets(searchQuery, createAppointments) {
     let query = {};
     if (searchQuery !== undefined) {
+      let keys = Object.keys(animalsTranslate);
+      let animals = Object.values(animalsTranslate)
+        .filter((animal) => animal.toLowerCase().includes(searchQuery))
+        .map((animal) => {
+          return keys.find((key) => animalsTranslate[key] === animal);
+        });
       query = {
         role: roles.Vet,
         moderationVerified: true,
@@ -288,7 +295,7 @@ class UserRepository {
           { email: { $regex: searchQuery, $options: "i" } },
           { address: { $regex: searchQuery, $options: "i" } },
           { URN: { $regex: searchQuery, $options: "i" } },
-          { typeAnimals: { $regex: searchQuery, $options: "i" } },
+          { typeAnimals: { $in: animals } },
         ],
       };
       const cities = await City.find({
@@ -304,6 +311,9 @@ class UserRepository {
         role: roles.Vet,
         moderationVerified: true,
       };
+    }
+    if (createAppointments === true) {
+      query["scheduleVet"] = { $exists: true };
     }
     const vets = await User.find(query)
       .populate("city")

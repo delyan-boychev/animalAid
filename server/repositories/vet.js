@@ -135,6 +135,71 @@ class VetRepository {
       return false;
     }
   }
+  async getAppointmentsByVet(vetId, date) {
+    try {
+      const vet = await User.findOne({
+        _id: vetId,
+        moderationVerified: true,
+        role: roles.Vet,
+      }).exec();
+      if (vet !== null) {
+        if (vet.scheduleVet !== undefined) {
+          let day = daysOfWeek[date.getDay()];
+          if (vet.scheduleVet[day].length > 0) {
+            const appointments = await VetAppointment.find({
+              vet: vetId,
+              date,
+            })
+              .populate("user", "name email phoneNumber")
+              .lean()
+              .exec();
+            return {
+              hours: vet.scheduleVet[day].map((hour) => {
+                let appointment = appointments.find(
+                  (a) => a.hour === hour._id.toString()
+                );
+                if (appointment !== undefined) {
+                  delete appointment.vet;
+                  delete appointment.hour;
+                  return {
+                    startHour: hour.startHour,
+                    endHour: hour.endHour,
+                    appointment,
+                  };
+                } else {
+                  return { startHour: hour.startHour, endHour: hour.endHour };
+                }
+              }),
+            };
+          } else {
+            return { hours: [] };
+          }
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  async checkVetAndSchedule(vetId) {
+    try {
+      const vet = await User.findOne({
+        _id: vetId,
+        moderationVerified: true,
+        role: roles.Vet,
+      });
+      if (vet !== null) {
+        return { vetExists: true, schedule: vet.scheduleVet !== undefined };
+      } else {
+        return { vetExists: false, schedule: false };
+      }
+    } catch {
+      return { vetExists: false, schedule: false };
+    }
+  }
   async getAppointments(query) {
     try {
       const appointments = await VetAppointment.find(query)
@@ -148,6 +213,38 @@ class VetRepository {
         appointments2.push(app);
       });
       return appointments2;
+    } catch {
+      return false;
+    }
+  }
+  async removeAppointment(userId, appointmentId) {
+    try {
+      const d = await VetAppointment.deleteOne({
+        _id: appointmentId,
+        user: userId,
+        date: { $gt: new Date().toISOString() },
+      }).exec();
+      if (d.deletedCount > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  async removeAppointmentByVet(vetId, appointmentId) {
+    try {
+      const d = await VetAppointment.deleteOne({
+        _id: appointmentId,
+        vet: vetId,
+        date: { $gt: new Date().toISOString() },
+      }).exec();
+      if (d.deletedCount > 0) {
+        return true;
+      } else {
+        return false;
+      }
     } catch {
       return false;
     }

@@ -73,6 +73,7 @@ class FundrisingCampaign extends React.Component {
                     ? `${API_URL}/user/img/${this.state.campaign.mainPhoto}`
                     : ""
                 }
+                crossOrigin={window.location.origin}
                 alt="Главна снимка"
               />
             </Col>
@@ -116,6 +117,7 @@ class FundrisingCampaign extends React.Component {
                         ? `${API_URL}/user/img/${this.state.campaign.user.imgFileName}`
                         : ""
                     }
+                    crossOrigin={window.location.origin}
                     height="60px"
                     weight="60px"
                     alt="avatar"

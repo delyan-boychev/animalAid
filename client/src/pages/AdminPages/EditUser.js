@@ -526,6 +526,7 @@ export default class EditUser extends React.Component {
                   ? `${API_URL}/user/img/${this.state.profile.imgFileName}`
                   : ""
               }
+              crossOrigin={window.location.origin}
               height="150px"
               width="150px"
               alt="profilePicture"

@@ -385,8 +385,11 @@ class UserService {
    * @param {Number} pageNum Number of the page
    * @returns {Object[]}
    */
-  async getVets(pageNum, searchQuery) {
-    const vets = await this.#userRepository.getVets(searchQuery);
+  async getVets(pageNum, searchQuery, createAppointments) {
+    const vets = await this.#userRepository.getVets(
+      searchQuery,
+      createAppointments
+    );
     if (vets !== false) {
       return getPageFromArr(vets, 10, pageNum, "vets");
     }

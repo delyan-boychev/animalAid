@@ -331,6 +331,7 @@ class Thread extends React.Component {
                       ? `${API_URL}/user/img/${this.state.thread.author.imgFileName}`
                       : ""
                   }
+                  crossOrigin={window.location.origin}
                   height="70px"
                   width="70px"
                   alt="profilePicture"
@@ -402,6 +403,7 @@ class Thread extends React.Component {
                           ? `${API_URL}/user/img/${post.author.imgFileName}`
                           : ""
                       }
+                      crossOrigin={window.location.origin}
                       height="70px"
                       width="70px"
                       alt="profilePicture"

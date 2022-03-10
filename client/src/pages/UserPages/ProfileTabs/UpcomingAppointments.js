@@ -3,8 +3,16 @@ import { useNavigate } from "react-router-dom";
 import InfoModal from "../../../components/InfoModal";
 import DialogModal from "../../../components/DialogModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ListGroup, Col, Row, Pagination, Spinner } from "react-bootstrap";
 import {
+  ListGroup,
+  Col,
+  Row,
+  Pagination,
+  Spinner,
+  Button,
+} from "react-bootstrap";
+import {
+  faCalendarMinus,
   faChevronCircleLeft,
   faChevronCircleRight,
 } from "@fortawesome/free-solid-svg-icons";
@@ -59,7 +67,7 @@ class UpcomingAppointments extends React.Component {
     let modal = this.state.modal;
     modal.show = false;
     this.setState({ modal });
-    this.getVets(1);
+    this.getAppointments(1);
   };
   openModal2 = (body, task) => {
     let modal2 = this.state.modal2;
@@ -78,26 +86,21 @@ class UpcomingAppointments extends React.Component {
       date.getMonth() + 1
     ).pad()}-${date.getFullYear()}`;
   };
-  /*moderationVerify = async (email) => {
+  removeAppointment = async (appointmentId) => {
     this.openModal2(
-      `Сигурни ли сте, че искате да одобрите ветеринарен лекар с имейл-${email}?`,
+      `Сигурни ли сте, че искате да отмените часа си за ветеринарен лекар?`,
       async () => {
-        const res = await client.postRequestToken(
-          "/admin/moderationVerifyVet",
-          {
-            email,
-          }
-        );
+        const res = await client.postRequestToken("/vet/removeAppointment", {
+          appointmentId,
+        });
         if (res === true) {
-          this.openModal(
-            `Успешно е одобрен ветеринарен лекар с email адрес-${email}!`
-          );
+          this.openModal(`Часът е отменен успешно!`);
         } else {
           this.openModal("Възникна грешка! Извиняваме се за неудобството!");
         }
       }
     );
-  };*/
+  };
   render() {
     const pagination = (
       <Pagination
@@ -187,6 +190,16 @@ class UpcomingAppointments extends React.Component {
                     , Час: {numToHours(appointment.hour.startHour)}-
                     {numToHours(appointment.hour.endHour)}
                   </span>
+                </Col>
+                <Col sm={1}>
+                  <Button
+                    variant="danger"
+                    onClick={() => {
+                      this.removeAppointment(appointment._id);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCalendarMinus}></FontAwesomeIcon>
+                  </Button>
                 </Col>
               </Row>
             </ListGroup.Item>
