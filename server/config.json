@@ -1,9 +1,8 @@
 {
   "CONNECTION_STRING": "mongodb://animalAid:8R%404E-kLpV7G%24rgV2_VcPqkp%5EVK%2B%3DpvheGx%257LNh@localhost:27017/animalAid?authSource=animalAid&readPreference=primary&appname=animalAid&ssl=false",
-  "ENCRYPTION_KEY": "9EJb5MuYmffLEUrUbMKphDFvCTsDwdEY?&!_MzGXV4yEn9b$hCC3X^Q*w+PFz4yCUc&?R*b3zDymkWv8=wK9FQCc-MRuFK4V#zCp5kjAYLh=xG7husgrU#TphU3VsTQr",
-  "API_URL": "https://animalaidbg.com:8443",
-  "BASE_URL": "https://animalaidbg.com",
-  "PORT": 8443,
+  "API_URL": "https://localhost:4000",
+  "BASE_URL": "http://localhost:3000",
+  "PORT": 4000,
   "EMAIL_INFO": {
     "EMAIL": "bganimalaid@gmail.com",
     "PASSWORD": "nyyjnqksvjgpkqnd",

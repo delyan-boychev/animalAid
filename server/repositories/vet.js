@@ -191,7 +191,6 @@ class VetRepository {
         moderationVerified: true,
         role: roles.Vet,
       });
-      console.log(vet);
       if (vet !== null) {
         return { vetExists: true, schedule: vet.scheduleVet !== undefined };
       } else {
