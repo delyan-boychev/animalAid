@@ -237,6 +237,7 @@ a.text-secondary:focus {
 }
 .cropper {
   height: 500px;
+  max-height: 500px;
 }
 .allChats {
   max-height: 400px;
