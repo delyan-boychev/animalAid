@@ -321,7 +321,7 @@ class Thread extends React.Component {
           <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
         <div hidden={this.state.threadId === ""}>
-          <Card body style={{ wordBreak: "break-word" }}>
+          <Card body className="longText">
             <Row>
               <Col sm={3}>
                 <img
@@ -390,7 +390,7 @@ class Thread extends React.Component {
               role="status"
             ></Spinner>
           </div>
-          <ListGroup style={{ wordBreak: "break-word" }}>
+          <ListGroup className="longText">
             {this.state.posts.map((post) => (
               <ListGroup.Item key={post._id}>
                 <Row>
@@ -510,7 +510,6 @@ class Thread extends React.Component {
                     placeholder="Съдържание"
                     onChange={this.handleOnChangeValue}
                     value={this.state.fields.content}
-                    style={{ resize: "none", height: "200px" }}
                   />
                 </FloatingLabel>
                 <span className="text-danger">{this.state.errors.content}</span>

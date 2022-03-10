@@ -152,7 +152,6 @@ class EditThread extends React.Component {
                 placeholder="Описание"
                 onChange={this.handleOnChangeValue}
                 value={this.state.fields.description}
-                style={{ resize: "none", height: "200px" }}
               />
             </FloatingLabel>
             <span className="text-danger">{this.state.errors.description}</span>

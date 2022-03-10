@@ -145,7 +145,7 @@ class UpcomingAppointments extends React.Component {
             this.state.appointments.length !== 0 || this.state.numPages === 0
           }
         >
-          Няма намерени предстоящи записани часове!
+          Няма намерени предстоящи часове!
         </h4>
         <div className="text-center mt-3" hidden={this.state.numPages > 0}>
           <Spinner animation="border" variant="primary" role="status"></Spinner>
@@ -161,6 +161,7 @@ class UpcomingAppointments extends React.Component {
                     height="60px"
                     weight="60px"
                     alt="avatar"
+                    crossOrigin={window.location.origin}
                   />
                 </Col>
                 <Col>

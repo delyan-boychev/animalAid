@@ -1,5 +1,5 @@
 import { Modal, Button } from "react-bootstrap";
-export default function InfoModal(props) {
+export default function LargeModal(props) {
   return (
     <Modal size="xl" show={props.show} onHide={props.closeModal}>
       <Modal.Header closeButton>

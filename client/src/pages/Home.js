@@ -20,15 +20,8 @@ export default function Home() {
   const token = cookies.get("authorization");
   return (
     <div>
-      <Carousel style={{ height: "500px" }}>
-        <Carousel.Item
-          style={{
-            height: "500px",
-            backgroundImage: `url(/images/home1.webp)`,
-            backgroundPosition: "50% 20%",
-            backgroundSize: "cover",
-          }}
-        >
+      <Carousel>
+        <Carousel.Item className="homeImg1">
           <Carousel.Caption>
             <div className="container text-center text-secondary mt-5">
               <h1 className="text-shadow-big">
@@ -41,14 +34,11 @@ export default function Home() {
                 <FontAwesomeIcon
                   icon={faPaw}
                   className="text-primary mt-3"
-                  style={{ fontSize: "70px" }}
+                  size="3x"
                 ></FontAwesomeIcon>
               </h2>
               <NavLink to={token === undefined ? "/register" : "/user/profile"}>
-                <div
-                  className="btn btn-primary mt-5 fw-bold"
-                  style={{ fontSize: "18px" }}
-                >
+                <div className="btn btn-primary mt-5 fw-bold">
                   <FontAwesomeIcon icon={faPlayCircle}></FontAwesomeIcon>{" "}
                   Започни сега
                 </div>
@@ -56,14 +46,7 @@ export default function Home() {
             </div>
           </Carousel.Caption>
         </Carousel.Item>
-        <Carousel.Item
-          style={{
-            height: "500px",
-            backgroundImage: `url(/images/home2.webp)`,
-            backgroundPosition: "50% 20%",
-            backgroundSize: "cover",
-          }}
-        >
+        <Carousel.Item className="homeImg2">
           <Carousel.Caption>
             <div className="container text-center text-secondary mt-5">
               <h2 className="text-shadow-big mt-3">
@@ -72,14 +55,11 @@ export default function Home() {
                 <FontAwesomeIcon
                   icon={faHandHoldingHeart}
                   className="text-primary mt-3"
-                  style={{ fontSize: "70px" }}
+                  size="3x"
                 ></FontAwesomeIcon>
               </h2>
               <NavLink to="/about">
-                <div
-                  className="btn btn-primary mt-5 fw-bold"
-                  style={{ fontSize: "18px" }}
-                >
+                <div className="btn btn-primary mt-5 fw-bold">
                   <FontAwesomeIcon icon={faBookOpen}></FontAwesomeIcon> Прочети
                   повече
                 </div>
@@ -87,14 +67,7 @@ export default function Home() {
             </div>
           </Carousel.Caption>
         </Carousel.Item>
-        <Carousel.Item
-          style={{
-            height: "500px",
-            backgroundImage: `url(/images/home3.webp)`,
-            backgroundPosition: "50% 80%",
-            backgroundSize: "cover",
-          }}
-        >
+        <Carousel.Item className="homeImg3">
           <Carousel.Caption>
             <div className="container text-center text-secondary mt-5">
               <h2 className="text-shadow-big mt-3">
@@ -104,14 +77,11 @@ export default function Home() {
                 <FontAwesomeIcon
                   icon={faLightbulb}
                   className="text-primary mt-3"
-                  style={{ fontSize: "70px" }}
+                  size="3x"
                 ></FontAwesomeIcon>
               </h2>
               <NavLink to="/contacts">
-                <div
-                  className="btn btn-primary mt-5 fw-bold"
-                  style={{ fontSize: "18px" }}
-                >
+                <div className="btn btn-primary mt-5 fw-bold">
                   <FontAwesomeIcon icon={faPhoneAlt}></FontAwesomeIcon> Свържи
                   се
                 </div>
@@ -183,8 +153,8 @@ export default function Home() {
             <img
               src={`/images/logoReverse.webp`}
               className="d-block mx-lg-auto img-fluid"
-              alt="Bootstrap Themes"
-              style={{ width: "310px" }}
+              alt="reverseLogo"
+              width="300px"
             />
           </div>
           <div className="col-lg-6">

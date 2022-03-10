@@ -159,16 +159,13 @@ export default class ChangeForgotPassword extends React.Component {
             </Card>
           </div>
         ) : (
-          <div>
-            <h1 className="text-center">
+          <div className="display-5">
+            <div className="text-center">
               Линкът за смяна на паролата е невалиден!
-            </h1>
-            <p
-              style={{ fontSize: "150px" }}
-              className="text-center text-primary"
-            >
-              <FontAwesomeIcon icon={faTimesCircle}></FontAwesomeIcon>
-            </p>
+            </div>
+            <div className="text-center text-primary">
+              <FontAwesomeIcon icon={faTimesCircle} size="2x"></FontAwesomeIcon>
+            </div>
           </div>
         )}
       </div>

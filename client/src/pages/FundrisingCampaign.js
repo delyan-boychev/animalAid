@@ -83,7 +83,7 @@ class FundrisingCampaign extends React.Component {
                 на:{" "}
                 {this.formatDate(new Date(this.state.campaign.expireAt * 1000))}
               </div>
-              <div className="h6" style={{ wordBreak: "break-word" }}>
+              <div className="h6 longText">
                 {this.state.campaign.fullDescription}
               </div>
               <div className="h4 text-center text-primary">
@@ -139,6 +139,7 @@ class FundrisingCampaign extends React.Component {
                 <div key={photo}>
                   <img
                     src={`${API_URL}/user/img/${photo}`}
+                    crossOrigin={window.location.origin}
                     className="img-thumbnail mt-2"
                     alt="Допълнителни снимки"
                   />

@@ -86,21 +86,18 @@ class FundrisingCampaigns extends React.Component {
                 <Card.Img
                   variant="top"
                   src={`${API_URL}/user/img/${campaign.mainPhoto}`}
+                  crossOrigin={window.location.origin}
                 />
                 <Card.Body>
-                  <Card.Title style={{ wordBreak: "break-word" }}>
-                    {campaign.title}
-                  </Card.Title>
-                  <Card.Text
-                    style={{ fontSize: "14px" }}
-                    className="text-muted"
-                  >
+                  <Card.Title className="longText">{campaign.title}</Card.Title>
+                  <Card.Text className="text-muted">
                     <span className="fw-bold">
                       <CampaignStatus
                         moderationVerified={campaign.moderationVerified}
                         completed={campaign.completed}
                         rejectedComment={campaign.rejectedComment}
                       />
+                      <br />
                       {campaign.rejectedComment !== "" ? (
                         <span>Причини: {campaign.rejectedComment}</span>
                       ) : (

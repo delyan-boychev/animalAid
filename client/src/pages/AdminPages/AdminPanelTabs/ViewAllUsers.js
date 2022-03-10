@@ -132,6 +132,7 @@ class ViewAllUsers extends React.Component {
                     height="60px"
                     weight="60px"
                     alt="avatar"
+                    crossOrigin={window.location.origin}
                   />
                 </Col>
                 <Col>

@@ -29,6 +29,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../../extensionFunctions/formatNumber";
+import LargeModal from "../../../components/LargeModal";
 const arrayCompare = require("../../../extensionFunctions/arrayCompare");
 const client = require("../../../clientRequests");
 const roles = require("../../../enums/roles");
@@ -419,9 +420,9 @@ export default class EditProfile extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
         ></InfoModal>
-        <InfoModal
+        <LargeModal
           body={
-            <div style={{ height: "500px" }}>
+            <div className="cropper">
               <Cropper
                 image={
                   this.state.profile.image !== null
@@ -440,7 +441,7 @@ export default class EditProfile extends React.Component {
           show={this.state.modal2.show}
           title={this.state.modal2.title}
           closeModal={this.closeModal2}
-        ></InfoModal>
+        ></LargeModal>
         <div
           className="text-center"
           hidden={this.state.lastProfile.name.first !== ""}
@@ -456,6 +457,7 @@ export default class EditProfile extends React.Component {
                   ? `${API_URL}/user/img/${this.state.profile.imgFileName}`
                   : ""
               }
+              crossOrigin={window.location.origin}
               height="150px"
               width="150px"
               alt="profilePicture"
@@ -746,7 +748,6 @@ export default class EditProfile extends React.Component {
                         placeholder="Описание на вертеринарния лекар"
                         onChange={this.onChangeValue}
                         value={this.state.profile.vetDescription}
-                        style={{ resize: "none", height: "200px" }}
                       />
                       <span className="text-danger">
                         {this.state.errors.vetDescription}
@@ -873,11 +874,6 @@ export default class EditProfile extends React.Component {
                       }) => (
                         <div className="upload__image-wrapper d-flex">
                           <Button
-                            style={
-                              isDragging
-                                ? { backgroundColor: "red" }
-                                : undefined
-                            }
                             className="mt-3 me-3"
                             onClick={onImageUpload}
                             {...dragProps}

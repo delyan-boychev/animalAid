@@ -7,6 +7,7 @@ import ImageUploading from "react-images-uploading";
 import Cropper from "react-easy-crop";
 import PageTitle from "../../components/PageTitle";
 import { faUpload, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import LargeModal from "../../components/LargeModal";
 const client = require("../../clientRequests");
 class CreateFundrisingCampaign extends React.Component {
   submitted = false;
@@ -332,9 +333,9 @@ class CreateFundrisingCampaign extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
         ></InfoModal>
-        <InfoModal
+        <LargeModal
           body={
-            <div style={{ height: "500px" }}>
+            <div className="cropper">
               <Cropper
                 image={
                   this.state.fields.image !== null
@@ -353,7 +354,7 @@ class CreateFundrisingCampaign extends React.Component {
           show={this.state.modal2.show}
           title={this.state.modal2.title}
           closeModal={this.closeModal2}
-        ></InfoModal>
+        ></LargeModal>
         <Form onSubmit={this.submitForm}>
           <Row className="mb-3">
             <Form.Group>
@@ -379,7 +380,6 @@ class CreateFundrisingCampaign extends React.Component {
                   placeholder="Кратко описание"
                   onChange={this.handleOnChangeValue}
                   value={this.state.fields.shortDescription}
-                  style={{ resize: "none", height: "150px" }}
                 />
               </FloatingLabel>
               <span className="text-danger">
@@ -395,7 +395,6 @@ class CreateFundrisingCampaign extends React.Component {
                   placeholder="Пълно описание"
                   onChange={this.handleOnChangeValue}
                   value={this.state.fields.fullDescription}
-                  style={{ resize: "none", height: "220px" }}
                 />
               </FloatingLabel>
               <span className="text-danger">
@@ -455,9 +454,6 @@ class CreateFundrisingCampaign extends React.Component {
                 }) => (
                   <div className="upload__image-wrapper d-flex">
                     <Button
-                      style={
-                        isDragging ? { backgroundColor: "red" } : undefined
-                      }
                       className="mt-3 me-3"
                       onClick={onImageUpload}
                       {...dragProps}
@@ -495,9 +491,6 @@ class CreateFundrisingCampaign extends React.Component {
                 }) => (
                   <div className="upload__image-wrapper d-flex">
                     <Button
-                      style={
-                        isDragging ? { backgroundColor: "red" } : undefined
-                      }
                       className="mt-3 me-3"
                       onClick={onImageUpload}
                       {...dragProps}
@@ -537,9 +530,6 @@ class CreateFundrisingCampaign extends React.Component {
                 }) => (
                   <div className="upload__image-wrapper d-flex">
                     <Button
-                      style={
-                        isDragging ? { backgroundColor: "red" } : undefined
-                      }
                       className="mt-3 me-3"
                       onClick={onImageUpload}
                       {...dragProps}

@@ -17,18 +17,12 @@ export default function Header() {
     if (isMobile) setOpen(!open);
   };
   return (
-    <Navbar
-      bg="primary"
-      style={{ boxShadow: "0 7px 10px 0 rgba(0,0,0,0.7)", zIndex: "2" }}
-      variant="dark"
-      expand="lg"
-    >
+    <Navbar bg="primary" className="navbar-shadow" variant="dark" expand="xl">
       <Navbar.Brand as={Link} to="/" className="text-secondary ms-3">
         <img
           src={`/images/logo.webp`}
           alt="logo"
-          style={{ maxHeight: "70px" }}
-          className="logo-shadow"
+          className="logo-shadow logo-nav"
         ></img>
       </Navbar.Brand>
       <Navbar.Toggle onClick={() => setOpen(!open)} />
@@ -38,7 +32,7 @@ export default function Header() {
         aria-expanded={open}
         in={open}
       >
-        <Nav className="text-secondary ms-3" style={{ fontSize: "21px" }}>
+        <Nav className="text-secondary ms-3 h5">
           <Nav.Link
             as={NavLink}
             to="/"
@@ -88,11 +82,11 @@ export default function Header() {
           >
             <span className="nav-link-effect shadow-navbar">
               <FontAwesomeIcon icon={faHandHoldingHeart}></FontAwesomeIcon>{" "}
-              Кампании за дарение
+              Дарения
             </span>
           </Nav.Link>
         </Nav>
-        <hr className="d-lg-none border-white" style={{ width: "95%" }} />
+        <hr className="d-lg-none border-white" />
         <LoginAndRegPartial onClick={autoCloseCollapse}></LoginAndRegPartial>
       </Navbar.Collapse>
     </Navbar>

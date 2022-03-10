@@ -35,7 +35,7 @@ export default function LoginAndRegPartial(props) {
   };
   if (token === undefined) {
     return (
-      <div style={{ fontSize: "20px" }}>
+      <div className="h5">
         <Nav.Link
           as={Link}
           to="/login"
@@ -55,40 +55,32 @@ export default function LoginAndRegPartial(props) {
           className="ms-3"
           variant="primary"
           title={
-            <span
-              style={{ fontSize: "20px" }}
-              className="fw-bold shadow-navbar"
-            >
+            <span className="fw-bold shadow-navbar h5">
               <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Профил
             </span>
           }
         >
           {profile ? (
             <div>
-              <Dropdown.Item
-                style={{ fontSize: "20px" }}
-                className="text-primary fw-bold"
-              >
+              <Dropdown.Item className="text-primary fw-bold h5">
                 {profile.name.first} {profile.name.last}
               </Dropdown.Item>
               <Dropdown.Divider></Dropdown.Divider>
               <Dropdown.Item
-                style={{ fontSize: "19px" }}
                 eventKey="1"
                 as={Link}
                 to="/user/profile"
-                className="text-primary"
+                className="text-primary h5"
                 onClick={props.onClick}
               >
                 <FontAwesomeIcon icon={faUser}></FontAwesomeIcon> Моят профил
               </Dropdown.Item>
               {profile.role === roles.Admin ? (
                 <Dropdown.Item
-                  style={{ fontSize: "19px" }}
                   eventKey="1"
                   as={Link}
                   to="/admin/adminPanel"
-                  className="text-primary"
+                  className="text-primary h5"
                   onClick={props.onClick}
                 >
                   <FontAwesomeIcon icon={faUsersCog}></FontAwesomeIcon>{" "}
@@ -99,11 +91,10 @@ export default function LoginAndRegPartial(props) {
               )}
               {profile.role !== roles.Vet ? (
                 <Dropdown.Item
-                  style={{ fontSize: "19px" }}
                   eventKey="1"
                   as={Link}
                   to="/user/vets"
-                  className="text-primary"
+                  className="text-primary h5"
                   onClick={props.onClick}
                 >
                   <FontAwesomeIcon icon={faUserMd}></FontAwesomeIcon>{" "}
@@ -113,19 +104,17 @@ export default function LoginAndRegPartial(props) {
                 ""
               )}
               <Dropdown.Item
-                style={{ fontSize: "19px" }}
                 eventKey="1"
                 as={Link}
                 to="/user/chats"
-                className="text-primary"
+                className="text-primary h5"
                 onClick={props.onClick}
               >
                 <FontAwesomeIcon icon={faComments}></FontAwesomeIcon> Чатове
               </Dropdown.Item>
               <Dropdown.Item
-                style={{ fontSize: "19px" }}
                 onClick={logout}
-                className="text-primary"
+                className="text-primary h5"
                 eventKey="2"
               >
                 <FontAwesomeIcon icon={faSignOutAlt}></FontAwesomeIcon> Изход

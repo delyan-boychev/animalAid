@@ -157,7 +157,7 @@ class ViewFundrisingCampaignAdmin extends React.Component {
     }
   };
   approveCampaign = async () => {
-    const res = client.postRequestToken(
+    const res = await client.postRequestToken(
       "/admin/moderationVerifyFundrisingCampaign",
       {
         campaignId: this.state.campaign._id,
@@ -234,10 +234,10 @@ class ViewFundrisingCampaignAdmin extends React.Component {
                   : "Кампанията е приключила на:"}{" "}
                 {this.formatDate(new Date(this.state.campaign.expireAt * 1000))}
               </div>
-              <div className="h6" style={{ wordBreak: "break-word" }}>
+              <div className="h6 longText">
                 Кратко описание: {this.state.campaign.shortDescription}
               </div>
-              <div className="h6" style={{ wordBreak: "break-word" }}>
+              <div className="h6 longText">
                 Пълно описание: {this.state.campaign.fullDescription}
               </div>
               <div className="h4 text-center text-primary">
@@ -295,7 +295,6 @@ class ViewFundrisingCampaignAdmin extends React.Component {
                               placeholder="Коментар"
                               onChange={this.handleOnChangeRejectedComment}
                               value={this.state.rejectedComment}
-                              style={{ resize: "none", height: "100px" }}
                             />
                           </FloatingLabel>
                           <span className="text-danger">
@@ -366,6 +365,7 @@ class ViewFundrisingCampaignAdmin extends React.Component {
                     src={`${API_URL}/admin/document/${photo}?token=${token}`}
                     className="img-thumbnail mt-2"
                     alt="Снимки на документи за плащане"
+                    crossOrigin={window.location.origin}
                   />
                 </div>
               );
@@ -380,6 +380,7 @@ class ViewFundrisingCampaignAdmin extends React.Component {
                     src={`${API_URL}/user/img/${photo}`}
                     className="img-thumbnail mt-2"
                     alt="Допълнителни снимки"
+                    crossOrigin={window.location.origin}
                   />
                 </div>
               );

@@ -73,29 +73,8 @@ class FundrisingCampaigns extends React.Component {
     modal2.show = false;
     this.setState({ modal2 });
   };
-  /*onDeleteThread = (id) => {
-    const thread = this.state.campaigns.find((thread) => thread._id === id);
-    if (thread !== undefined) {
-      this.openModal2(
-        `Сигурни ли сте, че искате да изтриете темата-${thread.topic}?`,
-        () => {
-          this.deleteThread(id);
-        }
-      );
-    }
-  };
-  deleteThread = async (id) => {
-    const deleteThread = await client.postRequestToken("/admin/deleteThread", {
-      threadId: id,
-    });
-    if (deleteThread === true) {
-      this.openModal("Темата е изтрита успешно!");
-    } else {
-      this.openModal("Не успяхме да изтрием темата!");
-    }
-  };*/
   componentDidMount() {
-    document.title = "Кампании за набиране на средства";
+    document.title = "Дарения";
     this.getCampaigns(1);
     this.getUserIdAndRole();
   }
@@ -234,15 +213,11 @@ class FundrisingCampaigns extends React.Component {
                 <Card.Img
                   variant="top"
                   src={`${API_URL}/user/img/${campaign.mainPhoto}`}
+                  crossOrigin={window.location.origin}
                 />
                 <Card.Body>
-                  <Card.Title style={{ wordBreak: "break-word" }}>
-                    {campaign.title}
-                  </Card.Title>
-                  <Card.Text
-                    style={{ wordBreak: "break-word", fontSize: "14px" }}
-                    className="text-muted"
-                  >
+                  <Card.Title className="longText">{campaign.title}</Card.Title>
+                  <Card.Text className="text-muted longText">
                     {campaign.shortDescription}
                   </Card.Text>
                 </Card.Body>

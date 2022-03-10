@@ -12,6 +12,7 @@ import "../../extensionFunctions/formatNumber";
 import EditProfile from "./ProfileTabs/EditProfile";
 import MyCampaigns from "./ProfileTabs/MyCampaigns";
 import UpcomingAppointments from "./ProfileTabs/UpcomingAppointments";
+import PastAppointments from "./ProfileTabs/PastAppointments";
 import ChangeEmail from "./ProfileTabs/ChangeEmail";
 import ChangePassword from "./ProfileTabs/ChangePassword";
 import PageTitle from "../../components/PageTitle";
@@ -32,7 +33,7 @@ export default class Profile extends React.Component {
           <Tab
             eventKey="profileInfo"
             title={
-              <p style={{ fontSize: 17, fontWeight: "bold" }}>
+              <p className="fw-bold">
                 <FontAwesomeIcon icon={faInfoCircle}></FontAwesomeIcon>{" "}
                 Информация за профила
               </p>
@@ -43,7 +44,7 @@ export default class Profile extends React.Component {
           <Tab
             eventKey="myCampaigns"
             title={
-              <p style={{ fontSize: 17, fontWeight: "bold" }}>
+              <p className="fw-bold">
                 <FontAwesomeIcon icon={faHandHoldingHeart}></FontAwesomeIcon>{" "}
                 Моите кампании
               </p>
@@ -54,9 +55,9 @@ export default class Profile extends React.Component {
           <Tab
             eventKey="upcomingAppointments"
             title={
-              <p style={{ fontSize: 17, fontWeight: "bold" }}>
+              <p className="fw-bold">
                 <FontAwesomeIcon icon={faHandHoldingHeart}></FontAwesomeIcon>{" "}
-                Предстоящи записани часове
+                Предстоящи часове
               </p>
             }
           >
@@ -65,18 +66,18 @@ export default class Profile extends React.Component {
           <Tab
             eventKey="pastAppointments"
             title={
-              <p style={{ fontSize: 17, fontWeight: "bold" }}>
+              <p className="fw-bold">
                 <FontAwesomeIcon icon={faClockRotateLeft}></FontAwesomeIcon>{" "}
-                Минали записани часове
+                Минали часове
               </p>
             }
           >
-            <UpcomingAppointments />
+            <PastAppointments />
           </Tab>
           <Tab
             eventKey="changeEmail"
             title={
-              <p style={{ fontSize: 17, fontWeight: "bold" }}>
+              <p className="fw-bold">
                 <FontAwesomeIcon icon={faAt}></FontAwesomeIcon> Промяна на имейл
                 адрес
               </p>
@@ -87,7 +88,7 @@ export default class Profile extends React.Component {
           <Tab
             eventKey="changePassword"
             title={
-              <p style={{ fontSize: 17, fontWeight: "bold" }}>
+              <p className="fw-bold">
                 <FontAwesomeIcon icon={faLock}></FontAwesomeIcon> Промяна на
                 парола
               </p>

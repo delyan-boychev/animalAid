@@ -2,6 +2,7 @@ import React from "react";
 import $ from "jquery";
 import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
 import InfoModal from "../components/InfoModal";
+import LargeModal from "../components/LargeModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSyncAlt,
@@ -362,9 +363,9 @@ class RegisterVet extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
         ></InfoModal>
-        <InfoModal
+        <LargeModal
           body={
-            <div style={{ height: "500px" }}>
+            <div className="cropper">
               <Cropper
                 image={
                   this.state.fields.image !== null
@@ -383,7 +384,7 @@ class RegisterVet extends React.Component {
           show={this.state.modal2.show}
           title={this.state.modal2.title}
           closeModal={this.closeModal2}
-        ></InfoModal>
+        ></LargeModal>
         <Form onSubmit={this.submitForm}>
           <Row>
             <Form.Group as={Col} sm className="mb-3">
@@ -539,7 +540,6 @@ class RegisterVet extends React.Component {
                   placeholder="Описание на вертеринарния лекар"
                   onChange={this.handleOnChangeValue}
                   value={this.state.fields.vetDescription}
-                  style={{ resize: "none", height: "200px" }}
                 />
               </FloatingLabel>
               <span className="text-danger">
@@ -624,9 +624,6 @@ class RegisterVet extends React.Component {
                 }) => (
                   <div className="upload__image-wrapper d-flex">
                     <Button
-                      style={
-                        isDragging ? { backgroundColor: "red" } : undefined
-                      }
                       className="mt-3 me-3"
                       onClick={onImageUpload}
                       {...dragProps}

@@ -1,4 +1,6 @@
 const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
 const cron = require("node-cron");
 const config = require("./config.json");
 const mongoose = require("mongoose");
@@ -7,7 +9,6 @@ const cronJobs = require("./cronJobs");
 const compression = require("compression");
 const app = express();
 const fs = require("fs");
-var cors = require("cors");
 const privateKey = fs.readFileSync("./ssl/key.pem", "utf8");
 const certificate = fs.readFileSync("./ssl/cert.pem", "utf8");
 const updateCaptchaEncryption =
@@ -28,7 +29,7 @@ const credentials = {
 const httpServer = require("https").createServer(credentials, app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: [config.BASE_URL],
+    origin: [config.BASE_URL, config.API_URL],
   },
 });
 const onConnection = require("./chatSockets")(io);
@@ -36,7 +37,38 @@ io.on("connection", onConnection);
 app.disable("x-powered-by");
 app.use(compression());
 app.use(bodyParse);
-app.use(cors());
+app.use(cors({ origin: [config.API_URL, config.BASE_URL] }));
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: false,
+    directives: {
+      defaultSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        config.BASE_URL,
+        config.API_URL,
+      ],
+      scriptSrc: ["'self'", config.BASE_URL, config.BASE_URL, config.API_URL],
+      objectSrc: ["'none'"],
+      "style-src": null,
+      upgradeInsecureRequests: [],
+    },
+  })
+);
+app.use(helmet.crossOriginEmbedderPolicy());
+app.use(helmet.crossOriginOpenerPolicy());
+app.use(helmet.crossOriginResourcePolicy());
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.expectCt());
+app.use(helmet.frameguard());
+app.use(helmet.hidePoweredBy());
+app.use(helmet.hsts());
+app.use(helmet.ieNoOpen());
+app.use(helmet.noSniff());
+app.use(helmet.originAgentCluster());
+app.use(helmet.permittedCrossDomainPolicies());
+app.use(helmet.referrerPolicy());
+app.use(helmet.xssFilter());
 app.use("/user", userRoute);
 app.use("/captcha", captchaRoute);
 app.use("/admin", adminRoute);

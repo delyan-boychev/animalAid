@@ -46,6 +46,7 @@ a.text-secondary:focus {
   color: #ffffff !important;
 }
 .nav-link-effect {
+  padding: 5px;
   display: inline-block;
   position: relative;
   color: #ffffff;
@@ -198,4 +199,52 @@ a.text-secondary:focus {
 .row-flex {
   display: flex;
   flex-wrap: wrap;
+}
+.navbar-shadow {
+  box-shadow: 0 7px 10px 0 rgba(0, 0, 0, 0.7);
+  z-index: 2;
+}
+.logo-nav {
+  max-height: 70px;
+}
+.line {
+  height: 10px;
+  opacity: 100%;
+  width: 30%;
+  border: 2px solid;
+  border-radius: 5px;
+}
+.longText {
+  word-break: break-word;
+}
+.homeImg1 {
+  height: 500px;
+  background-image: url("/img/home1.webp");
+  background-position: 50% 20%;
+  background-size: cover;
+}
+.homeImg2 {
+  height: 500px;
+  background-image: url("/img/home2.webp");
+  background-position: 50% 20%;
+  background-size: cover;
+}
+.homeImg3 {
+  height: 500px;
+  background-image: url("/img/home3.webp");
+  background-position: 50% 20%;
+  background-size: cover;
+}
+.cropper {
+  height: 500px;
+}
+.allChats {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+.message-80 {
+  max-width: 80%;
+}
+.message-100 {
+  max-width: 80%;
 }

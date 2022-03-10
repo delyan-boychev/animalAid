@@ -34,8 +34,8 @@ export default class VerifyProfile extends React.Component {
       <div>
         <div hidden={this.state.verificationComplete !== true}>
           <h1 className="text-center">Профилът е потвърден успешно!</h1>
-          <p style={{ fontSize: "150px" }} className="text-center text-primary">
-            <FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon>
+          <p className="text-center text-primary display-5">
+            <FontAwesomeIcon icon={faCheckCircle} size="2x"></FontAwesomeIcon>
           </p>
         </div>
         <div
@@ -47,8 +47,8 @@ export default class VerifyProfile extends React.Component {
           <h1 className="text-center">
             Линкът за потвърждаване на профила е невалиден!
           </h1>
-          <p style={{ fontSize: "150px" }} className="text-center text-primary">
-            <FontAwesomeIcon icon={faTimesCircle}></FontAwesomeIcon>
+          <p className="text-center text-primary">
+            <FontAwesomeIcon icon={faTimesCircle} size="2x"></FontAwesomeIcon>
           </p>
         </div>
       </div>

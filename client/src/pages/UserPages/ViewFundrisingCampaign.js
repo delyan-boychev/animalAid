@@ -172,10 +172,10 @@ class ViewFundrisingCampaign extends React.Component {
                   : "Кампанията е приключила на:"}{" "}
                 {this.formatDate(new Date(this.state.campaign.expireAt * 1000))}
               </div>
-              <div className="h6" style={{ wordBreak: "break-word" }}>
+              <div className="h6 longText">
                 Кратко описание: {this.state.campaign.shortDescription}
               </div>
-              <div className="h6" style={{ wordBreak: "break-word" }}>
+              <div className="h6 longText">
                 Пълно описание: {this.state.campaign.fullDescription}
               </div>
               <div className="h4 text-center text-primary">
@@ -262,6 +262,7 @@ class ViewFundrisingCampaign extends React.Component {
                     src={`${API_URL}/fundrisingCampaign/document/${this.state.campaign._id}/${photo}?token=${token}`}
                     className="img-thumbnail mt-2"
                     alt="Снимки на документи за плащане"
+                    crossOrigin={window.location.origin}
                   />
                 </div>
               );
@@ -276,6 +277,7 @@ class ViewFundrisingCampaign extends React.Component {
                     src={`${API_URL}/user/img/${photo}`}
                     className="img-thumbnail mt-2"
                     alt="Допълнителни снимки"
+                    crossOrigin={window.location.origin}
                   />
                 </div>
               );

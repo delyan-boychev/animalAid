@@ -13,6 +13,7 @@ import ImageUploading from "react-images-uploading";
 import Cropper from "react-easy-crop";
 import PageTitle from "../../components/PageTitle";
 import InfoModal from "../../components/InfoModal";
+import LargeModal from "../../components/LargeModal";
 const client = require("../../clientRequests");
 export default class EditFundrisingCampaign extends React.Component {
   constructor(props) {
@@ -368,9 +369,9 @@ export default class EditFundrisingCampaign extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
         ></InfoModal>
-        <InfoModal
+        <LargeModal
           body={
-            <div style={{ height: "500px" }}>
+            <div className="cropper">
               <Cropper
                 image={
                   this.state.campaign.image !== null
@@ -389,7 +390,7 @@ export default class EditFundrisingCampaign extends React.Component {
           show={this.state.modal2.show}
           title={this.state.modal2.title}
           closeModal={this.closeModal2}
-        ></InfoModal>
+        ></LargeModal>
         <div className="text-center" hidden={this.state.campaign.title !== ""}>
           <Spinner animation="border" variant="primary" role="status"></Spinner>
         </div>
@@ -433,7 +434,6 @@ export default class EditFundrisingCampaign extends React.Component {
                     placeholder="Кратко описание"
                     onChange={this.handleOnChangeValue}
                     value={this.state.campaign.shortDescription}
-                    style={{ resize: "none", height: "150px" }}
                   />
                 </FloatingLabel>
                 <span className="text-danger">
@@ -467,7 +467,6 @@ export default class EditFundrisingCampaign extends React.Component {
                     placeholder="Пълно описание"
                     onChange={this.handleOnChangeValue}
                     value={this.state.campaign.fullDescription}
-                    style={{ resize: "none", height: "220px" }}
                   />
                 </FloatingLabel>
                 <span className="text-danger">
@@ -571,9 +570,6 @@ export default class EditFundrisingCampaign extends React.Component {
                   }) => (
                     <div className="upload__image-wrapper d-flex">
                       <Button
-                        style={
-                          isDragging ? { backgroundColor: "red" } : undefined
-                        }
                         className="mt-3 me-3"
                         onClick={onImageUpload}
                         {...dragProps}
@@ -630,9 +626,6 @@ export default class EditFundrisingCampaign extends React.Component {
                   }) => (
                     <div className="upload__image-wrapper d-flex">
                       <Button
-                        style={
-                          isDragging ? { backgroundColor: "red" } : undefined
-                        }
                         className="mt-3 me-3"
                         onClick={onImageUpload}
                         {...dragProps}
@@ -691,9 +684,6 @@ export default class EditFundrisingCampaign extends React.Component {
                   }) => (
                     <div className="upload__image-wrapper d-flex">
                       <Button
-                        style={
-                          isDragging ? { backgroundColor: "red" } : undefined
-                        }
                         className="mt-3 me-3"
                         onClick={onImageUpload}
                         {...dragProps}

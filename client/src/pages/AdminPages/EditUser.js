@@ -3,6 +3,7 @@ import $ from "jquery";
 import InfoModal from "../../components/InfoModal";
 import ImageUploading from "react-images-uploading";
 import Cropper from "react-easy-crop";
+import LargeModal from "../../components/LargeModal";
 import {
   ListGroup,
   Button,
@@ -486,9 +487,9 @@ export default class EditUser extends React.Component {
           body={this.state.modal.body}
           closeModal={this.closeModal}
         ></InfoModal>
-        <InfoModal
+        <LargeModal
           body={
-            <div style={{ height: "500px" }}>
+            <div className="cropper">
               <Cropper
                 image={
                   this.state.profile.image !== null
@@ -507,7 +508,7 @@ export default class EditUser extends React.Component {
           show={this.state.modal2.show}
           title={this.state.modal2.title}
           closeModal={this.closeModal2}
-        ></InfoModal>
+        ></LargeModal>
         <h3
           hidden={
             this.state.lastProfile.name.first !== "" || this.state.id === ""
@@ -846,7 +847,6 @@ export default class EditUser extends React.Component {
                         placeholder="Описание на вертеринарния лекар"
                         onChange={this.onChangeValue}
                         value={this.state.profile.vetDescription}
-                        style={{ resize: "none", height: "200px" }}
                       />
                       <span className="text-danger">
                         {this.state.errors.vetDescription}
@@ -1046,11 +1046,6 @@ export default class EditUser extends React.Component {
                       }) => (
                         <div className="upload__image-wrapper d-flex">
                           <Button
-                            style={
-                              isDragging
-                                ? { backgroundColor: "red" }
-                                : undefined
-                            }
                             className="mt-3 me-3"
                             onClick={onImageUpload}
                             {...dragProps}

@@ -130,15 +130,11 @@ class ViewCampaignsForModerationVerify extends React.Component {
                 <Card.Img
                   variant="top"
                   src={`${API_URL}/user/img/${campaign.mainPhoto}`}
+                  crossOrigin={window.location.origin}
                 />
                 <Card.Body>
-                  <Card.Title style={{ wordBreak: "break-word" }}>
-                    {campaign.title}
-                  </Card.Title>
-                  <Card.Text
-                    style={{ fontSize: "14px", wordBreak: "break-word" }}
-                    className="text-muted"
-                  >
+                  <Card.Title className="longText">{campaign.title}</Card.Title>
+                  <Card.Text className="text-muted longText">
                     {campaign.shortDescription}
                   </Card.Text>
                 </Card.Body>

@@ -420,7 +420,6 @@ class CreateAppointment extends React.Component {
                     placeholder="Допълнителна информация"
                     onChange={this.handleOnChangeValue}
                     value={this.state.fields.otherInfo}
-                    style={{ resize: "none", height: "150px" }}
                   />
                 </FloatingLabel>
                 <span className="text-danger">

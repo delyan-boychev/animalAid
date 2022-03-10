@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "cryptr": "^6.0.2",
     "express": "^4.17.3",
+    "helmet": "^5.0.2",
     "https": "^1.0.0",
     "jsonschema": "^1.4.0",
     "moment": "^2.29.1",

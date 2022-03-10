@@ -264,8 +264,9 @@ class UserService {
    * @returns {Object}
    */
   async validateForgotPasswordToken(token) {
-    const decoded = simdjson.parse(decryptString(token));
+    let decoded = decryptString(token);
     if (decoded !== "") {
+      decoded = simdjson.parse(decoded);
       if (decoded["exp"] != undefined && decoded["email"] != undefined) {
         if (decoded["exp"] < parseInt(new Date().getTime() / 1000)) {
           return { isValid: false, email: "" };

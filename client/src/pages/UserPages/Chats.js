@@ -281,7 +281,7 @@ class Chats extends React.Component {
         </Alert>
         <Row>
           <Col>
-            <div style={{ maxHeight: "400px", overflowY: "scroll" }}>
+            <div className="allChats">
               <ListGroup>
                 {this.state.chatUsers.map((user) => (
                   <ListGroup.Item
@@ -302,6 +302,7 @@ class Chats extends React.Component {
                           height="60px"
                           weight="60px"
                           alt="avatar"
+                          crossOrigin={window.location.origin}
                         />
                       </Col>
                       <Col>
@@ -313,7 +314,7 @@ class Chats extends React.Component {
                         {user.seenMessages === false ? (
                           <FontAwesomeIcon
                             icon={faDotCircle}
-                            style={{ fontSize: "25px" }}
+                            size="2x"
                             className="text-success fade-animation"
                           ></FontAwesomeIcon>
                         ) : (
@@ -337,6 +338,7 @@ class Chats extends React.Component {
                       height="60px"
                       weight="60px"
                       alt="avatar"
+                      crossOrigin={window.location.origin}
                     />
                   </Col>
                   <Col>
@@ -380,19 +382,8 @@ class Chats extends React.Component {
                         </Tooltip>
                       }
                     >
-                      <div
-                        style={{
-                          maxWidth: "80%",
-                        }}
-                        className="d-inline-flex flex-wrap rounded bg-primary message text-secondary p-1"
-                      >
-                        <span
-                          style={{
-                            maxWidth: "100%",
-                          }}
-                        >
-                          {message.message}
-                        </span>
+                      <div className="d-inline-flex flex-wrap rounded bg-primary message text-secondary p-1 message-80">
+                        <span className="message-100">{message.message}</span>
                       </div>
                     </OverlayTrigger>
                   </div>
@@ -410,25 +401,16 @@ class Chats extends React.Component {
                         </Tooltip>
                       }
                     >
-                      <div
-                        style={{
-                          maxWidth: "80%",
-                        }}
-                        className="d-inline-flex rounded p-1"
-                      >
+                      <div className="d-inline-flex rounded p-1 message-80">
                         <img
                           className="rounded-circle"
                           height="40px"
                           weight="40px"
                           alt="avatar"
                           src={`${API_URL}\\user\\img\\${this.state.chatUserInfo["imgFileName"]}`}
+                          crossOrigin={window.location.origin}
                         />
-                        <span
-                          style={{
-                            maxWidth: "100%",
-                          }}
-                          className="mt-2 ms-2"
-                        >
+                        <span className="mt-2 ms-2 message-100">
                           {message.message}
                         </span>
                       </div>
