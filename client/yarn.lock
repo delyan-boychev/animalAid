@@ -1372,7 +1372,7 @@
     "fastq" "^1.6.0"
 
 "@npmcli/arborist@*", "@npmcli/arborist@^5.0.0":
-  "version" "5.0.0"
+  "version" "5.0.2"
   dependencies:
     "@isaacs/string-locale-compare" "^1.1.0"
     "@npmcli/installed-package-contents" "^1.0.7"
@@ -1457,11 +1457,11 @@
     "npm-normalize-package-bin" "^1.0.1"
 
 "@npmcli/map-workspaces@*", "@npmcli/map-workspaces@^2.0.0", "@npmcli/map-workspaces@^2.0.1":
-  "version" "2.0.1"
+  "version" "2.0.2"
   dependencies:
     "@npmcli/name-from-folder" "^1.0.1"
     "glob" "^7.2.0"
-    "minimatch" "^5.0.0"
+    "minimatch" "^5.0.1"
     "read-package-json-fast" "^2.0.3"
 
 "@npmcli/metavuln-calculator@^3.0.0":
@@ -2662,10 +2662,10 @@
   "resolved" "https://registry.npmjs.org/axe-core/-/axe-core-4.4.1.tgz"
   "version" "4.4.1"
 
-"axios@^0.26.0":
-  "integrity" "sha512-lKoGLMYtHvFrPVt3r+RBMp9nh34N0M8zEfCWqdWZx6phynIEhQqAdydpyBAAG211zlhX9Rgu08cOamy6XjE5Og=="
-  "resolved" "https://registry.npmjs.org/axios/-/axios-0.26.0.tgz"
-  "version" "0.26.0"
+"axios@^0.26.1":
+  "integrity" "sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA=="
+  "resolved" "https://registry.npmjs.org/axios/-/axios-0.26.1.tgz"
+  "version" "0.26.1"
   dependencies:
     "follow-redirects" "^1.14.8"
 
@@ -6466,7 +6466,7 @@
     "type-check" "~0.3.2"
 
 "libnpmaccess@*":
-  "version" "6.0.0"
+  "version" "6.0.1"
   dependencies:
     "aproba" "^2.0.0"
     "minipass" "^3.1.1"
@@ -6474,7 +6474,7 @@
     "npm-registry-fetch" "^13.0.0"
 
 "libnpmdiff@*":
-  "version" "4.0.0"
+  "version" "4.0.1"
   dependencies:
     "@npmcli/disparity-colors" "^1.0.1"
     "@npmcli/installed-package-contents" "^1.0.7"
@@ -6486,7 +6486,7 @@
     "tar" "^6.1.0"
 
 "libnpmexec@*":
-  "version" "4.0.0"
+  "version" "4.0.1"
   dependencies:
     "@npmcli/arborist" "^5.0.0"
     "@npmcli/ci-detect" "^2.0.0"
@@ -6502,31 +6502,31 @@
     "walk-up-path" "^1.0.0"
 
 "libnpmfund@*":
-  "version" "3.0.0"
+  "version" "3.0.1"
   dependencies:
     "@npmcli/arborist" "^5.0.0"
 
 "libnpmhook@*":
-  "version" "8.0.0"
+  "version" "8.0.1"
   dependencies:
     "aproba" "^2.0.0"
     "npm-registry-fetch" "^13.0.0"
 
 "libnpmorg@*":
-  "version" "4.0.0"
+  "version" "4.0.1"
   dependencies:
     "aproba" "^2.0.0"
     "npm-registry-fetch" "^13.0.0"
 
 "libnpmpack@*":
-  "version" "4.0.0"
+  "version" "4.0.1"
   dependencies:
     "@npmcli/run-script" "^3.0.0"
     "npm-package-arg" "^9.0.0"
     "pacote" "^13.0.2"
 
 "libnpmpublish@*":
-  "version" "6.0.0"
+  "version" "6.0.1"
   dependencies:
     "normalize-package-data" "^3.0.2"
     "npm-package-arg" "^9.0.0"
@@ -6535,18 +6535,18 @@
     "ssri" "^8.0.1"
 
 "libnpmsearch@*":
-  "version" "5.0.0"
+  "version" "5.0.1"
   dependencies:
     "npm-registry-fetch" "^13.0.0"
 
 "libnpmteam@*":
-  "version" "4.0.0"
+  "version" "4.0.1"
   dependencies:
     "aproba" "^2.0.0"
     "npm-registry-fetch" "^13.0.0"
 
 "libnpmversion@*":
-  "version" "3.0.0"
+  "version" "3.0.1"
   dependencies:
     "@npmcli/git" "^3.0.0"
     "@npmcli/run-script" "^3.0.0"
@@ -6677,8 +6677,8 @@
 "lru-cache@^7.3.1":
   "version" "7.4.0"
 
-"lru-cache@^7.4.0":
-  "version" "7.4.0"
+"lru-cache@^7.4.1":
+  "version" "7.4.2"
 
 "magic-string@^0.25.0", "magic-string@^0.25.7":
   "integrity" "sha512-4CrMT5DOHTDk4HYDlzmwu4FVCcIYI8gauveasrdCu2IKIFOJ3f0v/8MDGJCDL9oD2ppz/Av1b0Nj345H9M+XIA=="
@@ -6695,7 +6695,7 @@
     "semver" "^6.0.0"
 
 "make-fetch-happen@*", "make-fetch-happen@^10.0.3":
-  "version" "10.0.4"
+  "version" "10.0.5"
   dependencies:
     "agentkeepalive" "^4.2.1"
     "cacache" "^15.3.0"
@@ -6703,10 +6703,10 @@
     "http-proxy-agent" "^5.0.0"
     "https-proxy-agent" "^5.0.0"
     "is-lambda" "^1.0.1"
-    "lru-cache" "^7.4.0"
+    "lru-cache" "^7.4.1"
     "minipass" "^3.1.6"
     "minipass-collect" "^1.0.2"
-    "minipass-fetch" "^2.0.1"
+    "minipass-fetch" "^2.0.2"
     "minipass-flush" "^1.0.5"
     "minipass-pipeline" "^1.2.4"
     "negotiator" "^0.6.3"
@@ -6867,7 +6867,7 @@
   dependencies:
     "brace-expansion" "^1.1.7"
 
-"minimatch@^5.0.0":
+"minimatch@^5.0.1":
   "version" "5.0.1"
   dependencies:
     "brace-expansion" "^2.0.1"
@@ -6904,7 +6904,7 @@
   optionalDependencies:
     "encoding" "^0.1.12"
 
-"minipass-fetch@^2.0.1":
+"minipass-fetch@^2.0.1", "minipass-fetch@^2.0.2":
   "version" "2.0.2"
   dependencies:
     "minipass" "^3.1.6"
@@ -7234,10 +7234,10 @@
 "npm-user-validate@*":
   "version" "1.0.1"
 
-"npm@^8.5.3":
-  "integrity" "sha512-O+1j66Alx7ZQgWnUSSTaz8rTqQrJnqNb8Num5uQw2vYvc2RrxLaX7cWtRkDhvkPIL8Nf2WU9gx1oSu268QConA=="
-  "resolved" "https://registry.npmjs.org/npm/-/npm-8.5.3.tgz"
-  "version" "8.5.3"
+"npm@^8.5.4":
+  "integrity" "sha512-VnGLT4t88cUE78lLw5kxBwtLn2/Sx6O7Uw9dYwmq6AnF/taWHyMYQgDzUEsLhaXAVH7prG+sjG+MvxlHdIasgg=="
+  "resolved" "https://registry.npmjs.org/npm/-/npm-8.5.4.tgz"
+  "version" "8.5.4"
   dependencies:
     "@isaacs/string-locale-compare" "*"
     "@npmcli/arborist" "*"
@@ -8678,7 +8678,7 @@
     "npm-normalize-package-bin" "^1.0.1"
 
 "read-package-json@*", "read-package-json@^4.1.1":
-  "version" "4.1.1"
+  "version" "4.1.2"
   dependencies:
     "glob" "^7.1.1"
     "json-parse-even-better-errors" "^2.3.0"
