@@ -19,5 +19,6 @@ const schema = new mongoose.Schema({
   },
   hour: { type: String, required: true },
   date: { type: Date, required: true },
+  confirmed: { type: Boolean, default: false },
 });
 module.exports = mongoose.model("VetAppointment", schema, "vetAppointments");

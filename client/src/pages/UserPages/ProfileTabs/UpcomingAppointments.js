@@ -169,18 +169,16 @@ class UpcomingAppointments extends React.Component {
                 </Col>
                 <Col>
                   Ветеринарен лекар:{" "}
-                  <span className="fw-bold">
+                  <div className="fw-bold">
                     {appointment.vet.name.first} {appointment.vet.name.last} (
                     {appointment.vet.email})
-                  </span>
-                  <br />
-                  <span>
+                  </div>
+                  <div>
                     Животно: {animalsSingleTranslate[appointment.typeAnimal]},{" "}
                     Причина за посещение:{" "}
-                    {appointmentsTranslate[appointment.typeAppointment]}
-                  </span>
-                  <br />
-                  <span>
+                    {appointmentsTranslate[appointment.typeAppointment]},
+                    Допълнителна информация: {appointment.otherInfo}
+                    <br />
                     Дата: {this.formatDate(new Date(appointment.date))}{" "}
                     {
                       daysTranslate[
@@ -189,9 +187,18 @@ class UpcomingAppointments extends React.Component {
                     }
                     , Час: {numToHours(appointment.hour.startHour)}-
                     {numToHours(appointment.hour.endHour)}
-                  </span>
+                  </div>
+                  {appointment.confirmed === true ? (
+                    <div className="alert alert-primary mt-2" role="alert">
+                      Потвърден час
+                    </div>
+                  ) : (
+                    <div className="alert alert-warning mt-2" role="alert">
+                      Часът чака потвърждение
+                    </div>
+                  )}
                 </Col>
-                <Col sm={1}>
+                <Col sm={2} className="align-self-center">
                   <Button
                     variant="danger"
                     onClick={() => {

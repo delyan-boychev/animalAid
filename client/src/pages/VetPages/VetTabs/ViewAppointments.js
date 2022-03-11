@@ -10,10 +10,11 @@ import {
 import InfoModal from "../../../components/InfoModal";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarMinus } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarMinus, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { numToHours } from "../../../extensionFunctions/convertHours";
 import appointmentsTranslate from "../../../enums/appointmentsTranslate";
 import DialogModal from "../../../components/DialogModal";
+import "../../../extensionFunctions/formatNumber";
 const daysOfWeekNum = require("../../../enums/daysOfWeekNum");
 const daysTranslate = require("../../../enums/daysTranslate");
 const animalsSingleTranslate = require("../../../enums/animalsSingleTranslate");
@@ -27,9 +28,9 @@ class ViewAppointments extends React.Component {
     this.state = {
       vetId: "",
       hours: [],
-      date: `${date.getFullYear()}-${("0" + date.getDate().toString()).slice(
-        -2
-      )}-${("0" + (date.getMonth() + 1).toString()).slice(-2)}`,
+      date: `${date.getFullYear()}-${(date.getMonth() + 1).pad()}-${date
+        .getDate()
+        .pad()}`,
       modal: {
         show: false,
         title: "Съобщение",
@@ -95,6 +96,21 @@ class ViewAppointments extends React.Component {
       }
     });
   };
+  confirmAppointment = async (appointmentId) => {
+    this.openModal2(
+      `Сигурни ли сте, че искате да потвърдите часа?`,
+      async () => {
+        const res = await client.postRequestToken("/vet/confirmAppointment", {
+          appointmentId,
+        });
+        if (res === true) {
+          this.openModal(`Часът е потвърден!`);
+        } else {
+          this.openModal("Възникна грешка! Извиняваме се за неудобството!");
+        }
+      }
+    );
+  };
   render() {
     let d1 = new Date();
     d1.setDate(d1.getDate());
@@ -120,12 +136,12 @@ class ViewAppointments extends React.Component {
           <FloatingLabel controlId="date" label="Дата">
             <Form.Control
               type="date"
-              min={`${d1.getFullYear()}-${(
-                "0" + (d1.getMonth() + 1).toString()
-              ).slice(-2)}-${("0" + d1.getDate().toString()).slice(-2)}`}
-              max={`${d2.getFullYear()}-${(
-                "0" + (d2.getMonth() + 1).toString()
-              ).slice(-2)}-${("0" + d2.getDate().toString()).slice(-2)}`}
+              min={`${d1.getFullYear()}-${(d1.getMonth() + 1).pad()}-${d1
+                .getDate()
+                .pad()}`}
+              max={`${d2.getFullYear()}-${(d2.getMonth() + 1).pad()}-${d2
+                .getDate()
+                .pad()}`}
               value={this.state.date}
               onChange={this.onChangeDate}
             />
@@ -133,9 +149,9 @@ class ViewAppointments extends React.Component {
         </Form.Group>
         <h5 className="text-center">
           Избрана дата: {daysTranslate[daysOfWeekNum[currentDate.getDay()]]}{" "}
-          {`${("0" + currentDate.getDate().toString()).slice(-2)}-${(
-            "0" + (currentDate.getMonth() + 1).toString()
-          ).slice(-2)}-${currentDate.getFullYear()}`}
+          {`${currentDate.getDate().pad()}-${(
+            currentDate.getMonth() + 1
+          ).pad()}-${currentDate.getFullYear()}`}
         </h5>
         <hr className="w-50 m-auto mb-3" />
         <div hidden={this.state.hours.length > 0}>
@@ -149,7 +165,7 @@ class ViewAppointments extends React.Component {
             let appointment = "";
             if (hour.appointment !== undefined) {
               appointment = (
-                <span>
+                <div>
                   Име: {hour.appointment.user.name.first}{" "}
                   {hour.appointment.user.name.last}, Телефонен номер:{" "}
                   {hour.appointment.user.phoneNumber}
@@ -158,7 +174,7 @@ class ViewAppointments extends React.Component {
                   , Причина за посещение:{" "}
                   {appointmentsTranslate[hour.appointment.typeAppointment]},
                   Допълнителна информация: {hour.appointment.otherInfo}
-                </span>
+                </div>
               );
             }
             return (
@@ -167,28 +183,53 @@ class ViewAppointments extends React.Component {
                   <Col>
                     <div className="h5 fw-bold">
                       Час: {numToHours(hour.startHour)}-
-                      {numToHours(hour.endHour)}-
-                      {hour.appointment !== undefined ? (
-                        <span className="text-danger">Запазен</span>
-                      ) : (
-                        <span className="text-primary">Свободен</span>
-                      )}
+                      {numToHours(hour.endHour)}
                     </div>
-                    <br />
                     {appointment}
+                    {hour.appointment !== undefined ? (
+                      hour.appointment.confirmed === true ? (
+                        <div className="alert alert-primary mt-2" role="alert">
+                          Запазен час
+                        </div>
+                      ) : (
+                        <div className="alert alert-warning mt-2" role="alert">
+                          Часът чака потвърждение
+                        </div>
+                      )
+                    ) : (
+                      <div className="alert alert-dark mt-2" role="alert">
+                        Свободен час
+                      </div>
+                    )}
                   </Col>
                   {hour.appointment !== undefined ? (
-                    <Col sm={1}>
-                      <Button
-                        variant="danger"
-                        onClick={() => {
-                          this.removeAppointment(hour.appointment._id);
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faCalendarMinus}
-                        ></FontAwesomeIcon>
-                      </Button>
+                    <Col sm={3} className="align-self-center">
+                      {hour.appointment.confirmed === false ? (
+                        <div className="d-inline me-3">
+                          <Button
+                            variant="primary"
+                            onClick={() => {
+                              this.confirmAppointment(hour.appointment._id);
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+                          </Button>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div className="d-inline">
+                        <Button
+                          variant="danger"
+                          onClick={() => {
+                            this.removeAppointment(hour.appointment._id);
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faCalendarMinus}
+                          ></FontAwesomeIcon>
+                        </Button>
+                      </div>
                     </Col>
                   ) : (
                     ""

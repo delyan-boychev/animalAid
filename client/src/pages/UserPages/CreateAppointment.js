@@ -8,6 +8,7 @@ import { numToHours } from "../../extensionFunctions/convertHours";
 import PageTitle from "../../components/PageTitle";
 import appointmentsTranslate from "../../enums/appointmentsTranslate";
 import DialogModal from "../../components/DialogModal";
+import "../../extensionFunctions/formatNumber";
 const daysOfWeekNum = require("../../enums/daysOfWeekNum");
 const daysTranslate = require("../../enums/daysTranslate");
 const animalsSingleTranslate = require("../../enums/animalsSingleTranslate");
@@ -28,9 +29,9 @@ class CreateAppointment extends React.Component {
         typeAppointments: [],
       },
       fields: {
-        date: `${date.getFullYear()}-${(
-          "0" + (date.getMonth() + 1).toString()
-        ).slice(-2)}-${("0" + date.getDate().toString()).slice(-2)}`,
+        date: `${date.getFullYear()}-${(date.getMonth() + 1).pad()}-${date
+          .getDate()
+          .pad()}`,
         hour: "",
         typeAnimal: "",
         typeAppointment: "",
@@ -190,7 +191,7 @@ class CreateAppointment extends React.Component {
   };
   async createAppointment() {
     if (this.state.errors.isValid === true) {
-      let fields = this.state.fields;
+      let fields = { ...this.state.fields };
       fields.date = fields.date.split("-");
       fields.date = `${fields.date[2]}-${fields.date[1]}-${fields.date[0]}`;
       const res = await client.postRequestToken("/vet/createAppointment", {
@@ -203,11 +204,11 @@ class CreateAppointment extends React.Component {
       });
       let date = new Date();
       date.setDate(date.getDate() + 1);
-      this.setState({
+      await this.setState({
         fields: {
-          date: `${date.getFullYear()}-${(
-            "0" + (date.getMonth() + 1).toString()
-          ).slice(-2)}-${("0" + date.getDate().toString()).slice(-2)}`,
+          date: `${date.getFullYear()}-${(date.getMonth() + 1).pad()}-${date
+            .getDate()
+            .pad()}`,
           hour: "",
           typeAnimal: "",
           typeAppointment: "",
@@ -216,7 +217,6 @@ class CreateAppointment extends React.Component {
       });
       if (res === true) {
         this.createdComplete = true;
-        console.log(this.state.fields);
         this.openModal(
           `Вие успешно записахте час при ${this.state.vetInfo.name}!`
         );
@@ -253,18 +253,20 @@ class CreateAppointment extends React.Component {
           <h5>Име на ветеринарен лекар: {this.state.vetInfo.name}</h5>
           <h5>
             Работни дни:{" "}
-            {this.state.workingDays.map((day) => daysTranslate[day]).join(", ")}
+            {this.state.workingDays
+              .map((day) => <span key="day">{daysTranslate[day]}</span>)
+              .join(", ")}
           </h5>
           <Form.Group className="mb-3">
             <FloatingLabel controlId="date" label="Дата">
               <Form.Control
                 type="date"
-                min={`${d1.getFullYear()}-${(
-                  "0" + (d1.getMonth() + 1).toString()
-                ).slice(-2)}-${("0" + d1.getDate().toString()).slice(-2)}`}
-                max={`${d2.getFullYear()}-${(
-                  "0" + (d2.getMonth() + 1).toString()
-                ).slice(-2)}-${("0" + d2.getDate().toString()).slice(-2)}`}
+                min={`${d1.getFullYear()}-${(d1.getMonth() + 1).pad()}-${d1
+                  .getDate()
+                  .pad()}`}
+                max={`${d2.getFullYear()}-${(d2.getMonth() + 1).pad()}-${d2
+                  .getDate()
+                  .pad()}`}
                 value={this.state.fields.date}
                 onChange={this.handleOnChangeValue}
               />
@@ -273,15 +275,16 @@ class CreateAppointment extends React.Component {
           </Form.Group>
           <h5 className="text-center">
             Избрана дата: {daysTranslate[daysOfWeekNum[currentDate.getDay()]]}{" "}
-            {`${("0" + currentDate.getDate().toString()).slice(-2)}-${(
-              "0" + (currentDate.getMonth() + 1).toString()
-            ).slice(-2)}-${currentDate.getFullYear()}`}
+            {`${currentDate.getDate().pad()}-${(
+              currentDate.getMonth() + 1
+            ).pad()}-${currentDate.getFullYear()}`}
           </h5>
           <hr className="w-50 m-auto mb-3" />
           <div hidden={this.state.hours.length > 0}>
             <h5 className="text-center text-danger">
               {this.state.vetInfo.name} не работи в ден{" "}
-              {daysTranslate[daysOfWeekNum[currentDate.getDay()]]}!
+              {daysTranslate[daysOfWeekNum[currentDate.getDay()]].toLowerCase()}
+              !
             </h5>
           </div>
           <Form.Group className="mb-3">

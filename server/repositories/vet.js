@@ -234,16 +234,60 @@ class VetRepository {
     }
   }
   async removeAppointmentByVet(vetId, appointmentId) {
-    try {
-      const d = await VetAppointment.deleteOne({
+    const appointment = await VetAppointment.findOne({
+      _id: appointmentId,
+      vet: vetId,
+      date: { $gt: new Date().toISOString() },
+    })
+      .populate("vet", "name scheduleVet")
+      .populate("user", "name email")
+      .exec();
+    if (appointment !== null) {
+      let oldAppointment = appointment.toObject();
+      delete oldAppointment.hour;
+      let day = daysOfWeek[new Date(appointment.date).getDay()];
+      let hour = appointment.vet.scheduleVet[day].find(
+        (h) => h._id.toString() === appointment.hour
+      );
+      oldAppointment.startHour = hour.startHour;
+      oldAppointment.endHour = hour.endHour;
+      await VetAppointment.deleteOne({
         _id: appointmentId,
         vet: vetId,
         date: { $gt: new Date().toISOString() },
       }).exec();
-      if (d.deletedCount > 0) {
-        return true;
-      } else {
-        return false;
+
+      return oldAppointment;
+    } else {
+      return false;
+    }
+  }
+  async confirmAppointment(vetId, appointmentId) {
+    try {
+      const appointment = await VetAppointment.findOne({
+        _id: appointmentId,
+        vet: vetId,
+        date: { $gt: new Date().toISOString() },
+      })
+        .populate("vet", "name scheduleVet")
+        .populate("user", "name email")
+        .exec();
+      if (appointment !== null) {
+        let oldAppointment = appointment.toObject();
+        delete oldAppointment.hour;
+        let day = daysOfWeek[new Date(appointment.date).getDay()];
+        let hour = appointment.vet.scheduleVet[day].find(
+          (h) => h._id.toString() === appointment.hour
+        );
+        oldAppointment.startHour = hour.startHour;
+        oldAppointment.endHour = hour.endHour;
+        if (appointment.confirmed === false) {
+          appointment.confirmed = true;
+          await appointment.save();
+          return oldAppointment;
+        } else {
+          return false;
+        }
       }
     } catch {
       return false;

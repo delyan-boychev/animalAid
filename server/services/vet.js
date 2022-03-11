@@ -1,7 +1,21 @@
 "use strict";
+const nodemailer = require("nodemailer");
+const config = require("../config.json");
 const VetRepository = require("../repositories/vet");
 const getPageFromArr = require("../extensionMethods").getPageFromArr;
 const moment = require("moment");
+const {
+  appointmentConfirmed,
+  appointmentRejected,
+} = require("../models/emailTemplates/appointmentConfirmation");
+const transportMail = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: config.EMAIL_INFO.EMAIL,
+    pass: config.EMAIL_INFO.PASSWORD,
+  },
+});
+const fromSender = config.EMAIL_INFO.EMAIL_SENDER;
 class VetService {
   #vetRepository = new VetRepository();
   async createSchedule(vetId, scheduleVet) {
@@ -143,10 +157,50 @@ class VetService {
     return await this.#vetRepository.removeAppointment(userId, appointmentId);
   }
   async removeAppointmentByVet(vetId, appointmentId) {
-    return await this.#vetRepository.removeAppointmentByVet(
+    const removed = await this.#vetRepository.removeAppointmentByVet(
       vetId,
       appointmentId
     );
+    if (removed !== false) {
+      transportMail.sendMail({
+        from: fromSender,
+        to: removed.user.email,
+        subject: "Отменен час за ветеринарен лекар",
+        html: appointmentRejected(
+          removed.user.name.first,
+          `${removed.vet.name.first} ${removed.vet.name.last}`,
+          removed.startHour,
+          removed.endHour,
+          new Date(removed.date)
+        ),
+      });
+      return true;
+    } else {
+      return false;
+    }
+  }
+  async confirmAppointment(vetId, appointmentId) {
+    const confirmed = await this.#vetRepository.confirmAppointment(
+      vetId,
+      appointmentId
+    );
+    if (confirmed !== false) {
+      transportMail.sendMail({
+        from: fromSender,
+        to: confirmed.user.email,
+        subject: "Потвърден час за ветеринарен лекар",
+        html: appointmentConfirmed(
+          confirmed.user.name.first,
+          `${confirmed.vet.name.first} ${confirmed.vet.name.last}`,
+          confirmed.startHour,
+          confirmed.endHour,
+          new Date(confirmed.date)
+        ),
+      });
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 module.exports = VetService;
