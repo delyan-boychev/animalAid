@@ -424,7 +424,7 @@ export default class EditProfile extends React.Component {
           body={
             <div className="cropper">
               <Cropper
-                nonce="rAnd0m"
+                disableAutomaticStylesInjection={true}
                 image={
                   this.state.profile.image !== null
                     ? this.state.profile.image

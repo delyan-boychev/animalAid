@@ -302,7 +302,7 @@ class RegisterUser extends React.Component {
           body={
             <div className="cropper">
               <Cropper
-                nonce="rAnd0m"
+                disableAutomaticStylesInjection={true}
                 image={
                   this.state.fields.image !== null
                     ? this.state.fields.image
