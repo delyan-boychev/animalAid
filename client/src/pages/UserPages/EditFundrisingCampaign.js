@@ -373,7 +373,7 @@ export default class EditFundrisingCampaign extends React.Component {
           body={
             <div className="cropper">
               <Cropper
-                nonce="nonce-rAnd0m"
+                nonce="rAnd0m"
                 image={
                   this.state.campaign.image !== null
                     ? this.state.campaign.image
