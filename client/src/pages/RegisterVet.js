@@ -367,6 +367,7 @@ class RegisterVet extends React.Component {
           body={
             <div className="cropper">
               <Cropper
+                nonce="nonce-rAnd0m"
                 image={
                   this.state.fields.image !== null
                     ? this.state.fields.image
