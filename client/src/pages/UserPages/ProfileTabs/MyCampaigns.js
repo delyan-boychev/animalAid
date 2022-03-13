@@ -7,20 +7,15 @@ import {
   faChevronCircleLeft,
   faChevronCircleRight,
 } from "@fortawesome/free-solid-svg-icons";
-import PageTitle from "../../../components/PageTitle";
 const client = require("../../../clientRequests");
 const API_URL = require("../../../config.json").API_URL;
 class FundrisingCampaigns extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      page: 1,
-      campaigns: [],
-      numPages: 0,
-    };
-  }
+  state = {
+    page: 1,
+    campaigns: [],
+    numPages: 0,
+  };
   componentDidMount() {
-    document.title = "Кампании за набиране на средства";
     this.getCampaigns(1);
   }
   getCampaigns = async (page) => {
@@ -63,7 +58,6 @@ class FundrisingCampaigns extends React.Component {
     );
     return (
       <div>
-        <PageTitle title="Кампании за набиране на средства" />
         {pagination}
         <h4
           className="text-center mt-3"
