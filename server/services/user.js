@@ -237,7 +237,7 @@ class UserService {
     const decoded = decryptToken(token).split(";");
     if (decoded[0] !== "") {
       if (parseInt(decoded[1]) > parseInt(new Date().getTime() / 1000)) {
-        return false;
+        return "TOO_EARLY";
       } else {
         const refreshToken = encryptToken(
           `${decoded[0]};${parseInt(new Date().getTime() / 1000) + 1800}`

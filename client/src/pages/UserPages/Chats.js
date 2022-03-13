@@ -71,10 +71,6 @@ class Chats extends React.Component {
       this.socket.on("getMessagesNextPage", this.setMessagesNextPage);
       this.socket.on("invalidToken", this.onInvalidToken);
       this.socket.on("changeActiveStatus", this.onChangeActiveStatus);
-      this.socket.on("disconnect", async () => {
-        if (!this.leavePage) {
-        }
-      });
       const urlParams = new URLSearchParams(window.location.search);
       const id = urlParams.get("chatId");
       if (id !== null && id !== "") {
@@ -283,9 +279,9 @@ class Chats extends React.Component {
           <Col>
             <div className="allChats">
               <ListGroup>
-                {this.state.chatUsers.map((user) => (
+                {this.state.chatUsers.map((user, index) => (
                   <ListGroup.Item
-                    key={user._id}
+                    key={index}
                     id={user._id}
                     className={`${
                       user._id === this.state.currentChatId ? "activeChat" : ""
@@ -367,10 +363,10 @@ class Chats extends React.Component {
               ""
             )}
             <div className="chat-box" id="chat-box">
-              {this.state.messages.map((message) =>
+              {this.state.messages.map((message, index) =>
                 message.sender === this.state.id ? (
                   <div
-                    key={message._id}
+                    key={index}
                     id={`ms-${message._id}`}
                     className="d-flex justify-content-end text-right me-2 mb-2"
                   >
@@ -389,7 +385,7 @@ class Chats extends React.Component {
                   </div>
                 ) : (
                   <div
-                    key={message._id}
+                    key={index}
                     id={`ms-${message._id}`}
                     className="justify-content-start text-left ms-2 me-2 mb-2"
                   >

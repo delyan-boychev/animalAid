@@ -57,14 +57,16 @@ module.exports = (io) => {
       socket.startChat
     );
     if (message !== false) {
-      let socketId = Object.keys(activeUsers).find(
+      let socketIds = Object.keys(activeUsers).filter(
         (key) => activeUsers[key] === socket.recieveId
       );
-      if (socketId) {
-        io.to(socketId).emit("newMessage", {
-          msg: socket.msg,
-          senderId: senderId,
-          date: socket.date,
+      if (socketIds.length > 0) {
+        socketIds.forEach((socketId) => {
+          io.to(socketId).emit("newMessage", {
+            msg: socket.msg,
+            senderId: senderId,
+            date: socket.date,
+          });
         });
       }
     }

@@ -50,6 +50,20 @@ function getPageFromArr(arr, numPerPage, pageNum, nameEl) {
   }
   return page;
 }
+function getPageFromArrReverse(arr, numPerPage, pageNum, nameEl) {
+  const startIndex = arr.length - pageNum * 10;
+  const endIndex = arr.length - (pageNum - 1) * 10;
+  const numPages = Math.ceil(arr.length / numPerPage);
+  let page = { numPages };
+  if (pageNum < 1 || (arr.length < endIndex && arr.length < startIndex)) {
+    return false;
+  } else if (startIndex < 0 && endIndex > 0) {
+    page[nameEl] = arr.slice(0, endIndex);
+  } else {
+    page[nameEl] = arr.slice(startIndex, endIndex);
+  }
+  return page;
+}
 /*eslint no-extend-native: ["error", { "exceptions": ["Number"] }]*/
 Number.prototype.pad = function (n) {
   return ("0" + this).slice((n || 2) * -1);
@@ -59,4 +73,5 @@ module.exports = {
   randomString,
   randomStringWithSpecialSymbols,
   getPageFromArr,
+  getPageFromArrReverse,
 };

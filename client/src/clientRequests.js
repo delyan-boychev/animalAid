@@ -13,7 +13,7 @@ async function refreshToken() {
       {},
       { headers: headers }
     );
-    if (res.data !== false) {
+    if (res.data !== false && res.data !== "TOO_EARLY") {
       cookies.set("authorization", res.data, {
         maxAge: 3153600000,
         path: "/",
@@ -23,10 +23,12 @@ async function refreshToken() {
         path: "/",
       });
       return res.data;
-    } else {
+    } else if (res.data !== "TOO_EARLY") {
       cookies.remove("authorization", { path: "/" });
       cookies.remove("validity", { path: "/" });
       return false;
+    } else {
+      window.location.reload();
     }
   } else {
     return false;
