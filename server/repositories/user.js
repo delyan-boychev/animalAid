@@ -85,12 +85,21 @@ class UserRepository {
         const cityIds = cities.map((city) => city._id);
         let query = { role: roles.Vet, city: cityIds };
         if (searchQuery !== undefined) {
+          let keys = Object.keys(animalsTranslate);
+          let animals = Object.values(animalsTranslate)
+            .filter((animal) =>
+              animal.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((animal) => {
+              return keys.find((key) => animalsTranslate[key] === animal);
+            });
           query["$or"] = [
             { "name.first": { $regex: searchQuery, $options: "i" } },
             { "name.last": { $regex: searchQuery, $options: "i" } },
             { email: { $regex: searchQuery, $options: "i" } },
             { address: { $regex: searchQuery, $options: "i" } },
             { URN: { $regex: searchQuery, $options: "i" } },
+            { typeAnimals: { $in: animals } },
           ];
         }
         const vets = await User.find(query).populate("city").exec();
@@ -282,7 +291,9 @@ class UserRepository {
     if (searchQuery !== undefined) {
       let keys = Object.keys(animalsTranslate);
       let animals = Object.values(animalsTranslate)
-        .filter((animal) => animal.toLowerCase().includes(searchQuery))
+        .filter((animal) =>
+          animal.toLowerCase().includes(searchQuery.toLowerCase())
+        )
         .map((animal) => {
           return keys.find((key) => animalsTranslate[key] === animal);
         });
