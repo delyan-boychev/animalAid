@@ -253,9 +253,7 @@ class CreateAppointment extends React.Component {
           <h5>Име на ветеринарен лекар: {this.state.vetInfo.name}</h5>
           <h5>
             Работни дни:{" "}
-            {this.state.workingDays
-              .map((day) => <span key="day">{daysTranslate[day]}</span>)
-              .join(", ")}
+            {this.state.workingDays.map((day) => daysTranslate[day]).join(", ")}
           </h5>
           <Form.Group className="mb-3">
             <FloatingLabel controlId="date" label="Дата">
