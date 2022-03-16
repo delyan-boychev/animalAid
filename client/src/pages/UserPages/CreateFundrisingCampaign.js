@@ -1,5 +1,12 @@
 import React from "react";
-import { Form, Col, Button, Row, FloatingLabel } from "react-bootstrap";
+import {
+  Form,
+  Col,
+  Button,
+  Row,
+  FloatingLabel,
+  Spinner,
+} from "react-bootstrap";
 import InfoModal from "../../components/InfoModal";
 import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +18,7 @@ import LargeModal from "../../components/LargeModal";
 const client = require("../../clientRequests");
 class CreateFundrisingCampaign extends React.Component {
   submitted = false;
+  created = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -53,6 +61,7 @@ class CreateFundrisingCampaign extends React.Component {
       },
       crop: { x: 0, y: 0 },
       zoom: 1,
+      requestSent: false,
     };
   }
   componentDidMount() {
@@ -81,6 +90,7 @@ class CreateFundrisingCampaign extends React.Component {
           images1: null,
           images2: null,
         },
+        requestSent: true,
       });
       const response = await client.postRequestToken(
         "/fundrisingCampaign/createFundrisingCampaign",
@@ -97,10 +107,12 @@ class CreateFundrisingCampaign extends React.Component {
         }
       );
       if (response === true) {
+        this.created = true;
         this.openModal(
           "Кампанията за набиране на средства е създадена успешно!"
         );
       } else {
+        this.setState({ requestSent: false });
         this.openModal(
           "Не успяхме да създадем кампанията за набиране на средства!"
         );
@@ -122,6 +134,9 @@ class CreateFundrisingCampaign extends React.Component {
     let modal = this.state.modal;
     modal.show = false;
     this.setState({ modal });
+    if (this.created === true) {
+      this.props.navigate("/profile");
+    }
   };
   openModal2 = () => {
     let modal2 = this.state.modal2;
@@ -326,7 +341,10 @@ class CreateFundrisingCampaign extends React.Component {
   render() {
     return (
       <div>
-        <PageTitle title="Създаване на кампания за набиране на средства" />
+        <PageTitle
+          title="Създаване на кампания за набиране на средства"
+          hidden={this.state.requestSent === true}
+        />
         <InfoModal
           show={this.state.modal.show}
           title={this.state.modal.title}
@@ -356,7 +374,15 @@ class CreateFundrisingCampaign extends React.Component {
           title={this.state.modal2.title}
           closeModal={this.closeModal2}
         ></LargeModal>
-        <Form onSubmit={this.submitForm}>
+        <p className="text-center h3" hidden={this.state.requestSent === false}>
+          Кампанията се качва ...
+          <br />
+          <Spinner variant="primary" animation="border"></Spinner>
+        </p>
+        <Form
+          onSubmit={this.submitForm}
+          hidden={this.state.requestSent === true}
+        >
           <Row className="mb-3">
             <Form.Group>
               <FloatingLabel controlId="title" label="Заглавие">
