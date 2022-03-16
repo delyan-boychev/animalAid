@@ -1,34 +1,47 @@
 //*Functions for making post or get requests to api application
 import Cookies from "universal-cookie";
 const API_URL = require("./config.json").API_URL;
-const axios = require("axios");
+const simdjson = require("simdjson");
 //*Refresh token after expiration
 async function refreshToken() {
   const cookies = new Cookies();
   const token = cookies.get("authorization");
-  if (token !== undefined) {
-    let headers = { Authorization: `animalAidAuthorization ${token}` };
-    const res = await axios.post(
-      `${API_URL}/user/refreshToken`,
-      {},
-      { headers: headers }
-    );
-    if (res.data !== false && res.data !== "TOO_EARLY") {
-      cookies.set("authorization", res.data, {
-        maxAge: 3153600000,
-        path: "/",
+  const validity = cookies.get("validity");
+  if (token !== undefined && validity !== undefined) {
+    if (validity <= parseInt(new Date().getTime()) / 1000) {
+      let headers = {
+        Authorization: `animalAidAuthorization ${token}`,
+        "Content-Type": "application/json",
+      };
+      const res = await fetch(`${API_URL}/user/refreshToken`, {
+        method: "POST",
+        mode: "cors",
+        headers,
+        body: "",
       });
-      cookies.set("validity", parseInt(new Date().getTime() / 1000) + 1800, {
-        maxAge: 3153600000,
-        path: "/",
-      });
-      return res.data;
-    } else if (res.data !== "TOO_EARLY") {
-      cookies.remove("authorization", { path: "/" });
-      cookies.remove("validity", { path: "/" });
-      return false;
+      let r = await res.text();
+      try {
+        r = simdjson.parse(r);
+      } catch {}
+      if (r !== false && r !== "TOO_EARLY") {
+        cookies.set("authorization", r, {
+          maxAge: 3153600000,
+          path: "/",
+        });
+        cookies.set("validity", parseInt(new Date().getTime() / 1000) + 1800, {
+          maxAge: 3153600000,
+          path: "/",
+        });
+        return r;
+      } else if (r !== "TOO_EARLY") {
+        cookies.remove("authorization", { path: "/" });
+        cookies.remove("validity", { path: "/" });
+        return false;
+      } else {
+        window.location.reload();
+      }
     } else {
-      window.location.reload();
+      return false;
     }
   } else {
     return false;
@@ -39,8 +52,23 @@ async function postRequest(url, data, headers) {
   if (!headers) {
     headers = {};
   }
-  const res = await axios.post(API_URL + url, data, { headers: headers });
-  return res.data;
+  let URL = API_URL + url;
+  if (url.includes(API_URL)) URL = url;
+  const res = await fetch(URL, {
+    method: "POST",
+    mode: "cors",
+    headers,
+    body: JSON.stringify(data),
+  });
+  if (res.ok) {
+    let resData = await res.text();
+    try {
+      resData = simdjson.parse(resData);
+    } catch {}
+    return resData;
+  } else {
+    window.location.href = "/";
+  }
 }
 //*Function for making post request when user is logged in his profile
 async function postRequestToken(url, data, headers) {
@@ -50,43 +78,75 @@ async function postRequestToken(url, data, headers) {
   const cookies = new Cookies();
   let token = cookies.get("authorization");
   const validity = cookies.get("validity");
+  headers["Content-Type"] = "application/json";
+  let URL = API_URL + url;
+  if (url.includes(API_URL)) URL = url;
   if (token !== undefined && validity !== undefined) {
     if (validity > parseInt(new Date().getTime()) / 1000) {
       headers["Authorization"] = `animalAidAuthorization ${token}`;
-      let URL = API_URL + url;
-      if (url.includes(API_URL)) URL = url;
-      try {
-        const res = await axios.post(URL, data, { headers: headers });
-        return res.data;
-      } catch (error) {
-        if (error.response.status === 401) {
-          cookies.remove("authorization", { path: "/" });
-          cookies.remove("validity", { path: "/" });
-        } else {
-          window.location.href = "/";
-        }
+      const res = await fetch(URL, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        let resData = await res.text();
+        try {
+          resData = simdjson.parse(resData);
+        } catch {}
+        return resData;
+      } else if (res.status === 401) {
+        cookies.remove("authorization", { path: "/" });
+        cookies.remove("validity", { path: "/" });
+      } else {
+        window.location.href = "/";
       }
     } else {
       const refreshedToken = await refreshToken();
       if (refreshedToken !== false) {
         token = refreshedToken;
         headers["Authorization"] = `animalAidAuthorization ${token}`;
-        const res2 = await axios.post(URL, data, { headers: headers });
-        return res2.data;
+        const res = await fetch(URL, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(data),
+        });
+        if (res.ok) {
+          let resData = await res.text();
+          try {
+            resData = simdjson.parse(resData);
+          } catch {}
+          return resData;
+        } else if (res.status === 401) {
+          cookies.remove("authorization", { path: "/" });
+          cookies.remove("validity", { path: "/" });
+        } else {
+          window.location.href = "/";
+        }
       } else {
         window.location.href = "/";
-        return "";
       }
     }
   }
 }
 //*Function for making get request
 async function getRequest(url, headers) {
-  if (!headers) {
-    headers = {};
+  let URL = API_URL + url;
+  if (url.includes(API_URL)) URL = url;
+  const res = await fetch(URL, {
+    method: "GET",
+    mode: "cors",
+    headers,
+  });
+  if (res.ok) {
+    let resData = await res.text();
+    try {
+      resData = simdjson.parse(resData);
+    } catch {}
+    return resData;
+  } else {
+    window.location.href = "/";
   }
-  const res = await axios.get(API_URL + url, { headers: headers });
-  return res.data;
 }
 //*Function for making get request when user is logged in his profile
 async function getRequestToken(url, headers) {
@@ -101,27 +161,45 @@ async function getRequestToken(url, headers) {
   if (token !== undefined && validity !== undefined) {
     if (validity > parseInt(new Date().getTime()) / 1000) {
       headers["Authorization"] = `animalAidAuthorization ${token}`;
-      try {
-        const res = await axios.get(URL, { headers: headers });
-        return res.data;
-      } catch (error) {
-        if (error.response.status === 401) {
-          cookies.remove("authorization", { path: "/" });
-          cookies.remove("validity", { path: "/" });
-        } else {
-          window.location.href = "/";
-        }
+      const res = await fetch(URL, {
+        method: "GET",
+        mode: "cors",
+        headers,
+      });
+      if (res.ok) {
+        let resData = await res.text();
+        try {
+          resData = simdjson.parse(resData);
+        } catch {}
+        return resData;
+      } else if (res.status === 401) {
+        cookies.remove("authorization", { path: "/" });
+        cookies.remove("validity", { path: "/" });
+      } else {
+        window.location.href = "/";
       }
     } else {
       const refreshedToken = await refreshToken();
       if (refreshedToken !== false) {
         token = refreshedToken;
-        headers["Authorization"] = `animalAidAuthorization ${token}`;
-        const res2 = await axios.get(URL, { headers: headers });
-        return res2.data;
+        const res = await fetch(URL, {
+          method: "GET",
+          headers,
+        });
+        if (res.ok) {
+          let resData = await res.text();
+          try {
+            resData = simdjson.parse(resData);
+          } catch {}
+          return resData;
+        } else if (res.status === 401) {
+          cookies.remove("authorization", { path: "/" });
+          cookies.remove("validity", { path: "/" });
+        } else {
+          window.location.href = "/";
+        }
       } else {
         window.location.href = "/";
-        return "";
       }
     }
   }
