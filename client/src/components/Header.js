@@ -1,6 +1,5 @@
 import { Navbar, Nav } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
-import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoginAndRegPartial from "./LoginAndRegPartial";
 import {
@@ -14,7 +13,11 @@ import { useState } from "react";
 export default function Header() {
   const [open, setOpen] = useState(false);
   let autoCloseCollapse = () => {
-    if (isMobile) setOpen(!open);
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+    if (vw < 1200) setOpen(!open);
   };
   return (
     <Navbar bg="primary" className="navbar-shadow" variant="dark" expand="xl">

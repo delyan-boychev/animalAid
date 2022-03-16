@@ -51,7 +51,7 @@ export default function LoginAndRegPartial(props) {
       <div>
         <DropdownButton
           id="dropdownbutton"
-          align={{ lg: "end" }}
+          align={{ xl: "end" }}
           className="ms-3"
           variant="primary"
           title={

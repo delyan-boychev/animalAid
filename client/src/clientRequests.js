@@ -1,47 +1,43 @@
 //*Functions for making post or get requests to api application
 import Cookies from "universal-cookie";
+import simdjson from "simdjson";
 const API_URL = require("./config.json").API_URL;
-const simdjson = require("simdjson");
 //*Refresh token after expiration
 async function refreshToken() {
   const cookies = new Cookies();
   const token = cookies.get("authorization");
   const validity = cookies.get("validity");
   if (token !== undefined && validity !== undefined) {
-    if (validity <= parseInt(new Date().getTime()) / 1000) {
-      let headers = {
-        Authorization: `animalAidAuthorization ${token}`,
-        "Content-Type": "application/json",
-      };
-      const res = await fetch(`${API_URL}/user/refreshToken`, {
-        method: "POST",
-        mode: "cors",
-        headers,
-        body: "",
+    let headers = {
+      Authorization: `animalAidAuthorization ${token}`,
+      "Content-Type": "application/json",
+    };
+    const res = await fetch(`${API_URL}/user/refreshToken`, {
+      method: "POST",
+      mode: "cors",
+      headers,
+      body: "",
+    });
+    let r = await res.text();
+    try {
+      r = simdjson.parse(r);
+    } catch {}
+    if (r !== false && r !== "TOO_EARLY") {
+      cookies.set("authorization", r, {
+        maxAge: 3153600000,
+        path: "/",
       });
-      let r = await res.text();
-      try {
-        r = simdjson.parse(r);
-      } catch {}
-      if (r !== false && r !== "TOO_EARLY") {
-        cookies.set("authorization", r, {
-          maxAge: 3153600000,
-          path: "/",
-        });
-        cookies.set("validity", parseInt(new Date().getTime() / 1000) + 1800, {
-          maxAge: 3153600000,
-          path: "/",
-        });
-        return r;
-      } else if (r !== "TOO_EARLY") {
-        cookies.remove("authorization", { path: "/" });
-        cookies.remove("validity", { path: "/" });
-        return false;
-      } else {
-        window.location.reload();
-      }
-    } else {
+      cookies.set("validity", parseInt(new Date().getTime() / 1000) + 1800, {
+        maxAge: 3153600000,
+        path: "/",
+      });
+      return r;
+    } else if (r !== "TOO_EARLY") {
+      cookies.remove("authorization", { path: "/" });
+      cookies.remove("validity", { path: "/" });
       return false;
+    } else {
+      window.location.reload();
     }
   } else {
     return false;
@@ -82,7 +78,7 @@ async function postRequestToken(url, data, headers) {
   let URL = API_URL + url;
   if (url.includes(API_URL)) URL = url;
   if (token !== undefined && validity !== undefined) {
-    if (validity > parseInt(new Date().getTime()) / 1000) {
+    if (validity >= parseInt(new Date().getTime()) / 1000) {
       headers["Authorization"] = `animalAidAuthorization ${token}`;
       const res = await fetch(URL, {
         method: "POST",
@@ -159,7 +155,7 @@ async function getRequestToken(url, headers) {
   let URL = API_URL + url;
   if (url.includes(API_URL)) URL = url;
   if (token !== undefined && validity !== undefined) {
-    if (validity > parseInt(new Date().getTime()) / 1000) {
+    if (validity >= parseInt(new Date().getTime()) / 1000) {
       headers["Authorization"] = `animalAidAuthorization ${token}`;
       const res = await fetch(URL, {
         method: "GET",
@@ -182,6 +178,7 @@ async function getRequestToken(url, headers) {
       const refreshedToken = await refreshToken();
       if (refreshedToken !== false) {
         token = refreshedToken;
+        headers["Authorization"] = `animalAidAuthorization ${token}`;
         const res = await fetch(URL, {
           method: "GET",
           headers,
