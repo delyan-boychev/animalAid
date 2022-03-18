@@ -11,8 +11,6 @@ const decryptString = require("../encryption/stringEncryption").decryptString;
 const sharp = require("sharp");
 const extensionMethods = require("../extensionMethods");
 const getPageFromArr = require("../extensionMethods").getPageFromArr;
-const decryptCaptcha =
-  require("../encryption/captchaEncryption").decryptCaptcha;
 const config = require("../config.json");
 const nodemailer = require("nodemailer");
 const verifyTemplates = require("../models/emailTemplates/verifyProfile");
@@ -35,55 +33,46 @@ class UserService {
    * @returns {Boolean|String}
    */
   async registerUser(user) {
-    const captcha = decryptCaptcha(user.captchaCode);
-    if (captcha === user.captcha) {
-      const captchaExists = await this.#captchaRepository.captchaExists(
-        user.captcha,
-        user.captchaCode
-      );
-      if (!captchaExists) {
-        await this.#captchaRepository.saveCaptcha(
-          user.captcha,
-          user.captchaCode
-        );
-        let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+    const validateCaptcha = await this.#captchaRepository.validateCaptcha(
+      user.captcha,
+      user.captchaCode
+    );
+    if (validateCaptcha) {
+      let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+        8
+      )}.webp`;
+      let dir = `${path.dirname(require.main.filename)}/img`;
+      while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+        imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
           8
-        )}.webp`;
-        let dir = `${path.dirname(require.main.filename)}/img`;
-        while (fs.existsSync(`${dir}\\${imgFileName}`)) {
-          imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
-            8
-          )}.webp}`;
-        }
-        user.imgFileName = imgFileName;
-        user.role = "User";
-        const isReg = await this.#userRepository.register(user);
-        if (isReg === true) {
-          const key = encryptString(user.email);
-          transportMail.sendMail({
-            from: fromSender,
-            to: user.email,
-            subject: "Успешна регистрация в Animal Aid",
-            html: verifyTemplates.verifyProfileUser(user.name.first, key),
-          });
-          let base64Data = user.imgDataURL.split("base64,")[1];
-          if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-          }
-          sharp(Buffer.from(base64Data, "base64"))
-            .extract({
-              top: user.imageCrop.y,
-              left: user.imageCrop.x,
-              width: user.imageCrop.width,
-              height: user.imageCrop.height,
-            })
-            .webp()
-            .toFile(`${dir}/${imgFileName}`);
-        }
-        return isReg;
-      } else {
-        return "INVALID_CAPTCHA";
+        )}.webp}`;
       }
+      user.imgFileName = imgFileName;
+      user.role = "User";
+      const isReg = await this.#userRepository.register(user);
+      if (isReg === true) {
+        const key = encryptString(user.email);
+        transportMail.sendMail({
+          from: fromSender,
+          to: user.email,
+          subject: "Успешна регистрация в Animal Aid",
+          html: verifyTemplates.verifyProfileUser(user.name.first, key),
+        });
+        let base64Data = user.imgDataURL.split("base64,")[1];
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir);
+        }
+        sharp(Buffer.from(base64Data, "base64"))
+          .extract({
+            top: user.imageCrop.y,
+            left: user.imageCrop.x,
+            width: user.imageCrop.width,
+            height: user.imageCrop.height,
+          })
+          .webp()
+          .toFile(`${dir}/${imgFileName}`);
+      }
+      return isReg;
     } else {
       return "INVALID_CAPTCHA";
     }
@@ -110,57 +99,48 @@ class UserService {
    * @returns {Boolean|String}
    */
   async registerVet(user) {
-    const captcha = decryptCaptcha(user.captchaCode);
-    if (captcha === user.captcha) {
-      const captchaExists = await this.#captchaRepository.captchaExists(
-        user.captcha,
-        user.captchaCode
-      );
-      if (!captchaExists) {
-        await this.#captchaRepository.saveCaptcha(
-          user.captcha,
-          user.captchaCode
-        );
-        let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+    const validateCaptcha = await this.#captchaRepository.validateCaptcha(
+      user.captcha,
+      user.captchaCode
+    );
+    if (validateCaptcha) {
+      let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+        8
+      )}.webp`;
+      let dir = `${path.dirname(require.main.filename)}/img`;
+      while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+        imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
           8
         )}.webp`;
-        let dir = `${path.dirname(require.main.filename)}/img`;
-        while (fs.existsSync(`${dir}\\${imgFileName}`)) {
-          imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
-            8
-          )}.webp`;
-        }
-        user.imgFileName = imgFileName;
-        user.role = "Vet";
-        const isReg = await this.#userRepository.register(user);
-        if (isReg === true) {
-          const key = encryptString(user.email);
-          transportMail.sendMail({
-            from: fromSender,
-            to: user.email,
-            subject: "Успешна регистрация в Animal Aid",
-            html: verifyTemplates.verifyProfileVet(user.name.first, key),
-          });
-          let base64Data = user.imgDataURL.split("base64,")[1];
-          if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-          }
-          sharp(Buffer.from(base64Data, "base64"))
-            .extract({
-              top: user.imageCrop.y,
-              left: user.imageCrop.x,
-              width: user.imageCrop.width,
-              height: user.imageCrop.height,
-            })
-            .webp()
-            .toFile(`${dir}/${imgFileName}`, function (err) {
-              if (err) console.log(err);
-            });
-        }
-        return isReg;
-      } else {
-        return "INVALID_CAPTCHA";
       }
+      user.imgFileName = imgFileName;
+      user.role = "Vet";
+      const isReg = await this.#userRepository.register(user);
+      if (isReg === true) {
+        const key = encryptString(user.email);
+        transportMail.sendMail({
+          from: fromSender,
+          to: user.email,
+          subject: "Успешна регистрация в Animal Aid",
+          html: verifyTemplates.verifyProfileVet(user.name.first, key),
+        });
+        let base64Data = user.imgDataURL.split("base64,")[1];
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir);
+        }
+        sharp(Buffer.from(base64Data, "base64"))
+          .extract({
+            top: user.imageCrop.y,
+            left: user.imageCrop.x,
+            width: user.imageCrop.width,
+            height: user.imageCrop.height,
+          })
+          .webp()
+          .toFile(`${dir}/${imgFileName}`, function (err) {
+            if (err) console.log(err);
+          });
+      }
+      return isReg;
     } else {
       return "INVALID_CAPTCHA";
     }
@@ -184,37 +164,28 @@ class UserService {
    * @returns {Boolean|String}
    */
   async loginUser(user) {
-    const captcha = decryptCaptcha(user.captchaCode);
-    if (captcha === user.captcha) {
-      const captchaExists = await this.#captchaRepository.captchaExists(
-        user.captcha,
-        user.captchaCode
-      );
-      if (!captchaExists) {
-        await this.#captchaRepository.saveCaptcha(
-          user.captcha,
-          user.captchaCode
-        );
-        const u = await this.#userRepository.loginUser(user);
-        if (u !== false) {
-          if (u.verified) {
-            if (u.role === roles.Vet) {
-              if (u.moderationVerified === false) {
-                return "PROFILE_NOT_MODERATION_VERIFIED";
-              }
+    const validateCaptcha = await this.#captchaRepository.validateCaptcha(
+      user.captcha,
+      user.captchaCode
+    );
+    if (validateCaptcha) {
+      const u = await this.#userRepository.loginUser(user);
+      if (u !== false) {
+        if (u.verified) {
+          if (u.role === roles.Vet) {
+            if (u.moderationVerified === false) {
+              return "PROFILE_NOT_MODERATION_VERIFIED";
             }
-            const token = encryptToken(
-              `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
-            );
-            return token;
-          } else {
-            return "PROFILE_NOT_VERIFIED";
           }
+          const token = encryptToken(
+            `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
+          );
+          return token;
         } else {
-          return false;
+          return "PROFILE_NOT_VERIFIED";
         }
       } else {
-        return "INVALID_CAPTCHA";
+        return false;
       }
     } else {
       return "INVALID_CAPTCHA";

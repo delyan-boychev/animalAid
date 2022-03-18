@@ -263,8 +263,12 @@ class AdminRepository {
    */
   async deleteThread(threadId) {
     try {
-      await Thread.deleteOne({ _id: threadId }).exec();
-      return true;
+      const d = await Thread.deleteOne({ _id: threadId }).exec();
+      if (d.deletedCount > 0) {
+        return true;
+      } else {
+        return false;
+      }
     } catch {
       return false;
     }

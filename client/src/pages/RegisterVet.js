@@ -82,6 +82,10 @@ class RegisterVet extends React.Component {
     this.getCaptcha();
     this.getRegions();
     document.title = "Регистрация като ветеринарен лекар";
+    this.intervalId = setInterval(this.getCaptcha, 2 * 60 * 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
   submitForm = async (event) => {
     event.preventDefault();

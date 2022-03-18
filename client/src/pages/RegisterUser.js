@@ -73,6 +73,10 @@ class RegisterUser extends React.Component {
     this.getCaptcha();
     this.getRegions();
     document.title = "Регистрация като потребител";
+    this.intervalId = setInterval(this.getCaptcha, 2 * 60 * 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
   getRegions = async () => {
     const regions = await client.getRequest(`/city/getAllRegions`);

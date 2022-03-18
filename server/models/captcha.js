@@ -4,7 +4,7 @@ const schema = new mongoose.Schema({
     type: Date,
     required: true,
     default: () => {
-      return new Date(new Date().valueOf() + 600000);
+      return new Date(new Date().valueOf() + 2 * 60 * 1000);
     },
   },
   captcha: { type: String, required: true },

@@ -41,6 +41,10 @@ export default class Login extends React.Component {
   componentDidMount() {
     this.getCaptcha();
     document.title = "Влизане";
+    this.intervalId = setInterval(this.getCaptcha, 2 * 60 * 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
   submitForm = async (event) => {
     event.preventDefault();

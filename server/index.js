@@ -11,8 +11,6 @@ const app = express();
 const fs = require("fs");
 const privateKey = fs.readFileSync("./ssl/key.pem", "utf8");
 const certificate = fs.readFileSync("./ssl/cert.pem", "utf8");
-const updateCaptchaEncryption =
-  require("./encryption/captchaEncryption").updateCaptchaEncryption;
 const port = config.PORT;
 const userRoute = require("./routes/user");
 const captchaRoute = require("./routes/captcha");
@@ -21,6 +19,7 @@ const cityRoute = require("./routes/city");
 const threadRoute = require("./routes/thread");
 const fundrisingCampaignRoute = require("./routes/fundrisingCampaign");
 const vetRoute = require("./routes/vet");
+const rateLimit = require("express-rate-limit");
 const credentials = {
   key: privateKey,
   cert: certificate,
@@ -33,6 +32,13 @@ const io = require("socket.io")(httpServer, {
   },
 });
 const onConnection = require("./chatSockets")(io);
+
+const limiter = rateLimit({
+  windowMs: 2 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 io.on("connection", onConnection);
 app.disable("x-powered-by");
 app.use(compression());
@@ -70,7 +76,7 @@ app.use(helmet.permittedCrossDomainPolicies());
 app.use(helmet.referrerPolicy());
 app.use(helmet.xssFilter());
 app.use("/user", userRoute);
-app.use("/captcha", captchaRoute);
+app.use("/captcha", limiter, captchaRoute);
 app.use("/admin", adminRoute);
 app.use("/city", cityRoute);
 app.use("/thread", threadRoute);
@@ -81,8 +87,6 @@ mongoose.connect(config.CONNECTION_STRING, {
   useUnifiedTopology: true,
 });
 cronJobs(cron);
-updateCaptchaEncryption();
-setInterval(updateCaptchaEncryption, 600000);
 httpServer.listen(port, () => {
   console.log(`Animal Aid server is running!`);
 });

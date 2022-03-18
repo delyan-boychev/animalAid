@@ -2,12 +2,27 @@
 const { createCanvas } = require("canvas");
 const encryptCaptcha =
   require("../encryption/captchaEncryption").encryptCaptcha;
+const CaptchaRepository = require("../repositories/captcha");
 class CaptchaService {
+  #captchaRepository = new CaptchaRepository();
   /**
    * Get captcha
    * @returns {Object} Captcha
    */
-  getCaptcha() {
+  async getCaptcha() {
+    let captcha = this.generateCaptcha();
+    while (
+      (await this.#captchaRepository.saveCaptcha(
+        captcha.captcha,
+        captcha.code
+      )) === false
+    ) {
+      captcha = this.generateCaptcha();
+    }
+    delete captcha.captcha;
+    return captcha;
+  }
+  generateCaptcha() {
     const charsArray =
       "023456789abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!#$%^&*";
     let captcha = [];
@@ -44,6 +59,7 @@ class CaptchaService {
     ctx.lineTo(0, 40);
     ctx.stroke();
     return {
+      captcha: captcha.join(""),
       dataUrl: canvas.toDataURL("image/png"),
       code: encryptCaptcha(captcha.join("")),
     };
