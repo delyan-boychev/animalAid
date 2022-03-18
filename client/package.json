@@ -14,7 +14,6 @@
     "i": "^0.3.7",
     "jquery": "^3.6.0",
     "node-sass": "^7.0.1",
-    "npm": "^8.5.4",
     "react": "^17.0.2",
     "react-bootstrap": "^2.2.1",
     "react-cookie-consent": "^7.3.1",
