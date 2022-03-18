@@ -116,7 +116,7 @@ class Vet extends React.Component {
           </div>
           <div className="mb-3">
             <Button
-              className="d-inline"
+              className="d-inline ms-3 mt-3"
               onClick={() =>
                 this.openModal(
                   `Сигурни ли сте, че искате да започнете чат с ${this.state.vet.name.first} ${this.state.vet.name.last}?`
@@ -128,7 +128,7 @@ class Vet extends React.Component {
             </Button>
             <Button
               onClick={() => window.open(`tel:${this.state.vet.phoneNumber}`)}
-              className="d-inline ms-3"
+              className="d-inline ms-3 mt-3"
             >
               <FontAwesomeIcon icon={faPhoneAlt}></FontAwesomeIcon> Обади се
             </Button>
@@ -136,7 +136,7 @@ class Vet extends React.Component {
               <Button
                 as={Link}
                 to={`/user/createAppointment?id=${this.state.vet._id}`}
-                className="d-inline ms-3"
+                className="d-inline-sm ms-3 mt-3"
               >
                 <FontAwesomeIcon icon={faCalendarPlus}></FontAwesomeIcon> Запази
                 час
