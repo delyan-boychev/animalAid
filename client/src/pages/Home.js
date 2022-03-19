@@ -37,7 +37,7 @@ export default function Home() {
       <Carousel>
         <Carousel.Item className="homeImg1">
           <Carousel.Caption>
-            <Card className="bg-primary text-white registered-users navbar-shadow">
+            <Card className="bg-primary text-white registered-users">
               <Card.Header className="fw-bold">
                 Регистрирани потребители
               </Card.Header>
