@@ -282,3 +282,25 @@ a.text-secondary:focus {
   transition: padding 0.1s ease-in-out, transform 0.1s ease-in-out;
   border-radius: 5px 0 0 0;
 }
+.registered-users {
+  position: absolute;
+  top: 10px;
+  right: -10vw;
+  z-index: 99;
+}
+.firstSlide {
+  margin-top: 50px;
+}
+@media only screen and (max-width: 1130px) {
+  .registered-users {
+    margin-top: 20px;
+    margin: auto;
+    position: relative;
+    top: 0;
+    right: 0;
+    max-width: 250px;
+  }
+  .firstSlide {
+    margin-top: 20px;
+  }
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Carousel } from "react-bootstrap";
+import { Card, Carousel } from "react-bootstrap";
 import CountUp from "react-countup";
 import "../css/alignCarouselTop.css";
 import { NavLink, Link } from "react-router-dom";
@@ -37,7 +37,44 @@ export default function Home() {
       <Carousel>
         <Carousel.Item className="homeImg1">
           <Carousel.Caption>
-            <div className="container text-center text-secondary mt-5">
+            <Card className="bg-primary text-white registered-users navbar-shadow">
+              <Card.Header>Регистрирани потребители</Card.Header>
+              <Card.Body>
+                <div className="d-flex justify-content-between">
+                  <div className="text-start">
+                    <span className="fw-bold">
+                      <FontAwesomeIcon icon={faUserDoctor}></FontAwesomeIcon>{" "}
+                      Ветеринарни лекари:{" "}
+                    </span>
+                  </div>
+                  <div className="text-end">
+                    <CountUp
+                      className="text-white"
+                      start={0}
+                      end={count.vets}
+                      duration={0.5}
+                    />
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <div className="text-start">
+                    <span className="fw-bold">
+                      <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>{" "}
+                      Потребители:{" "}
+                    </span>
+                  </div>
+                  <div className="text-end">
+                    <CountUp
+                      className="text-white"
+                      start={0}
+                      end={count.users}
+                      duration={0.5}
+                    />
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+            <div className="container text-center text-secondary firstSlide">
               <h1 className="text-shadow-big">
                 Добре дошли в{" "}
                 <span className="underline fw-bold">Animal Aid</span>!
@@ -46,30 +83,9 @@ export default function Home() {
                 Платформата, която обединява всички ветеринарни лекари в
                 България!
                 <br />
-                <span className="fw-bold text-primary h1">
-                  <FontAwesomeIcon icon={faUserDoctor}></FontAwesomeIcon>
-                  Ветеринарни лекари:{" "}
-                  <CountUp
-                    className="text-white"
-                    start={0}
-                    end={count.vets}
-                    duration={0.5}
-                  />
-                </span>
-                <br />
-                <span className="fw-bold text-primary h1 mt-3">
-                  <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-                  Потребители:{" "}
-                  <CountUp
-                    className="text-white"
-                    start={0}
-                    end={count.users}
-                    duration={0.5}
-                  />
-                </span>
               </h2>
               <NavLink to={token === undefined ? "/register" : "/user/profile"}>
-                <div className="btn btn-primary mt-5 fw-bold">
+                <div className="btn btn-primary mt-3 fw-bold">
                   <FontAwesomeIcon icon={faPlayCircle}></FontAwesomeIcon>{" "}
                   Започни сега
                 </div>
