@@ -48,6 +48,21 @@ class UserRepository {
     }
   }
   /**
+   * Count users and vets
+   */
+  async countUsersAndVets() {
+    const users = await User.count({
+      verified: true,
+      role: { $ne: roles.Vet },
+    }).exec();
+    const vets = await User.count({
+      verified: true,
+      moderationVerified: true,
+      role: roles.Vet,
+    }).exec();
+    return { users, vets };
+  }
+  /**
    * Check users exists and last request forgot password
    * @param {String} email
    * @returns {String|Boolean}

@@ -86,6 +86,12 @@ class UserService {
     return await this.#userRepository.getVet(id);
   }
   /**
+   * Count users and vets
+   */
+  async countUsersAndVets() {
+    return await this.#userRepository.countUsersAndVets();
+  }
+  /**
    * Get user role
    * @param {String} id User id
    * @returns {String}

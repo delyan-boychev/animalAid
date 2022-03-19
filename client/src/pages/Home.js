@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { Carousel } from "react-bootstrap";
+import CountUp from "react-countup";
 import "../css/alignCarouselTop.css";
 import { NavLink, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,13 +10,25 @@ import {
   faPhoneAlt,
   faPlayCircle,
   faLightbulb,
-  faPaw,
   faQuestionCircle,
   faTachometerAlt,
   faCogs,
+  faUserDoctor,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { getRequest } from "../clientRequests";
 import Cookies from "universal-cookie";
 export default function Home() {
+  const [count, setCount] = useState(0);
+  const countUsersAndVets = async () => {
+    const res = await getRequest("/user/countUsersAndVets");
+    setCount(res);
+  };
+  useEffect(() => {
+    if (!count) {
+      countUsersAndVets();
+    }
+  });
   const cookies = new Cookies();
   document.title = "Animal Aid";
   const token = cookies.get("authorization");
@@ -29,13 +43,30 @@ export default function Home() {
                 <span className="underline fw-bold">Animal Aid</span>!
               </h1>
               <h2 className="text-shadow-big mt-3">
-                Платформата, която обединява всички ветеринари в България!
+                Платформата, която обединява всички ветеринарни лекари в
+                България!
                 <br />
-                <FontAwesomeIcon
-                  icon={faPaw}
-                  className="text-primary mt-3"
-                  size="3x"
-                ></FontAwesomeIcon>
+                <span className="fw-bold text-primary h1">
+                  <FontAwesomeIcon icon={faUserDoctor}></FontAwesomeIcon>
+                  Ветеринарни лекари:{" "}
+                  <CountUp
+                    className="text-white"
+                    start={0}
+                    end={count.vets}
+                    duration={0.5}
+                  />
+                </span>
+                <br />
+                <span className="fw-bold text-primary h1 mt-3">
+                  <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+                  Потребители:{" "}
+                  <CountUp
+                    className="text-white"
+                    start={0}
+                    end={count.users}
+                    duration={0.5}
+                  />
+                </span>
               </h2>
               <NavLink to={token === undefined ? "/register" : "/user/profile"}>
                 <div className="btn btn-primary mt-5 fw-bold">

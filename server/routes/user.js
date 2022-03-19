@@ -28,6 +28,9 @@ router.post("/regVet", async (req, res) => {
     res.send(await userService.registerVet(req.body));
   });
 });
+router.get("/countUsersAndVets", async (req, res) => {
+  res.send(await userService.countUsersAndVets());
+});
 router.get(
   "/img/:filename",
   apicache.middleware("1 hour"),
