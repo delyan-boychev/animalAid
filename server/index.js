@@ -19,6 +19,7 @@ const cityRoute = require("./routes/city");
 const threadRoute = require("./routes/thread");
 const fundrisingCampaignRoute = require("./routes/fundrisingCampaign");
 const vetRoute = require("./routes/vet");
+const moderatorRoute = require("./routes/moderator");
 const rateLimit = require("express-rate-limit");
 const credentials = {
   key: privateKey,
@@ -82,6 +83,7 @@ app.use("/city", cityRoute);
 app.use("/thread", threadRoute);
 app.use("/fundrisingCampaign", fundrisingCampaignRoute);
 app.use("/vet", vetRoute);
+app.use("/moderator", moderatorRoute);
 mongoose.connect(config.CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

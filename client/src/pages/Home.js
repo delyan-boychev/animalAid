@@ -38,7 +38,9 @@ export default function Home() {
         <Carousel.Item className="homeImg1">
           <Carousel.Caption>
             <Card className="bg-primary text-white registered-users navbar-shadow">
-              <Card.Header>Регистрирани потребители</Card.Header>
+              <Card.Header className="fw-bold">
+                Регистрирани потребители
+              </Card.Header>
               <Card.Body>
                 <div className="d-flex justify-content-between">
                   <div className="text-start">
@@ -52,7 +54,7 @@ export default function Home() {
                       className="text-white"
                       start={0}
                       end={count.vets}
-                      duration={0.5}
+                      duration={1}
                     />
                   </div>
                 </div>
@@ -68,7 +70,7 @@ export default function Home() {
                       className="text-white"
                       start={0}
                       end={count.users}
-                      duration={0.5}
+                      duration={1}
                     />
                   </div>
                 </div>
