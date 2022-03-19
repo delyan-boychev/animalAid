@@ -4,6 +4,12 @@ const VetAppointment = require("../models/vetAppointment");
 const roles = require("../models/roles");
 const daysOfWeek = require("../models/daysOfWeek");
 class VetRepository {
+  /**
+   * Create schedule
+   * @param {String} vetId
+   * @param {Object} scheduleVet
+   * @returns {Boolean}
+   */
   async createSchedule(vetId, scheduleVet) {
     try {
       const vet = await User.findOne({ _id: vetId, role: roles.Vet });
@@ -23,6 +29,12 @@ class VetRepository {
       return false;
     }
   }
+  /**
+   * Create appointment
+   * @param {String} userId
+   * @param {Object} appointment
+   * @returns {Boolean}
+   */
   async createAppointment(userId, appointment) {
     try {
       const vet = await User.findOne({
@@ -75,6 +87,12 @@ class VetRepository {
       return false;
     }
   }
+  /**
+   * Get hours
+   * @param {String} vetId
+   * @param {Date} date
+   * @returns {Object}
+   */
   async getHours(vetId, date) {
     try {
       const vet = await User.findOne({ _id: vetId, role: roles.Vet })
@@ -135,6 +153,12 @@ class VetRepository {
       return false;
     }
   }
+  /**
+   * Get appointments by vet id
+   * @param {String} vetId
+   * @param {Date} date
+   * @returns {Object}
+   */
   async getAppointmentsByVet(vetId, date) {
     try {
       const vet = await User.findOne({
@@ -184,6 +208,11 @@ class VetRepository {
       return false;
     }
   }
+  /**
+   * Check vet and schedule
+   * @param {String} vetId
+   * @returns {Object}
+   */
   async checkVetAndSchedule(vetId) {
     try {
       const vet = await User.findOne({
@@ -200,6 +229,11 @@ class VetRepository {
       return { vetExists: false, schedule: false };
     }
   }
+  /**
+   * Get appointments
+   * @param {String} query
+   * @returns {Object[]}
+   */
   async getAppointments(query) {
     try {
       const appointments = await VetAppointment.find(query)
@@ -217,6 +251,12 @@ class VetRepository {
       return false;
     }
   }
+  /**
+   * Remove appointment
+   * @param {String} userId
+   * @param {String} appointmentId
+   * @returns {Boolean|Object}
+   */
   async removeAppointment(userId, appointmentId) {
     try {
       const d = await VetAppointment.deleteOne({
@@ -233,6 +273,12 @@ class VetRepository {
       return false;
     }
   }
+  /**
+   * Remove appointment by vet
+   * @param {String} vetId
+   * @param {String} appointmentId
+   * @returns {Boolean|Object}
+   */
   async removeAppointmentByVet(vetId, appointmentId) {
     const appointment = await VetAppointment.findOne({
       _id: appointmentId,
@@ -262,6 +308,12 @@ class VetRepository {
       return false;
     }
   }
+  /**
+   * Confirm appointment
+   * @param {String} vetId
+   * @param {String} appointmentId
+   * @returns {Boolean|Object}
+   */
   async confirmAppointment(vetId, appointmentId) {
     try {
       const appointment = await VetAppointment.findOne({

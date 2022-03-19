@@ -86,6 +86,12 @@ class UserRepository {
       return false;
     }
   }
+  /**
+   * Get vets around user
+   * @param {String} userId
+   * @param {String} searchQuery
+   * @returns {Object[]}
+   */
   async getVetsAroundUser(userId, searchQuery) {
     try {
       const user = await User.findById(userId).populate("city").exec();

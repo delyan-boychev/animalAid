@@ -302,6 +302,11 @@ class AdminRepository {
       return false;
     }
   }
+  /**
+   * Get campaign
+   * @param {String} campaignId
+   * @returns {Object}
+   */
   async getCampaign(campaignId) {
     try {
       const campaign = FundrisingCampaign.findById(campaignId)

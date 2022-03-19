@@ -159,6 +159,13 @@ class FundrisingCampaignRepository {
       return false;
     }
   }
+  /**
+   * Check document
+   * @param {String} campaignId
+   * @param {String} userId
+   * @param {String} documentFileName
+   * @returns {Boolean}
+   */
   async checkDocument(campaignId, userId, documentFileName) {
     try {
       const campaign = await FundrisingCampaign.findOne({

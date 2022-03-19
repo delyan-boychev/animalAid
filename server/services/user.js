@@ -345,6 +345,13 @@ class UserService {
       return false;
     }
   }
+  /**
+   * Get vets around user
+   * @param {Number} pageNum
+   * @param {String} userId
+   * @param {String} searchQuery
+   * @returns {Object|Boolean}
+   */
   async getVetsAroundUser(pageNum, userId, searchQuery) {
     const vets = await this.#userRepository.getVetsAroundUser(
       userId,
@@ -360,7 +367,7 @@ class UserService {
   /**
    * Get vet profiles
    * @param {Number} pageNum Number of the page
-   * @returns {Object[]}
+   * @returns {Object|Boolean}
    */
   async getVets(pageNum, searchQuery, createAppointments) {
     const vets = await this.#userRepository.getVets(

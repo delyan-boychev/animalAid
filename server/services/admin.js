@@ -146,6 +146,11 @@ class AdminService {
   async deleteThreadPost(threadId, postId) {
     return await this.#adminRepository.deleteThreadPost(threadId, postId);
   }
+  /**
+   * Get campaign
+   * @param {String} campaignId
+   * @returns {Object}
+   */
   async getCampaign(campaignId) {
     return await this.#adminRepository.getCampaign(campaignId);
   }
@@ -153,12 +158,17 @@ class AdminService {
    * Get all fundrising campaigns
    * @param {String} searchQuery
    * @param {Number} pageNum
-   * @returns {Object[]|Boolean}
+   * @returns {Object|Boolean}
    */
   async getAllCampaigns(searchQuery, pageNum) {
     const campaigns = await this.#adminRepository.getAllCampaigns(searchQuery);
     return getPageFromArr(campaigns, 12, pageNum, "campaigns");
   }
+  /**
+   * Get campaigns for moderation verify
+   * @param {Number} pageNum
+   * @returns {Object[]|Boolean}
+   */
   async getCampaignsForModerationVerify(pageNum) {
     const campaigns =
       await this.#adminRepository.getCampaignsForModerationVerify();

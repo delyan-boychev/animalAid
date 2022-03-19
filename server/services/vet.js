@@ -18,6 +18,12 @@ const transportMail = nodemailer.createTransport({
 const fromSender = config.EMAIL_INFO.EMAIL_SENDER;
 class VetService {
   #vetRepository = new VetRepository();
+  /**
+   * Create schedule
+   * @param {String} vetId
+   * @param {Object} scheduleVet
+   * @returns {Boolean}
+   */
   async createSchedule(vetId, scheduleVet) {
     let schedule = {};
     let step = scheduleVet["step"];
@@ -84,6 +90,12 @@ class VetService {
       typeAppointments: scheduleVet.typeAppointments,
     });
   }
+  /**
+   * Create appointment
+   * @param {String} userId
+   * @param {String} appointment
+   * @returns {Boolean}
+   */
   async createAppointment(userId, appointment) {
     const date = new Date();
     date.setHours(0, 0, 0, 0);
@@ -101,9 +113,20 @@ class VetService {
       return false;
     }
   }
+  /**
+   * Check vet and schedule
+   * @param {String} vetId
+   * @returns {Object}
+   */
   async checkVetAndSchedule(vetId) {
     return await this.#vetRepository.checkVetAndSchedule(vetId);
   }
+  /**
+   * Get hours
+   * @param {String} vetId
+   * @param {String} date
+   * @returns {Object|Boolean}
+   */
   async getHours(vetId, date) {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -118,6 +141,12 @@ class VetService {
       return false;
     }
   }
+  /**
+   * Get appointments
+   * @param {String} vetId
+   * @param {String} date
+   * @returns {Object|Boolean}
+   */
   async getAppointments(vetId, date) {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -131,6 +160,12 @@ class VetService {
       return false;
     }
   }
+  /**
+   * Get upcoming appointments
+   * @param {String} userId
+   * @param {Number} pageNum
+   * @returns {Object|Boolean}
+   */
   async getUpcomingAppointments(userId, pageNum) {
     const appointments = await this.#vetRepository.getAppointments({
       user: userId,
@@ -142,6 +177,12 @@ class VetService {
       return false;
     }
   }
+  /**
+   *  Get past appointments
+   * @param {String} userId
+   * @param {Number} pageNum
+   * @returns {Object|Boolean}
+   */
   async getPastAppointments(userId, pageNum) {
     const appointments = await this.#vetRepository.getAppointments({
       user: userId,
@@ -153,9 +194,21 @@ class VetService {
       return false;
     }
   }
+  /**
+   * Remove appointment
+   * @param {String} userId
+   * @param {String} appointmentId
+   * @returns {Boolean}
+   */
   async removeAppointment(userId, appointmentId) {
     return await this.#vetRepository.removeAppointment(userId, appointmentId);
   }
+  /**
+   * Remove appointment by vet
+   * @param {String} vetId
+   * @param {String} appointmentId
+   * @returns {Boolean}
+   */
   async removeAppointmentByVet(vetId, appointmentId) {
     const removed = await this.#vetRepository.removeAppointmentByVet(
       vetId,
@@ -179,6 +232,12 @@ class VetService {
       return false;
     }
   }
+  /**
+   * Confirm appointment
+   * @param {String} vetId
+   * @param {String} appointmentId
+   * @returns {Boolean}
+   */
   async confirmAppointment(vetId, appointmentId) {
     const confirmed = await this.#vetRepository.confirmAppointment(
       vetId,

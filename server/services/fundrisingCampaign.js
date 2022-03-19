@@ -111,7 +111,7 @@ class FundrisingCampaignService {
    * Get all fundrising campaigns
    * @param {String} searchQuery
    * @param {Number} pageNum
-   * @returns {Object[]|Boolean}
+   * @returns {Object|Boolean}
    */
   async getAllCampaigns(searchQuery, pageNum) {
     const campaigns = await this.#fundrisingCampaignRepository.getAllCampaigns(
