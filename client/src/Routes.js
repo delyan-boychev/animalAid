@@ -8,6 +8,7 @@ import Profile from "./pages/UserPages/Profile";
 import RequestForgotPassword from "./pages/RequestForgotPassword";
 import ChangeForgotPassword from "./pages/ChangeForgotPassword";
 import AdminPanel from "./pages/AdminPages/AdminPanel";
+import ModeratorPanel from "./pages/ModeratorPages/ModeratorPanel";
 import VetsAroundMe from "./pages/UserPages/VetsAroundMe";
 import { useRoutes } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -20,6 +21,7 @@ import FundrisingCampaings from "./pages/FundrisingCampaigns";
 import FundrisingCampaign from "./pages/FundrisingCampaign";
 import ViewFundrisingCampaign from "./pages/UserPages/ViewFundrisingCampaign";
 import ViewFundrisingCampaignAdmin from "./pages/AdminPages/ViewFundrisingCampaignAdmin";
+import ViewFundrisingCampaignModerator from "./pages/ModeratorPages/ViewFundrisingCampaignModerator";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import Cookies from "universal-cookie";
@@ -368,6 +370,32 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? (
       <div className="container mt-3">
         <ViewFundrisingCampaignAdmin />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/moderator/moderatorPanel",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <ModeratorPanel />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/moderator/viewFundrisingCampaign",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <ViewFundrisingCampaignModerator />
       </div>
     ) : (
       <div className="container mt-3">
