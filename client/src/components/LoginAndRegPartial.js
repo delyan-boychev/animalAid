@@ -8,6 +8,7 @@ import {
   faComments,
   faUserMd,
   faUsersCog,
+  faUserShield,
 } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Dropdown, DropdownButton } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -85,6 +86,20 @@ export default function LoginAndRegPartial(props) {
                 >
                   <FontAwesomeIcon icon={faUsersCog}></FontAwesomeIcon>{" "}
                   Администраторски панел
+                </Dropdown.Item>
+              ) : (
+                ""
+              )}
+              {profile.role === roles.Moderator ? (
+                <Dropdown.Item
+                  eventKey="1"
+                  as={Link}
+                  to="/moderator/moderatorPanel"
+                  className="text-primary h5"
+                  onClick={props.onClick}
+                >
+                  <FontAwesomeIcon icon={faUserShield}></FontAwesomeIcon>{" "}
+                  Модераторски панел
                 </Dropdown.Item>
               ) : (
                 ""

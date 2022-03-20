@@ -58,7 +58,7 @@ class ViewAllUsers extends React.Component {
     }
   };
   openUser = async (id) => {
-    this.props.navigate(`/moderator/editUser?id=${id}`);
+    this.props.navigate(`/moderator/viewUser?id=${id}`);
   };
   render() {
     const pagination = (

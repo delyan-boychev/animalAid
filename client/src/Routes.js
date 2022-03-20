@@ -36,6 +36,7 @@ import EditThread from "./pages/UserPages/EditThread";
 import CreateFundrisingCampaign from "./pages/UserPages/CreateFundrisingCampaign";
 import NoAccess from "./pages/NoAccess";
 import EditFundrisingCampaign from "./pages/UserPages/EditFundrisingCampaign";
+import ViewUser from "./pages/ModeratorPages/ViewUser";
 const routes = (isLoggedIn) => [
   { path: "/", element: <Home />, exact: true },
   {
@@ -383,6 +384,19 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? (
       <div className="container mt-3">
         <ModeratorPanel />
+      </div>
+    ) : (
+      <div className="container mt-3">
+        <NoAccess />
+      </div>
+    ),
+    exact: true,
+  },
+  {
+    path: "/moderator/viewUser",
+    element: isLoggedIn ? (
+      <div className="container mt-3">
+        <ViewUser />
       </div>
     ) : (
       <div className="container mt-3">
