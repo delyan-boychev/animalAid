@@ -451,7 +451,7 @@ class UserRepository {
    */
   async getRole(id) {
     try {
-      const u = await User.findById(id).exec();
+      const u = await User.findById(id).lean().exec();
       if (u !== null) {
         return u.role;
       } else {
