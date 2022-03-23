@@ -14,8 +14,8 @@ const deleteThreadPostSchema = require("../models/validation/admin/deleteThreadP
 const AdminService = require("../services/admin");
 const adminService = new AdminService();
 const roles = require("../models/roles");
-const completeFundrisingCampaignSchema = require("../models/validation/admin/completeFundrisingCampaign");
-const moderationVerifyCampaignSchema = require("../models/validation/admin/moderationVerifyFundrisingCampaign");
+const completeFundraisingCampaignSchema = require("../models/validation/admin/completeFundraisingCampaign");
+const moderationVerifyCampaignSchema = require("../models/validation/admin/moderationVerifyFundraisingCampaign");
 const router = express.Router();
 router.get(
   "/getAllUsers/:pageNum/:searchQuery?",
@@ -200,7 +200,7 @@ router.get("/getCampaign/:id", authenticateAdmin, async (req, res) => {
   res.send(await adminService.getCampaign(req.params.id));
 });
 router.post(
-  "/moderationVerifyFundrisingCampaign",
+  "/moderationVerifyFundraisingCampaign",
   authenticateAdmin,
   async (req, res) => {
     validation(
@@ -209,7 +209,7 @@ router.post(
       res,
       async () => {
         res.send(
-          await adminService.moderationVerifyFundrisingCampaign(
+          await adminService.moderationVerifyFundraisingCampaign(
             req.body.campaignId,
             req.body.verified,
             req.body.rejectedComment
@@ -220,12 +220,12 @@ router.post(
   }
 );
 router.post(
-  "/completeFundrisingCampaign",
+  "/completeFundraisingCampaign",
   authenticateAdmin,
   async (req, res) => {
-    validation(req.body, completeFundrisingCampaignSchema, res, async () => {
+    validation(req.body, completeFundraisingCampaignSchema, res, async () => {
       res.send(
-        await adminService.completeFundrisingCampaign(req.body.campaignId)
+        await adminService.completeFundraisingCampaign(req.body.campaignId)
       );
     });
   }

@@ -11,8 +11,8 @@ const deleteThreadPostSchema = require("../models/validation/moderator/deleteThr
 const ModeratorService = require("../services/moderator");
 const moderatorService = new ModeratorService();
 const roles = require("../models/roles");
-const completeFundrisingCampaignSchema = require("../models/validation/moderator/completeFundrisingCampaign");
-const moderationVerifyCampaignSchema = require("../models/validation/moderator/moderationVerifyFundrisingCampaign");
+const completeFundraisingCampaignSchema = require("../models/validation/moderator/completeFundraisingCampaign");
+const moderationVerifyCampaignSchema = require("../models/validation/moderator/moderationVerifyFundraisingCampaign");
 const router = express.Router();
 router.get(
   "/getAllUsers/:pageNum/:searchQuery?",
@@ -162,7 +162,7 @@ router.get("/getCampaign/:id", authenticateModerator, async (req, res) => {
   res.send(await moderatorService.getCampaign(req.params.id));
 });
 router.post(
-  "/moderationVerifyFundrisingCampaign",
+  "/moderationVerifyFundraisingCampaign",
   authenticateModerator,
   async (req, res) => {
     validation(
@@ -171,7 +171,7 @@ router.post(
       res,
       async () => {
         res.send(
-          await moderatorService.moderationVerifyFundrisingCampaign(
+          await moderatorService.moderationVerifyFundraisingCampaign(
             req.body.campaignId,
             req.body.verified,
             req.body.rejectedComment
@@ -182,12 +182,12 @@ router.post(
   }
 );
 router.post(
-  "/completeFundrisingCampaign",
+  "/completeFundraisingCampaign",
   authenticateModerator,
   async (req, res) => {
-    validation(req.body, completeFundrisingCampaignSchema, res, async () => {
+    validation(req.body, completeFundraisingCampaignSchema, res, async () => {
       res.send(
-        await moderatorService.completeFundrisingCampaign(req.body.campaignId)
+        await moderatorService.completeFundraisingCampaign(req.body.campaignId)
       );
     });
   }

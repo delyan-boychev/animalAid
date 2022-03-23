@@ -6,8 +6,8 @@ const fs = require("fs");
 const sharp = require("sharp");
 const extensionMethods = require("../extensionMethods");
 const getPageFromArr = require("../extensionMethods").getPageFromArr;
-const verifiedFundrisingCampaign = require("../models/emailTemplates/verifiedFundrisingCampaign");
-const rejectedFundrisingCampaign = require("../models/emailTemplates/rejectedFundrisingCampaign");
+const verifiedFundraisingCampaign = require("../models/emailTemplates/verifiedFundraisingCampaign");
+const rejectedFundraisingCampaign = require("../models/emailTemplates/rejectedFundraisingCampaign");
 const AdminRepository = require("../repositories/admin");
 const transportMail = nodemailer.createTransport({
   service: "gmail",
@@ -155,7 +155,7 @@ class AdminService {
     return await this.#adminRepository.getCampaign(campaignId);
   }
   /**
-   * Get all fundrising campaigns
+   * Get all fundraising campaigns
    * @param {String} searchQuery
    * @param {Number} pageNum
    * @returns {Object|Boolean}
@@ -179,19 +179,19 @@ class AdminService {
     }
   }
   /**
-   * Moderation verify fundrising campaign
+   * Moderation verify fundraising campaign
    * @param {String} campaignId
    * @param {Boolean} verified
    * @param {String} rejectedComment
    * @returns  {Boolean}
    */
-  async moderationVerifyFundrisingCampaign(
+  async moderationVerifyFundraisingCampaign(
     campaignId,
     verified,
     rejectedComment
   ) {
     const campaign =
-      await this.#adminRepository.moderationVerifyFundrisingCampaign(
+      await this.#adminRepository.moderationVerifyFundraisingCampaign(
         campaignId,
         verified,
         rejectedComment
@@ -202,7 +202,7 @@ class AdminService {
           from: fromSender,
           to: campaign.user.email,
           subject: "Одобрена кампания",
-          html: verifiedFundrisingCampaign(
+          html: verifiedFundraisingCampaign(
             campaign.user.name.first,
             campaign.title
           ),
@@ -212,7 +212,7 @@ class AdminService {
           from: fromSender,
           to: campaign.user.email,
           subject: "Отхвърлена кампания",
-          html: rejectedFundrisingCampaign(
+          html: rejectedFundraisingCampaign(
             campaign.user.name.first,
             campaign.title,
             campaign.rejectedComment
@@ -225,12 +225,12 @@ class AdminService {
     }
   }
   /**
-   * Complete fudrising campaign
+   * Complete fudraising campaign
    * @param {String} campaignId
    * @returns {Boolean}
    */
-  async completeFundrisingCampaign(campaignId) {
-    return await this.#adminRepository.completeFundrisingCampaign(campaignId);
+  async completeFundraisingCampaign(campaignId) {
+    return await this.#adminRepository.completeFundraisingCampaign(campaignId);
   }
 }
 module.exports = AdminService;

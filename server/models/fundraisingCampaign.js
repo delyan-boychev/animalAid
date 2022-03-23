@@ -19,4 +19,4 @@ const schema = new mongoose.Schema({
     },
   },
 });
-module.exports = mongoose.model("FundrisingCampaign", schema, "campaigns");
+module.exports = mongoose.model("FundraisingCampaign", schema, "campaigns");

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router";
 import PageTitle from "../components/PageTitle";
 const client = require("../clientRequests");
 const API_URL = require("../config.json").API_URL;
-class FundrisingCampaign extends React.Component {
+class FundraisingCampaign extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,7 +50,7 @@ class FundrisingCampaign extends React.Component {
     ).pad()}-${date.getFullYear()}`;
   };
   getCampaign = async (id) => {
-    const data = await client.getRequestToken(`/fundrisingCampaign/${id}`);
+    const data = await client.getRequestToken(`/fundraisingCampaign/${id}`);
     if (data === false) {
       this.props.navigate("/");
     } else {
@@ -156,6 +156,6 @@ class FundrisingCampaign extends React.Component {
 }
 function WithNavigate(props) {
   let navigate = useNavigate();
-  return <FundrisingCampaign {...props} navigate={navigate} />;
+  return <FundraisingCampaign {...props} navigate={navigate} />;
 }
 export default WithNavigate;

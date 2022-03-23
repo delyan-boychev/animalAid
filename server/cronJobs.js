@@ -1,7 +1,7 @@
-const FundrisingCampaign = require("./models/fundrisingCampaign");
+const FundraisingCampaign = require("./models/fundraisingCampaign");
 const cronJobs = (cron) => {
   cron.schedule("*/1 * * * *", async () => {
-    await FundrisingCampaign.updateMany(
+    await FundraisingCampaign.updateMany(
       {
         moderationVerified: true,
         completed: false,

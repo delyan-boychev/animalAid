@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 const client = require("../../../clientRequests");
 const API_URL = require("../../../config.json").API_URL;
-class FundrisingCampaigns extends React.Component {
+class FundraisingCampaigns extends React.Component {
   state = {
     page: 1,
     campaigns: [],
@@ -19,7 +19,7 @@ class FundrisingCampaigns extends React.Component {
     this.getCampaigns(1);
   }
   getCampaigns = async (page) => {
-    let url = `/fundrisingCampaign/getMyCampaigns/${page}`;
+    let url = `/fundraisingCampaign/getMyCampaigns/${page}`;
     const data = await client.getRequestToken(url);
     if (data !== false) {
       this.setState({
@@ -32,7 +32,7 @@ class FundrisingCampaigns extends React.Component {
     }
   };
   openCampaign = async (id) => {
-    this.props.navigate(`/user/viewFundrisingCampaign?id=${id}`);
+    this.props.navigate(`/user/viewFundraisingCampaign?id=${id}`);
   };
   render() {
     const pagination = (
@@ -111,5 +111,5 @@ class FundrisingCampaigns extends React.Component {
 }
 export default function WithNavigate(props) {
   let navigate = useNavigate();
-  return <FundrisingCampaigns {...props} navigate={navigate} />;
+  return <FundraisingCampaigns {...props} navigate={navigate} />;
 }

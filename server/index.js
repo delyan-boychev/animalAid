@@ -17,7 +17,7 @@ const captchaRoute = require("./routes/captcha");
 const adminRoute = require("./routes/admin");
 const cityRoute = require("./routes/city");
 const threadRoute = require("./routes/thread");
-const fundrisingCampaignRoute = require("./routes/fundrisingCampaign");
+const fundraisingCampaignRoute = require("./routes/fundraisingCampaign");
 const vetRoute = require("./routes/vet");
 const moderatorRoute = require("./routes/moderator");
 const rateLimit = require("express-rate-limit");
@@ -81,7 +81,7 @@ app.use("/captcha", limiter, captchaRoute);
 app.use("/admin", adminRoute);
 app.use("/city", cityRoute);
 app.use("/thread", threadRoute);
-app.use("/fundrisingCampaign", fundrisingCampaignRoute);
+app.use("/fundraisingCampaign", fundraisingCampaignRoute);
 app.use("/vet", vetRoute);
 app.use("/moderator", moderatorRoute);
 mongoose.connect(config.CONNECTION_STRING, {

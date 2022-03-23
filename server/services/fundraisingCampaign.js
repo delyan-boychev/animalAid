@@ -5,8 +5,8 @@ const config = require("../config.json");
 const fs = require("fs");
 const sharp = require("sharp");
 const extensionMethods = require("../extensionMethods");
-const createdFundrisingCampaign = require("../models/emailTemplates/createdFunrisingCampaign");
-const FundrisingCampaignRepository = require("../repositories/fundrisingCampaign");
+const createdFundraisingCampaign = require("../models/emailTemplates/createdFunraisingCampaign");
+const FundraisingCampaignRepository = require("../repositories/fundraisingCampaign");
 const UserRepository = require("../repositories/user");
 const dirImg = `${path.dirname(require.main.filename)}/img`;
 const dirDocs = `${path.dirname(require.main.filename)}/documents`;
@@ -19,15 +19,15 @@ const transportMail = nodemailer.createTransport({
 });
 const fromSender = config.EMAIL_INFO.EMAIL_SENDER;
 const getPageFromArr = require("../extensionMethods").getPageFromArr;
-class FundrisingCampaignService {
-  #fundrisingCampaignRepository = new FundrisingCampaignRepository();
+class FundraisingCampaignService {
+  #fundraisingCampaignRepository = new FundraisingCampaignRepository();
   #userRepository = new UserRepository();
   /**
-   * Create fundrising campaign
+   * Create fundraising campaign
    * @param {Object} campaign
    * @returns {Boolean}
    */
-  async createFundrisingCampaign(campaign) {
+  async createFundraisingCampaign(campaign) {
     campaign.photos = [];
     campaign.photosDataURL.forEach(() => {
       let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
@@ -62,7 +62,7 @@ class FundrisingCampaignService {
     }
     campaign.mainPhoto = imgFileName;
     const created =
-      await this.#fundrisingCampaignRepository.createFundrisingCampaign(
+      await this.#fundraisingCampaignRepository.createFundraisingCampaign(
         campaign
       );
     if (created === true) {
@@ -71,7 +71,7 @@ class FundrisingCampaignService {
         from: fromSender,
         to: user.email,
         subject: "Успешно създадена кампания",
-        html: createdFundrisingCampaign(user.name.first, campaign.title),
+        html: createdFundraisingCampaign(user.name.first, campaign.title),
       });
       campaign.photosDataURL.forEach((photo, index) => {
         let base64Data = photo.split("base64,")[1];
@@ -108,13 +108,13 @@ class FundrisingCampaignService {
     return created;
   }
   /**
-   * Get all fundrising campaigns
+   * Get all fundraising campaigns
    * @param {String} searchQuery
    * @param {Number} pageNum
    * @returns {Object|Boolean}
    */
   async getAllCampaigns(searchQuery, pageNum) {
-    const campaigns = await this.#fundrisingCampaignRepository.getAllCampaigns(
+    const campaigns = await this.#fundraisingCampaignRepository.getAllCampaigns(
       searchQuery
     );
     return getPageFromArr(campaigns, 12, pageNum, "campaigns");
@@ -127,7 +127,7 @@ class FundrisingCampaignService {
    */
   async getCampaignsByUser(id, pageNum) {
     const campaigns =
-      await this.#fundrisingCampaignRepository.getCampaignsByUser(id, pageNum);
+      await this.#fundraisingCampaignRepository.getCampaignsByUser(id, pageNum);
     if (campaigns !== false) {
       return getPageFromArr(campaigns, 12, pageNum, "campaigns");
     } else {
@@ -135,13 +135,13 @@ class FundrisingCampaignService {
     }
   }
   /**
-   * Complete fudrising campaign
+   * Complete fudraising campaign
    * @param {String} campaignId
    * @param {String} userId
    * @returns {Boolean}
    */
-  async completeFundrisingCampaign(campaignId, userId) {
-    return await this.#fundrisingCampaignRepository.completeFundrisingCampaign(
+  async completeFundraisingCampaign(campaignId, userId) {
+    return await this.#fundraisingCampaignRepository.completeFundraisingCampaign(
       campaignId,
       userId
     );
@@ -153,27 +153,27 @@ class FundrisingCampaignService {
    * @returns {Boolean}
    */
   async sendCampaignForVerification(campaignId, userId) {
-    return await this.#fundrisingCampaignRepository.sendCampaignForVerification(
+    return await this.#fundraisingCampaignRepository.sendCampaignForVerification(
       campaignId,
       userId
     );
   }
   /**
-   * Get fundrising campaign
+   * Get fundraising campaign
    * @param {String} id
    * @returns {Object}
    */
-  async getFundrisingCampaign(id) {
-    return await this.#fundrisingCampaignRepository.getFundrisingCampaign(id);
+  async getFundraisingCampaign(id) {
+    return await this.#fundraisingCampaignRepository.getFundraisingCampaign(id);
   }
   /**
-   * Get fundrising campaign by user id
+   * Get fundraising campaign by user id
    * @param {String} campaignId
    * @param {String} userId
    * @returns {Object|Boolean}
    */
-  async getFundrisingCampaignByUser(campaignId, userId) {
-    return this.#fundrisingCampaignRepository.getFundrisingCampaignByUser(
+  async getFundraisingCampaignByUser(campaignId, userId) {
+    return this.#fundraisingCampaignRepository.getFundraisingCampaignByUser(
       campaignId,
       userId
     );
@@ -186,21 +186,21 @@ class FundrisingCampaignService {
    * @returns {Boolean}
    */
   async checkDocument(campaignId, userId, documentFileName) {
-    return await this.#fundrisingCampaignRepository.checkDocument(
+    return await this.#fundraisingCampaignRepository.checkDocument(
       campaignId,
       userId,
       documentFileName
     );
   }
   /**
-   * Edit fundrising campaign
+   * Edit fundraising campaign
    * @param {String} userId
    * @param {String} campaignId
    * @param {String} prop
    * @param {Object} value
    * @returns {Boolean}
    */
-  async editFundrisingCampaign(userId, campaignId, prop, value) {
+  async editFundraisingCampaign(userId, campaignId, prop, value) {
     switch (prop) {
       case "mainPhotoDataURL": {
         let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
@@ -212,7 +212,7 @@ class FundrisingCampaignService {
           )}.webp}`;
         }
         const oldCampaign =
-          await this.#fundrisingCampaignRepository.editFunrisingCampaign(
+          await this.#fundraisingCampaignRepository.editFunraisingCampaign(
             userId,
             campaignId,
             "mainPhoto",
@@ -254,7 +254,7 @@ class FundrisingCampaignService {
           photos.push(imgFileName);
         });
         const oldCampaign =
-          await this.#fundrisingCampaignRepository.editFunrisingCampaign(
+          await this.#fundraisingCampaignRepository.editFunraisingCampaign(
             userId,
             campaignId,
             "photos",
@@ -294,7 +294,7 @@ class FundrisingCampaignService {
           photos.push(imgFileName);
         });
         const oldCampaign =
-          await this.#fundrisingCampaignRepository.editFunrisingCampaign(
+          await this.#fundraisingCampaignRepository.editFunraisingCampaign(
             userId,
             campaignId,
             "documentsForPayment",
@@ -322,7 +322,7 @@ class FundrisingCampaignService {
       }
       default: {
         const oldCampaign =
-          await this.#fundrisingCampaignRepository.editFunrisingCampaign(
+          await this.#fundraisingCampaignRepository.editFunraisingCampaign(
             userId,
             campaignId,
             prop,
@@ -337,4 +337,4 @@ class FundrisingCampaignService {
     }
   }
 }
-module.exports = FundrisingCampaignService;
+module.exports = FundraisingCampaignService;

@@ -1,6 +1,6 @@
 const moderationVerifiedCampaignSchema = (body) => {
   let schema = {
-    id: "/moderationVerifyFundrisingCampaign",
+    id: "/moderationVerifyFundraisingCampaign",
     type: "object",
     properties: {
       campaignId: { type: "string", pattern: "^[a-f\\d]{24}$" },

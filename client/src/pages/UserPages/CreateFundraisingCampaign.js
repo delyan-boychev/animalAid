@@ -16,7 +16,7 @@ import PageTitle from "../../components/PageTitle";
 import { faUpload, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import LargeModal from "../../components/LargeModal";
 const client = require("../../clientRequests");
-class CreateFundrisingCampaign extends React.Component {
+class CreateFundraisingCampaign extends React.Component {
   submitted = false;
   created = false;
   constructor(props) {
@@ -93,7 +93,7 @@ class CreateFundrisingCampaign extends React.Component {
         requestSent: true,
       });
       const response = await client.postRequestToken(
-        "/fundrisingCampaign/createFundrisingCampaign",
+        "/fundraisingCampaign/createFundraisingCampaign",
         {
           title: fields.title,
           shortDescription: fields.shortDescription,
@@ -582,6 +582,6 @@ class CreateFundrisingCampaign extends React.Component {
 }
 function WithNavigate(props) {
   let navigate = useNavigate();
-  return <CreateFundrisingCampaign {...props} navigate={navigate} />;
+  return <CreateFundraisingCampaign {...props} navigate={navigate} />;
 }
 export default WithNavigate;

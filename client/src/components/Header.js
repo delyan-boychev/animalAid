@@ -79,7 +79,7 @@ export default function Header() {
           </Nav.Link>
           <Nav.Link
             as={NavLink}
-            to="/fundrisingCampaigns"
+            to="/fundraisingCampaigns"
             className="navLink text-secondary"
             onClick={autoCloseCollapse}
           >

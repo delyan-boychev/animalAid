@@ -24,7 +24,7 @@ import { faPaypal } from "@fortawesome/free-brands-svg-icons";
 import PageTitle from "../components/PageTitle";
 const client = require("../clientRequests");
 const API_URL = require("../config.json").API_URL;
-class FundrisingCampaigns extends React.Component {
+class FundraisingCampaigns extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -85,7 +85,7 @@ class FundrisingCampaigns extends React.Component {
     }
   };
   getCampaigns = async (page, search) => {
-    let url = `/fundrisingCampaign/getAllCampaigns/${page}`;
+    let url = `/fundraisingCampaign/getAllCampaigns/${page}`;
     if (search === true)
       url += `/${encodeURIComponent(this.state.searchQuery)}`;
     else if (search === undefined && this.state.search === true)
@@ -115,7 +115,7 @@ class FundrisingCampaigns extends React.Component {
     }
   };
   openCampaign = async (id) => {
-    this.props.navigate(`/fundrisingCampaign?id=${id}`);
+    this.props.navigate(`/fundraisingCampaign?id=${id}`);
   };
   render() {
     const pagination = (
@@ -180,7 +180,7 @@ class FundrisingCampaigns extends React.Component {
               <Button
                 className="rounded-pill"
                 onClick={() =>
-                  this.props.navigate("/user/createFundrisingCampaign")
+                  this.props.navigate("/user/createFundraisingCampaign")
                 }
               >
                 <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon> Създаване на
@@ -245,5 +245,5 @@ class FundrisingCampaigns extends React.Component {
 }
 export default function WithNavigate(props) {
   let navigate = useNavigate();
-  return <FundrisingCampaigns {...props} navigate={navigate} />;
+  return <FundraisingCampaigns {...props} navigate={navigate} />;
 }

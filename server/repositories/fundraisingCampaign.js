@@ -1,12 +1,12 @@
-const FundrisingCampaign = require("../models/fundrisingCampaign");
-class FundrisingCampaignRepository {
+const FundraisingCampaign = require("../models/fundraisingCampaign");
+class FundraisingCampaignRepository {
   /**
-   * Create fundrising campaign
+   * Create fundraising campaign
    * @param {Object} campaign
    * @returns {Boolean}
    */
-  async createFundrisingCampaign(campaign) {
-    const c = new FundrisingCampaign(campaign);
+  async createFundraisingCampaign(campaign) {
+    const c = new FundraisingCampaign(campaign);
     try {
       await c.save();
       return true;
@@ -15,14 +15,14 @@ class FundrisingCampaignRepository {
     }
   }
   /**
-   * Complete fudrising campaign
+   * Complete fudraising campaign
    * @param {String} campaignId
    * @param {String} userId
    * @returns {Boolean}
    */
-  async completeFundrisingCampaign(campaignId, userId) {
+  async completeFundraisingCampaign(campaignId, userId) {
     try {
-      const campaign = await FundrisingCampaign.findOne({
+      const campaign = await FundraisingCampaign.findOne({
         _id: campaignId,
         user: userId,
       }).exec();
@@ -50,7 +50,7 @@ class FundrisingCampaignRepository {
    */
   async getCampaignsByUser(id) {
     try {
-      return await FundrisingCampaign.find({ user: id })
+      return await FundraisingCampaign.find({ user: id })
         .select("title mainPhoto moderationVerified completed rejectedComment")
         .lean()
         .exec();
@@ -59,7 +59,7 @@ class FundrisingCampaignRepository {
     }
   }
   /**
-   * Get all fundrising campaigns
+   * Get all fundraising campaigns
    * @param {String} searchQuery
    * @returns {Object[]}
    */
@@ -80,19 +80,19 @@ class FundrisingCampaignRepository {
         completed: false,
       };
     }
-    return await FundrisingCampaign.find(query)
+    return await FundraisingCampaign.find(query)
       .select("title shortDescription mainPhoto value paypalDonationURL")
       .lean()
       .exec();
   }
   /**
-   * Get fundrising campaign
+   * Get fundraising campaign
    * @param {String} id
    * @returns {Boolean}
    */
-  async getFundrisingCampaign(id) {
+  async getFundraisingCampaign(id) {
     try {
-      const campaign = await FundrisingCampaign.findOne({
+      const campaign = await FundraisingCampaign.findOne({
         _id: id,
         moderationVerified: true,
         completed: false,
@@ -118,7 +118,7 @@ class FundrisingCampaignRepository {
    */
   async sendCampaignForVerification(campaignId, userId) {
     try {
-      const campaign = await FundrisingCampaign.findOne({
+      const campaign = await FundraisingCampaign.findOne({
         _id: campaignId,
         user: userId,
         completed: false,
@@ -137,14 +137,14 @@ class FundrisingCampaignRepository {
     }
   }
   /**
-   * Get fundrising campaign by user id
+   * Get fundraising campaign by user id
    * @param {String} campaignId
    * @param {String} userId
    * @returns {Object|Boolean}
    */
-  async getFundrisingCampaignByUser(campaignId, userId) {
+  async getFundraisingCampaignByUser(campaignId, userId) {
     try {
-      const campaign = await FundrisingCampaign.findOne({
+      const campaign = await FundraisingCampaign.findOne({
         _id: campaignId,
         user: userId,
       })
@@ -168,7 +168,7 @@ class FundrisingCampaignRepository {
    */
   async checkDocument(campaignId, userId, documentFileName) {
     try {
-      const campaign = await FundrisingCampaign.findOne({
+      const campaign = await FundraisingCampaign.findOne({
         _id: campaignId,
         user: userId,
         documentsForPayment: documentFileName,
@@ -183,16 +183,16 @@ class FundrisingCampaignRepository {
     }
   }
   /**
-   * Edit fundrising campaign
+   * Edit fundraising campaign
    * @param {String} userId
    * @param {String} campaignId
    * @param {String} prop
    * @param {Object} value
    * @returns {Object|Boolean}
    */
-  async editFunrisingCampaign(userId, campaignId, prop, value) {
+  async editFunraisingCampaign(userId, campaignId, prop, value) {
     try {
-      const campaign = await FundrisingCampaign.findOne({
+      const campaign = await FundraisingCampaign.findOne({
         _id: campaignId,
         user: userId,
         completed: false,
@@ -212,4 +212,4 @@ class FundrisingCampaignRepository {
     }
   }
 }
-module.exports = FundrisingCampaignRepository;
+module.exports = FundraisingCampaignRepository;

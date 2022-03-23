@@ -17,11 +17,11 @@ import "./css/animations.css";
 import Threads from "./pages/Threads";
 import Thread from "./pages/Thread";
 import CreateThread from "./pages/UserPages/CreateThread";
-import FundrisingCampaings from "./pages/FundrisingCampaigns";
-import FundrisingCampaign from "./pages/FundrisingCampaign";
-import ViewFundrisingCampaign from "./pages/UserPages/ViewFundrisingCampaign";
-import ViewFundrisingCampaignAdmin from "./pages/AdminPages/ViewFundrisingCampaignAdmin";
-import ViewFundrisingCampaignModerator from "./pages/ModeratorPages/ViewFundrisingCampaignModerator";
+import FundraisingCampaings from "./pages/FundraisingCampaigns";
+import FundraisingCampaign from "./pages/FundraisingCampaign";
+import ViewFundraisingCampaign from "./pages/UserPages/ViewFundraisingCampaign";
+import ViewFundraisingCampaignAdmin from "./pages/AdminPages/ViewFundraisingCampaignAdmin";
+import ViewFundraisingCampaignModerator from "./pages/ModeratorPages/ViewFundraisingCampaignModerator";
 import VerifyProfile from "./pages/VerifyProfile";
 import About from "./pages/About";
 import Cookies from "universal-cookie";
@@ -33,9 +33,9 @@ import CreateSchedule from "./pages/VetPages/CreateSchedule";
 import CreateAppointment from "./pages/UserPages/CreateAppointment";
 import EditUser from "./pages/AdminPages/EditUser";
 import EditThread from "./pages/UserPages/EditThread";
-import CreateFundrisingCampaign from "./pages/UserPages/CreateFundrisingCampaign";
+import CreateFundraisingCampaign from "./pages/UserPages/CreateFundraisingCampaign";
 import NoAccess from "./pages/NoAccess";
-import EditFundrisingCampaign from "./pages/UserPages/EditFundrisingCampaign";
+import EditFundraisingCampaign from "./pages/UserPages/EditFundraisingCampaign";
 import ViewUser from "./pages/ModeratorPages/ViewUser";
 const routes = (isLoggedIn) => [
   { path: "/", element: <Home />, exact: true },
@@ -101,19 +101,19 @@ const routes = (isLoggedIn) => [
     exact: true,
   },
   {
-    path: "/fundrisingCampaigns",
+    path: "/fundraisingCampaigns",
     element: (
       <div className="container mt-3">
-        <FundrisingCampaings />
+        <FundraisingCampaings />
       </div>
     ),
     exact: true,
   },
   {
-    path: "/fundrisingCampaign",
+    path: "/fundraisingCampaign",
     element: (
       <div className="container mt-3">
-        <FundrisingCampaign />
+        <FundraisingCampaign />
       </div>
     ),
     exact: true,
@@ -276,10 +276,10 @@ const routes = (isLoggedIn) => [
     exact: true,
   },
   {
-    path: "/user/createFundrisingCampaign",
+    path: "/user/createFundraisingCampaign",
     element: isLoggedIn ? (
       <div className="container mt-3">
-        <CreateFundrisingCampaign />
+        <CreateFundraisingCampaign />
       </div>
     ) : (
       <div className="container mt-3">
@@ -289,10 +289,10 @@ const routes = (isLoggedIn) => [
     exact: true,
   },
   {
-    path: "/user/viewFundrisingCampaign",
+    path: "/user/viewFundraisingCampaign",
     element: isLoggedIn ? (
       <div className="container mt-3">
-        <ViewFundrisingCampaign />
+        <ViewFundraisingCampaign />
       </div>
     ) : (
       <div className="container mt-3">
@@ -302,10 +302,10 @@ const routes = (isLoggedIn) => [
     exact: true,
   },
   {
-    path: "/user/editFundrisingCampaign",
+    path: "/user/editFundraisingCampaign",
     element: isLoggedIn ? (
       <div className="container mt-3">
-        <EditFundrisingCampaign />
+        <EditFundraisingCampaign />
       </div>
     ) : (
       <div className="container mt-3">
@@ -367,10 +367,10 @@ const routes = (isLoggedIn) => [
     exact: true,
   },
   {
-    path: "/admin/viewFundrisingCampaign",
+    path: "/admin/viewFundraisingCampaign",
     element: isLoggedIn ? (
       <div className="container mt-3">
-        <ViewFundrisingCampaignAdmin />
+        <ViewFundraisingCampaignAdmin />
       </div>
     ) : (
       <div className="container mt-3">
@@ -406,10 +406,10 @@ const routes = (isLoggedIn) => [
     exact: true,
   },
   {
-    path: "/moderator/viewFundrisingCampaign",
+    path: "/moderator/viewFundraisingCampaign",
     element: isLoggedIn ? (
       <div className="container mt-3">
-        <ViewFundrisingCampaignModerator />
+        <ViewFundraisingCampaignModerator />
       </div>
     ) : (
       <div className="container mt-3">

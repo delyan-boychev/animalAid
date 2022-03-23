@@ -2,7 +2,7 @@
 const User = require("../models/user");
 const City = require("../models/city");
 const Thread = require("../models/thread");
-const FundrisingCampaign = require("../models/fundrisingCampaign");
+const FundraisingCampaign = require("../models/fundraisingCampaign");
 const roles = require("../models/roles");
 const ChatRepository = require("./chat");
 class ModeratorRepository {
@@ -217,7 +217,7 @@ class ModeratorRepository {
    */
   async getCampaign(campaignId) {
     try {
-      const campaign = FundrisingCampaign.findById(campaignId)
+      const campaign = FundraisingCampaign.findById(campaignId)
         .populate("user", "-password")
         .lean()
         .exec();
@@ -231,7 +231,7 @@ class ModeratorRepository {
     }
   }
   /**
-   * Get all fundrising campaigns
+   * Get all fundraising campaigns
    * @param {String} searchQuery
    * @returns {Object[]}
    */
@@ -245,33 +245,33 @@ class ModeratorRepository {
         ],
       };
     }
-    return await FundrisingCampaign.find(query)
+    return await FundraisingCampaign.find(query)
       .select("title shortDescription mainPhoto")
       .lean()
       .exec();
   }
   /**
-   * Get fundrising campaigns for moderation verify
+   * Get fundraising campaigns for moderation verify
    * @returns {Object[]}
    */
   async getCampaignsForModerationVerify() {
-    return await FundrisingCampaign.find({
+    return await FundraisingCampaign.find({
       moderationVerified: false,
       rejectedComment: { $eq: "" },
     }).select("title shortDescription mainPhoto value");
   }
   /**
-   * Moderation verify fundrising campaign
+   * Moderation verify fundraising campaign
    * @param {String} campaignId
    * @returns {Boolean|Object}
    */
-  async moderationVerifyFundrisingCampaign(
+  async moderationVerifyFundraisingCampaign(
     campaignId,
     verified,
     rejectedComment
   ) {
     try {
-      const campaign = await FundrisingCampaign.findById(campaignId)
+      const campaign = await FundraisingCampaign.findById(campaignId)
         .populate("user", "name email")
         .exec();
       if (campaign !== null) {
@@ -295,13 +295,13 @@ class ModeratorRepository {
     }
   }
   /**
-   * Complete fundrising campaign
+   * Complete fundraising campaign
    * @param {String} campaignId
    * @returns {Boolean}
    */
-  async completeFundrisingCampaign(campaignId) {
+  async completeFundraisingCampaign(campaignId) {
     try {
-      const campaign = await FundrisingCampaign.findById(campaignId).exec();
+      const campaign = await FundraisingCampaign.findById(campaignId).exec();
       if (campaign !== null) {
         if (campaign.completed === false) {
           campaign.rejectedComment = "";

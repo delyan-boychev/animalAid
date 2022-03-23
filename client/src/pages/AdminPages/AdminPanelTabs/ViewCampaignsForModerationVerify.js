@@ -69,7 +69,7 @@ class ViewCampaignsForModerationVerify extends React.Component {
     this.setState({ modal2 });
   };
   openCampaign = (id) => {
-    this.props.navigate(`/admin/ViewFundrisingCampaign?id=${id}`);
+    this.props.navigate(`/admin/ViewFundraisingCampaign?id=${id}`);
   };
   render() {
     const pagination = (

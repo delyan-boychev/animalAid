@@ -1,5 +1,5 @@
-const createFundrisingCampaignSchema = {
-  id: "/createFundrisingCampaign",
+const createFundraisingCampaignSchema = {
+  id: "/createFundraisingCampaign",
   type: "object",
   properties: {
     title: { type: "string", minLength: 5, maxLength: 50 },
@@ -48,4 +48,4 @@ const createFundrisingCampaignSchema = {
     "documentsForPaymentDataURL",
   ],
 };
-module.exports = createFundrisingCampaignSchema;
+module.exports = createFundraisingCampaignSchema;

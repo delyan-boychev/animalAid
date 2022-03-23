@@ -62,7 +62,7 @@ class ViewAllCampaigns extends React.Component {
     }
   };
   openCampaign = async (id) => {
-    this.props.navigate(`/admin/viewFundrisingCampaign?id=${id}`);
+    this.props.navigate(`/admin/viewFundraisingCampaign?id=${id}`);
   };
   render() {
     const pagination = (

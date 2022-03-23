@@ -15,7 +15,7 @@ import PageTitle from "../../components/PageTitle";
 import InfoModal from "../../components/InfoModal";
 import LargeModal from "../../components/LargeModal";
 const client = require("../../clientRequests");
-export default class EditFundrisingCampaign extends React.Component {
+export default class EditFundraisingCampaign extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -79,7 +79,7 @@ export default class EditFundrisingCampaign extends React.Component {
   }
   async getInfo(id) {
     const res = await client.getRequestToken(
-      `/fundrisingCampaign/getMyCampaign/${id}`
+      `/fundraisingCampaign/getMyCampaign/${id}`
     );
     if (res !== false) {
       if (res.rejectedComment !== "") {
@@ -178,7 +178,7 @@ export default class EditFundrisingCampaign extends React.Component {
     }
     body["campaignId"] = this.state.id;
     let res = await client.postRequestToken(
-      `/fundrisingCampaign/editCampaign/${button}`,
+      `/fundraisingCampaign/editCampaign/${button}`,
       body
     );
     if (res === true) {

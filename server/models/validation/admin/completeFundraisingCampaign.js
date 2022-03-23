@@ -1,5 +1,5 @@
-const completeFundrisingCampaignSchema = {
-  id: "/completeFundrisingCampaign",
+const completeFundraisingCampaignSchema = {
+  id: "/completeFundraisingCampaign",
   type: "object",
   properties: {
     campaignId: { type: "string", pattern: "^[a-f\\d]{24}$" },
@@ -7,4 +7,4 @@ const completeFundrisingCampaignSchema = {
   additionalProperties: false,
   required: ["campaignId"],
 };
-module.exports = completeFundrisingCampaignSchema;
+module.exports = completeFundraisingCampaignSchema;

@@ -23,7 +23,7 @@ import DialogModal from "../../components/DialogModal";
 import InfoModal from "../../components/InfoModal";
 const client = require("../../clientRequests");
 const API_URL = require("../../config.json").API_URL;
-class ViewFundrisingCampaignAdmin extends React.Component {
+class ViewFundraisingCampaignAdmin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -134,7 +134,7 @@ class ViewFundrisingCampaignAdmin extends React.Component {
   };
   completeCampaign = async () => {
     const res = await client.postRequestToken(
-      "/admin/completeFundrisingCampaign",
+      "/admin/completeFundraisingCampaign",
       { campaignId: this.state.campaign._id }
     );
     if (res === true) {
@@ -147,7 +147,7 @@ class ViewFundrisingCampaignAdmin extends React.Component {
   };
   sendForVerification = async () => {
     const res = await client.postRequestToken(
-      "/fundrisingCampaign/sendCampaignForVerification",
+      "/fundraisingCampaign/sendCampaignForVerification",
       { campaignId: this.state.campaign._id }
     );
     if (res === true) {
@@ -158,7 +158,7 @@ class ViewFundrisingCampaignAdmin extends React.Component {
   };
   approveCampaign = async () => {
     const res = await client.postRequestToken(
-      "/admin/moderationVerifyFundrisingCampaign",
+      "/admin/moderationVerifyFundraisingCampaign",
       {
         campaignId: this.state.campaign._id,
         verified: true,
@@ -175,7 +175,7 @@ class ViewFundrisingCampaignAdmin extends React.Component {
     await this.validateReject();
     if (this.state.errorRejectedComment === "") {
       const res = await client.postRequestToken(
-        "/admin/moderationVerifyFundrisingCampaign",
+        "/admin/moderationVerifyFundraisingCampaign",
         {
           campaignId: this.state.campaign._id,
           verified: false,
@@ -320,7 +320,7 @@ class ViewFundrisingCampaignAdmin extends React.Component {
                   <Button
                     variant="primary"
                     as={Link}
-                    to={`/fundrisingCampaign?id=${this.state.campaign._id}`}
+                    to={`/fundraisingCampaign?id=${this.state.campaign._id}`}
                   >
                     <FontAwesomeIcon icon={faEye}></FontAwesomeIcon> Преглед на
                     кампанията като потребител
@@ -395,6 +395,6 @@ class ViewFundrisingCampaignAdmin extends React.Component {
 }
 function WithNavigate(props) {
   let navigate = useNavigate();
-  return <ViewFundrisingCampaignAdmin {...props} navigate={navigate} />;
+  return <ViewFundraisingCampaignAdmin {...props} navigate={navigate} />;
 }
 export default WithNavigate;
