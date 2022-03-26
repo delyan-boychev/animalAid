@@ -32,6 +32,6 @@
   "keywords": [],
   "description": "",
   "devDependencies": {
-    "eslint": "^8.11.0"
+    "eslint": "^8.12.0"
   }
 }
