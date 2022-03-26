@@ -123,6 +123,7 @@ dist
 .pnp.*
 #Directories tmp
 img/
+imgChats/
 documents/
 
 # End of https://www.toptal.com/developers/gitignore/api/node

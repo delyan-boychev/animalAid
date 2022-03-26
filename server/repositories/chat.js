@@ -56,6 +56,35 @@ class ChatRepository {
     }
   }
   /**
+   * Send image
+   * @param {String} senderId Sender id
+   * @param {String} recieveId Recieve id
+   * @param {String} imgFileName Image file name
+   * @param {Number} date Date of sending message
+   * @returns {Boolean}
+   */
+  async sendImage(senderId, recieveId, imgFileName, date) {
+    try {
+      let chat = await Chat.findOne({
+        $and: [
+          { $or: [{ userOne: senderId }, { userOne: recieveId }] },
+          { $or: [{ userTwo: senderId }, { userTwo: recieveId }] },
+        ],
+      });
+      chat.messages.push({
+        date,
+        seen: false,
+        message: "image",
+        imgFileName,
+        sender: senderId,
+      });
+      await chat.save();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  /**
    * Check chat exists
    * @param {String} userOne User One id
    * @param {String} userTwo User Two id

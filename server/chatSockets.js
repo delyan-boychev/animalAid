@@ -47,6 +47,37 @@ module.exports = (io) => {
       }
     }
   };
+  const onSendImage = async function (socket) {
+    const senderId = activeUsers[socket.id];
+    const image = await chatService.sendImage(
+      senderId,
+      socket.recieveId,
+      socket.imageData,
+      socket.date,
+      () => {
+        onRequestGetMessages({
+          id: socket.id,
+          getId: socket.recieveId,
+          numPage: 1,
+        });
+      }
+    );
+    if (image !== false) {
+      let socketIds = Object.keys(activeUsers).filter(
+        (key) => activeUsers[key] === socket.recieveId
+      );
+      if (socketIds.length > 0) {
+        socketIds.forEach((socketId) => {
+          io.to(socketId).emit("newMessage", {
+            image,
+            msg: "",
+            senderId: senderId,
+            date: socket.date,
+          });
+        });
+      }
+    }
+  };
   const onNewMessage = async function (socket) {
     const senderId = activeUsers[socket.id];
     const message = await chatService.sendMessage(
@@ -60,6 +91,11 @@ module.exports = (io) => {
       let socketIds = Object.keys(activeUsers).filter(
         (key) => activeUsers[key] === socket.recieveId
       );
+      onRequestGetMessages({
+        id: socket.id,
+        getId: socket.recieveId,
+        numPage: 1,
+      });
       if (socketIds.length > 0) {
         socketIds.forEach((socketId) => {
           io.to(socketId).emit("newMessage", {
@@ -79,6 +115,7 @@ module.exports = (io) => {
       socket.emit("allChatUsers", { users: users, id: res.id });
       activeUsers[socket.id] = res.id;
       io.emit("changeActiveStatus", { userId: res.id, activeStatus: true });
+      socket.on("sendImage", onSendImage);
       socket.on("newMessage", onNewMessage);
       socket.on("requestGetMessages", onRequestGetMessages);
       socket.on("requestGetAllChatUsers", onRequestGetAllChatUsers);

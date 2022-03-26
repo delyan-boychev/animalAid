@@ -17,15 +17,19 @@ import {
   faDotCircle,
   faExclamationTriangle,
   faShare,
+  faTrashAlt,
+  faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import { refreshToken } from "../../clientRequests";
 import Cookies from "universal-cookie";
+import ImageUploading from "react-images-uploading";
 const io = require("socket.io-client");
 const API_URL = require("../../config.json").API_URL;
 class Chats extends React.Component {
   leavePage = false;
   page = 1;
   pages = 1;
+  newMessage = false;
   listenerSet = false;
   cookies = new Cookies();
   constructor(props) {
@@ -36,6 +40,7 @@ class Chats extends React.Component {
       messages: [],
       id: "",
       message: "",
+      image: null,
       errorMessage: "",
       page: 1,
       currentChatId: "",
@@ -56,6 +61,24 @@ class Chats extends React.Component {
       }
     });
     this.listenerSet = true;
+  };
+  scrollOnLoadImages = () => {
+    var imgs = document.images,
+      len = imgs.length,
+      counter = 0;
+    function incrementCounter() {
+      counter++;
+      if (counter === len) {
+        $("#chat-box").animate(
+          { scrollTop: document.getElementById("chat-box").scrollHeight },
+          500
+        );
+      }
+    }
+    [].forEach.call(imgs, function (img) {
+      if (img.complete) incrementCounter();
+      else img.addEventListener("load", incrementCounter, false);
+    });
   };
   startSocket = (token) => {
     this.socket = io.connect(API_URL, {
@@ -165,12 +188,12 @@ class Chats extends React.Component {
         overflow: "scroll",
       });
     } else if (prevState.currentChatId !== this.state.currentChatId) {
-      $("#chat-box").animate({ scrollTop: $("#chat-box").height() }, 500);
       $("html, body").animate({ scrollTop: $(document).height() }, 1000);
       this.socket.emit("seenMessages", {
         id: this.socket.id,
         recieveId: this.state.currentChatId,
       });
+      this.scrollOnLoadImages();
       setTimeout(
         function () {
           this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
@@ -178,41 +201,52 @@ class Chats extends React.Component {
         200
       );
     } else if (prevState.messages !== this.state.messages) {
-      $("#chat-box").animate({ scrollTop: $("#chat-box").height() }, 500);
+      this.scrollOnLoadImages();
     }
   }
+  sendMessage = () => {
+    let message = {
+      sender: this.state.id,
+      date: parseInt(new Date().getTime() / 1000),
+      message: this.state.message.trim(),
+    };
+    this.setState({
+      message: "",
+      messages: [...this.state.messages, message],
+    });
+    this.socket.emit("newMessage", {
+      msg: message.message,
+      id: this.socket.id,
+      recieveId: this.state.currentChatId,
+      date: message.date,
+      startChat: false,
+    });
+    this.page = 1;
+    this.pages = 1;
+  };
+  sendImage = () => {
+    let message = {
+      sender: this.state.id,
+      date: parseInt(new Date().getTime() / 1000),
+      image: this.state.image,
+      message: "",
+    };
+    this.socket.emit("sendImage", {
+      id: this.socket.id,
+      recieveId: this.state.currentChatId,
+      date: message.date,
+      imageData: message.image,
+    });
+    this.setState({ image: null });
+    this.page = 1;
+    this.pages = 1;
+  };
   sendMsg = (event) => {
     event.preventDefault();
-    if (this.state.errorMessage === "") {
-      let message = {
-        sender: this.state.id,
-        date: parseInt(new Date().getTime() / 1000),
-        message: this.state.message.trim(),
-      };
-      this.setState({
-        message: "",
-        messages: [...this.state.messages, message],
-      });
-      this.socket.emit("newMessage", {
-        msg: message.message,
-        id: this.socket.id,
-        recieveId: this.state.currentChatId,
-        date: message.date,
-        startChat: false,
-      });
-      setTimeout(
-        function () {
-          this.page = 1;
-          this.pages = 1;
-          this.socket.emit("requestGetMessages", {
-            id: this.socket.id,
-            getId: this.state.currentChatId,
-            numPage: 1,
-          });
-          this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
-        }.bind(this),
-        100
-      );
+    if (this.state.errorMessage === "" && this.state.image !== null) {
+      this.sendImage();
+    } else if (this.state.errorMessage === "" && this.state.image === null) {
+      this.sendMessage();
     }
   };
   startChat = (id) => {
@@ -228,14 +262,6 @@ class Chats extends React.Component {
       date: message.date,
       startChat: true,
     });
-    setTimeout(
-      function () {
-        $("#chat-box").animate({ scrollTop: $("#chat-box").height() }, 500);
-        this.getMsg(id);
-        this.socket.emit("requestGetAllChatUsers", { id: this.socket.id });
-      }.bind(this),
-      100
-    );
   };
   getNextPage = () => {
     if (this.page + 1 <= this.pages) {
@@ -267,6 +293,25 @@ class Chats extends React.Component {
     ).pad()}-${date.getFullYear()} ${date.getHours().pad()}:${date
       .getMinutes()
       .pad()}:${date.getSeconds().pad()}ч.`;
+  };
+  onImageChange = (image) => {
+    if (image[0] !== undefined) {
+      let img = image[0].data_url;
+      let errorMessage = "";
+      let message = "";
+      this.setState({ image: img, errorMessage, message });
+    } else {
+      this.setState({ image: null });
+    }
+  };
+  onError = (error) => {
+    if (error["acceptType"]) {
+      let errorMessage = "Неподдържан файлов формат!";
+      this.setState({ errorMessage });
+    } else if (error["maxFileSize"]) {
+      let errorMessage = "Файлът трябва да е по-малък от 1MB!";
+      this.setState({ errorMessage });
+    }
   };
   render() {
     return (
@@ -371,7 +416,7 @@ class Chats extends React.Component {
                     className="d-flex justify-content-end text-right me-2 mb-2"
                   >
                     <OverlayTrigger
-                      placement="top"
+                      placement="left"
                       overlay={
                         <Tooltip>
                           {this.formatString(new Date(message.date * 1000))}
@@ -379,7 +424,16 @@ class Chats extends React.Component {
                       }
                     >
                       <div className="d-inline-flex flex-wrap rounded bg-primary message text-secondary p-1 message-80">
-                        <span className="message-100">{message.message}</span>
+                        {message.imgFileName !== undefined ? (
+                          <img
+                            alt="img"
+                            className="message-100 rounded"
+                            src={`${API_URL}/user/imgChats/${message.imgFileName}?token=${this.state.token}`}
+                            crossOrigin={window.location.origin}
+                          />
+                        ) : (
+                          <span className="message-100">{message.message}</span>
+                        )}
                       </div>
                     </OverlayTrigger>
                   </div>
@@ -390,7 +444,7 @@ class Chats extends React.Component {
                     className="justify-content-start text-left ms-2 me-2 mb-2"
                   >
                     <OverlayTrigger
-                      placement="top"
+                      placement="right"
                       overlay={
                         <Tooltip>
                           {this.formatString(new Date(message.date * 1000))}
@@ -406,9 +460,20 @@ class Chats extends React.Component {
                           src={`${API_URL}\\user\\img\\${this.state.chatUserInfo["imgFileName"]}`}
                           crossOrigin={window.location.origin}
                         />
-                        <span className="mt-2 ms-2 message-100">
-                          {message.message}
-                        </span>
+                        <div className="d-inline-flex flex-wrap rounded bg-primary message text-secondary p-1 message-80 align-self-center">
+                          {message.imgFileName !== undefined ? (
+                            <img
+                              alt="img"
+                              className="message-100 rounded"
+                              src={`${API_URL}/user/imgChats/${message.imgFileName}?token=${this.state.token}`}
+                              crossOrigin={window.location.origin}
+                            />
+                          ) : (
+                            <span className="message-100">
+                              {message.message}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </OverlayTrigger>
                   </div>
@@ -417,17 +482,59 @@ class Chats extends React.Component {
             </div>
             <Form onSubmit={this.sendMsg}>
               <div className="d-flex flex-row bd-highlight mb-3">
+                <ImageUploading
+                  maxNumber={1}
+                  maxFileSize={1048576}
+                  onError={this.onError}
+                  acceptType={["png", "jpg", "jpeg", "webp"]}
+                  onChange={this.onImageChange}
+                  dataURLKey="data_url"
+                >
+                  {({
+                    onImageUpload,
+                    onImageRemoveAll,
+                    isDragging,
+                    dragProps,
+                  }) => (
+                    <div className="upload__image-wrapper d-flex me-2">
+                      <Button
+                        className="me-2"
+                        onClick={onImageUpload}
+                        disabled={
+                          this.state.message !== "" ||
+                          this.state.currentChatId === ""
+                        }
+                        {...dragProps}
+                      >
+                        <FontAwesomeIcon icon={faUpload}></FontAwesomeIcon>
+                      </Button>
+                      <Button
+                        disabled={
+                          this.state.message !== "" ||
+                          this.state.currentChatId === ""
+                        }
+                        onClick={onImageRemoveAll}
+                      >
+                        <FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon>
+                      </Button>
+                    </div>
+                  )}
+                </ImageUploading>
                 <FormControl
+                  className="me-2"
                   id="message"
+                  disabled={this.state.image !== null}
                   autoComplete="off"
                   value={this.state.message}
                   onChange={this.onChangeText}
                 ></FormControl>
                 <Button
+                  className="align-self-center"
                   type="submit"
                   disabled={
                     this.state.currentChatId === "" ||
-                    /^\s*$/.test(this.state.message) ||
+                    (/^\s*$/.test(this.state.message) &&
+                      this.state.image === null) ||
                     this.state.errorMessage !== ""
                       ? true
                       : false

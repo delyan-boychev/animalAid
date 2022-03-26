@@ -12,6 +12,7 @@ const forgotPasswordSchema = require("../models/validation/user/forgotPassword")
 const forgotPasswordChangeSchema = require("../models/validation/user/forgotPasswordChange");
 const changeProfilePhotoSchema = require("../models/validation/user/changeProfilePhoto");
 const authenticate = require("../authentication/authenticate");
+const authenticateGet = require("../authentication/authenticateGet");
 const editProfileSchema = require("../models/validation/user/editProfile");
 const roles = require("../models/roles");
 const router = express.Router();
@@ -33,10 +34,24 @@ router.get("/countUsersAndVets", async (req, res) => {
 });
 router.get(
   "/img/:filename",
-  apicache.middleware("1 hour"),
+  apicache.middleware("1 year"),
   async (req, res) => {
     const fileName = req.params.filename;
     let dir = `${path.dirname(require.main.filename)}/img`;
+    if (fs.existsSync(`${dir}/${fileName}`)) {
+      res.sendFile(`${dir}/${fileName}`);
+    } else {
+      res.sendStatus(404);
+    }
+  }
+);
+router.get(
+  "/imgChats/:filename",
+  apicache.middleware("1 year"),
+  authenticateGet,
+  async (req, res) => {
+    const fileName = req.params.filename;
+    let dir = `${path.dirname(require.main.filename)}/imgChats`;
     if (fs.existsSync(`${dir}/${fileName}`)) {
       res.sendFile(`${dir}/${fileName}`);
     } else {

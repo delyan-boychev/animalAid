@@ -1,6 +1,10 @@
 "use strict";
 const chatRepository = require("../repositories/chat");
 const userRepository = require("../repositories/user");
+const extensionMethods = require("../extensionMethods");
+const path = require("path");
+const fs = require("fs");
+const sharp = require("sharp");
 const getPageFromArrReverse =
   require("../extensionMethods").getPageFromArrReverse;
 class ChatService {
@@ -39,6 +43,35 @@ class ChatService {
           date
         );
       }
+    } else {
+      return false;
+    }
+  }
+  async sendImage(senderId, recieveId, imageData, date, callback) {
+    let imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+      8
+    )}.webp`;
+    let dir = `${path.dirname(require.main.filename)}/imgChats`;
+    while (fs.existsSync(`${dir}\\${imgFileName}`)) {
+      imgFileName = `${new Date().getTime()}${extensionMethods.randomString(
+        8
+      )}.webp}`;
+    }
+    const imageSent = await this.#chatRepository.sendImage(
+      senderId,
+      recieveId,
+      imgFileName,
+      date
+    );
+    if (imageSent) {
+      let base64Data = imageData.split("base64,")[1];
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+      }
+      sharp(Buffer.from(base64Data, "base64"))
+        .webp()
+        .toFile(`${dir}/${imgFileName}`, callback);
+      return imgFileName;
     } else {
       return false;
     }
