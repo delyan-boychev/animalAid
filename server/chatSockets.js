@@ -70,7 +70,7 @@ module.exports = (io) => {
         socketIds.forEach((socketId) => {
           io.to(socketId).emit("newMessage", {
             image,
-            msg: "",
+            msg: "Изображение",
             senderId: senderId,
             date: socket.date,
           });
