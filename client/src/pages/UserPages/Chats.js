@@ -453,7 +453,7 @@ class Chats extends React.Component {
                     >
                       <div className="d-inline-flex rounded p-1 message-80">
                         <img
-                          className="rounded-circle"
+                          className="rounded-circle me-2"
                           height="40px"
                           weight="40px"
                           alt="avatar"
