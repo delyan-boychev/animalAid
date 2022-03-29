@@ -64,6 +64,9 @@ export default class Login extends React.Component {
       } else if (response === "INVALID_CAPTCHA") {
         this.getCaptcha();
         this.openModal("Въвели сте невалиден код за потвърждение!");
+      } else if (response === "PROFILE_DEACTIVATED") {
+        this.getCaptcha();
+        this.openModal("Профилът е деактивиран от модераторите!");
       } else if (response === "PROFILE_NOT_VERIFIED") {
         this.getCaptcha();
         this.openModal(

@@ -177,18 +177,22 @@ class UserService {
     if (validateCaptcha) {
       const u = await this.#userRepository.loginUser(user);
       if (u !== false) {
-        if (u.verified) {
-          if (u.role === roles.Vet) {
-            if (u.moderationVerified === false) {
-              return "PROFILE_NOT_MODERATION_VERIFIED";
+        if (u.active === true) {
+          if (u.verified) {
+            if (u.role === roles.Vet) {
+              if (u.moderationVerified === false) {
+                return "PROFILE_NOT_MODERATION_VERIFIED";
+              }
             }
+            const token = encryptToken(
+              `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
+            );
+            return token;
+          } else {
+            return "PROFILE_NOT_VERIFIED";
           }
-          const token = encryptToken(
-            `${u._id};${parseInt(new Date().getTime() / 1000) + 1800}`
-          );
-          return token;
         } else {
-          return "PROFILE_NOT_VERIFIED";
+          return "PROFILE_DEACTIVATED";
         }
       } else {
         return false;
@@ -210,11 +214,13 @@ class UserService {
    * @param {String} token
    * @returns {String|Boolean}
    */
-  refreshToken(token) {
+  async refreshToken(token) {
     const decoded = decryptToken(token).split(";");
     if (decoded[0] !== "") {
       if (parseInt(decoded[1]) > parseInt(new Date().getTime() / 1000)) {
         return "TOO_EARLY";
+      } else if ((await this.getRole(decoded[0])) === false) {
+        return false;
       } else {
         const refreshToken = encryptToken(
           `${decoded[0]};${parseInt(new Date().getTime() / 1000) + 1800}`

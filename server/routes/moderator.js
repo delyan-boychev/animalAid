@@ -13,6 +13,7 @@ const moderatorService = new ModeratorService();
 const roles = require("../models/roles");
 const completeFundraisingCampaignSchema = require("../models/validation/moderator/completeFundraisingCampaign");
 const moderationVerifyCampaignSchema = require("../models/validation/moderator/moderationVerifyFundraisingCampaign");
+const activateDeactivateProfileSchema = require("../models/validation/moderator/activateDeactivateProfile");
 const router = express.Router();
 router.get(
   "/getAllUsers/:pageNum/:searchQuery?",
@@ -109,6 +110,16 @@ router.get(
 router.post("/moderationVerifyVet", authenticateModerator, async (req, res) => {
   validation(req.body, moderationVerifyVetSchema, res, async () => {
     res.send(await moderatorService.moderationVerifyVet(req.body.email));
+  });
+});
+router.post("/activateProfile", authenticateModerator, async (req, res) => {
+  validation(req.body, activateDeactivateProfileSchema, res, async () => {
+    res.send(await moderatorService.activateProfile(req.body.id));
+  });
+});
+router.post("/deactivateProfile", authenticateModerator, async (req, res) => {
+  validation(req.body, activateDeactivateProfileSchema, res, async () => {
+    res.send(await moderatorService.deactivateProfile(req.body.id));
   });
 });
 router.post("/deleteThread", authenticateModerator, async (req, res) => {

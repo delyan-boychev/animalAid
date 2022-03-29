@@ -15,7 +15,7 @@ import ViewVetsForModerationVerify from "./ModeratorPanelTabs/ViewVetsForModerat
 import ViewCampaignsForModerationVerify from "./ModeratorPanelTabs/ViewCampaignsForModerationVerify";
 export default class ModeratorPanel extends React.Component {
   componentDidMount() {
-    document.title = "Администраторски панел";
+    document.title = "Модераторски панел";
   }
   render() {
     return (

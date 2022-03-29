@@ -104,7 +104,7 @@ class UserRepository {
           ],
         });
         const cityIds = cities.map((city) => city._id);
-        let query = { role: roles.Vet, city: cityIds };
+        let query = { role: roles.Vet, city: cityIds, active: true };
         if (searchQuery !== undefined) {
           let keys = Object.keys(animalsTranslate);
           let animals = Object.values(animalsTranslate)
@@ -185,6 +185,7 @@ class UserRepository {
         _id: id,
         role: roles.Vet,
         moderationVerified: true,
+        active: true,
       })
         .populate("city")
         .select("-password -__v -verified -moderationVerified")
@@ -321,6 +322,7 @@ class UserRepository {
       query = {
         role: roles.Vet,
         moderationVerified: true,
+        active: true,
         $or: [
           { "name.first": { $regex: searchQuery, $options: "i" } },
           { "name.last": { $regex: searchQuery, $options: "i" } },
@@ -342,6 +344,7 @@ class UserRepository {
       query = {
         role: roles.Vet,
         moderationVerified: true,
+        active: true,
       };
     }
     if (createAppointments === true) {
@@ -453,7 +456,11 @@ class UserRepository {
     try {
       const u = await User.findById(id).lean().exec();
       if (u !== null) {
-        return u.role;
+        if (u.active === true) {
+          return u.role;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }

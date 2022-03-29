@@ -28,6 +28,8 @@ import {
   faUpload,
   faTrashAlt,
   faTags,
+  faUserSlash,
+  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../extensionFunctions/formatNumber";
@@ -81,6 +83,7 @@ export default class EditUser extends React.Component {
         },
         address: "",
         role: "",
+        active: "",
         phoneNumber: "",
         URN: "",
         vetDescription: "",
@@ -159,6 +162,7 @@ export default class EditUser extends React.Component {
           URN: res.URN,
           role: res.role,
           phoneNumber: res.phoneNumber,
+          active: res.active,
           vetDescription: res.vetDescription,
           typeAnimals:
             res.typeAnimals !== undefined ? [...res.typeAnimals] : undefined,
@@ -445,6 +449,26 @@ export default class EditUser extends React.Component {
       this.openModal2();
     }
   };
+  deactivateProfile = async () => {
+    const res = await client.postRequestToken("/admin/deactivateProfile", {
+      id: this.state.id,
+    });
+    if (res === true) {
+      this.openModal("Профилът е деактивиран успешно!");
+    } else {
+      this.openModal("Възникна грешка! Моля, опитайте отново!");
+    }
+  };
+  activateProfile = async () => {
+    const res = await client.postRequestToken("/admin/activateProfile", {
+      id: this.state.id,
+    });
+    if (res === true) {
+      this.openModal("Профилът е активиран успешно!");
+    } else {
+      this.openModal("Възникна грешка! Моля, опитайте отново!");
+    }
+  };
   onCropChange = (crop) => {
     this.setState({ crop });
   };
@@ -532,6 +556,25 @@ export default class EditUser extends React.Component {
               width="150px"
               alt="profilePicture"
             />
+          </div>
+          <div className="mb-3">
+            {this.state.lastProfile.active === true ? (
+              <Button onClick={this.deactivateProfile} variant="danger">
+                <FontAwesomeIcon icon={faUserSlash}></FontAwesomeIcon>
+              </Button>
+            ) : (
+              <Button onClick={this.activateProfile}>
+                <FontAwesomeIcon icon={faUserPlus}></FontAwesomeIcon>
+              </Button>
+            )}
+          </div>
+          <div className="mb-3 h4">
+            Статус на профила:{" "}
+            {this.state.lastProfile.active === true ? (
+              <span className="text-primary">Активен</span>
+            ) : (
+              <span className="text-danger">Деактивиран</span>
+            )}
           </div>
           <ListGroup className="shadow">
             <ListGroup.Item>

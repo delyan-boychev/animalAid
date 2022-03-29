@@ -157,7 +157,7 @@ router.post("/refreshToken", async (req, res) => {
       "animalAidAuthorization ",
       ""
     );
-    res.send(userService.refreshToken(token));
+    res.send(await userService.refreshToken(token));
   } else {
     res.sendStatus(400);
   }

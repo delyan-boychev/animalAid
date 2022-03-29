@@ -72,6 +72,22 @@ class ModeratorService {
     return await this.#moderatorRepository.changeRole(id, newRole);
   }
   /**
+   * Deactivate profile
+   * @param {String} id
+   * @returns {Boolean}
+   */
+  async deactivateProfile(id) {
+    return await this.#moderatorRepository.deactivateProfile(id);
+  }
+  /**
+   * Activate profile
+   * @param {String} id
+   * @returns {Boolean}
+   */
+  async activateProfile(id) {
+    return await this.#moderatorRepository.activateProfile(id);
+  }
+  /**
    * Delete thread
    * @param {String} threadId
    * @returns {Boolean}

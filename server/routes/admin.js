@@ -9,6 +9,7 @@ const moderationVerifyVetSchema = require("../models/validation/admin/moderation
 const changeRoleSchema = require("../models/validation/admin/changeRole");
 const editProfileSchema = require("../models/validation/admin/editProfile");
 const changeProfilePhotoSchema = require("../models/validation/admin/changeProfilePhoto");
+const activateDeactivateProfileSchema = require("../models/validation/admin/activateDeactivateProfile");
 const deleteThreadSchema = require("../models/validation/admin/deleteThread");
 const deleteThreadPostSchema = require("../models/validation/admin/deleteThreadPost");
 const AdminService = require("../services/admin");
@@ -152,6 +153,16 @@ router.post("/moderationVerifyVet", authenticateAdmin, async (req, res) => {
 router.post("/changeProfilePhoto", authenticateAdmin, async (req, res) => {
   validation(req.body, changeProfilePhotoSchema, res, async () => {
     res.send(await adminService.changeProfilePhoto(req.body));
+  });
+});
+router.post("/activateProfile", authenticateAdmin, async (req, res) => {
+  validation(req.body, activateDeactivateProfileSchema, res, async () => {
+    res.send(await adminService.activateProfile(req.body.id));
+  });
+});
+router.post("/deactivateProfile", authenticateAdmin, async (req, res) => {
+  validation(req.body, activateDeactivateProfileSchema, res, async () => {
+    res.send(await adminService.deactivateProfile(req.body.id));
   });
 });
 router.post("/deleteThread", authenticateAdmin, async (req, res) => {

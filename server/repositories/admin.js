@@ -246,16 +246,65 @@ class AdminRepository {
    * @returns {String|Boolean}
    */
   async changeProfilePhoto(id, imgFileName) {
-    const u = await User.findById(id).exec();
-    if (u !== null) {
-      const oldImgFileName = u.imgFileName;
-      u.imgFileName = imgFileName;
-      u.save();
-      return oldImgFileName;
-    } else {
+    try {
+      const u = await User.findById(id).exec();
+      if (u !== null) {
+        const oldImgFileName = u.imgFileName;
+        u.imgFileName = imgFileName;
+        u.save();
+        return oldImgFileName;
+      } else {
+        return false;
+      }
+    } catch {
       return false;
     }
   }
+  /**
+   * Deactivate profile
+   * @param {String} id
+   * @returns {Boolean}
+   */
+  async deactivateProfile(id) {
+    try {
+      const deactivated = await User.updateOne(
+        { _id: id, active: true },
+        { active: false }
+      ).exec();
+      if (deactivated.modifiedCount > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  /**
+   * Activate profile
+   * @param {String} id
+   * @returns {Boolean}
+   */
+  async activateProfile(id) {
+    try {
+      const activated = await User.updateOne(
+        { _id: id, active: false },
+        { active: true }
+      ).exec();
+      if (activated.modifiedCount > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  /**
+   *
+   * @param {*} threadId
+   * @returns
+   */
   /**
    * Delete thread
    * @param {String} threadId

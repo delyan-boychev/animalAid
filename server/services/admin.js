@@ -130,6 +130,22 @@ class AdminService {
     }
   }
   /**
+   * Deactivate profile
+   * @param {String} id
+   * @returns {Boolean}
+   */
+  async deactivateProfile(id) {
+    return await this.#adminRepository.deactivateProfile(id);
+  }
+  /**
+   * Activate profile
+   * @param {String} id
+   * @returns {Boolean}
+   */
+  async activateProfile(id) {
+    return await this.#adminRepository.activateProfile(id);
+  }
+  /**
    * Delete thread
    * @param {String} threadId
    * @returns {Boolean}

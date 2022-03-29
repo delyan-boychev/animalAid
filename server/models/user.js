@@ -53,6 +53,7 @@ const schema = new mongoose.Schema({
     default: undefined,
   },
   imgFileName: { type: String, required: true },
+  active: { type: Boolean, default: true, required: true },
   verified: { type: Boolean, required: true },
   moderationVerified: {
     type: Boolean,

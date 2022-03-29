@@ -165,6 +165,46 @@ class ModeratorRepository {
     }
   }
   /**
+   * Deactivate profile
+   * @param {String} id
+   * @returns {Boolean}
+   */
+  async deactivateProfile(id) {
+    try {
+      const deactivated = await User.updateOne(
+        { _id: id, active: true, role: { $ne: roles.Admin } },
+        { active: false }
+      ).exec();
+      if (deactivated.modifiedCount > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  /**
+   * Activate profile
+   * @param {String} id
+   * @returns {Boolean}
+   */
+  async activateProfile(id) {
+    try {
+      const activated = await User.updateOne(
+        { _id: id, active: false, role: { $ne: roles.Admin } },
+        { active: true }
+      ).exec();
+      if (activated.modifiedCount > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
+  /**
    * Delete thread
    * @param {String} threadId
    * @returns {Boolean}
