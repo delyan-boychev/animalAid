@@ -1,6 +1,6 @@
-const roles = {
+const trueFalse = {
   true: "Да",
   false: "Не",
 };
-Object.freeze(roles);
-module.exports = roles;
+Object.freeze(trueFalse);
+module.exports = trueFalse;
