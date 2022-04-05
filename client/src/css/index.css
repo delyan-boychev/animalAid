@@ -273,7 +273,7 @@ a.text-secondary:focus {
 .form-floating > .form-control:-webkit-autofill ~ label {
   opacity: 1;
   color: rgba(0, 0, 0, 0.5);
-  background-color: #fff;
+  background-color: #ffffff;
   height: auto;
   padding: 0px;
   padding: 0px 0px 0px 10px;
@@ -281,6 +281,9 @@ a.text-secondary:focus {
   transform: scale(0.982) translateY(0.045rem) translateX(0.1rem);
   transition: padding 0.1s ease-in-out, transform 0.1s ease-in-out;
   border-radius: 5px 0 0 0;
+}
+.form-floating > .form-control:disabled ~ label {
+  background-color: #ebebe4;
 }
 .registered-users {
   position: absolute;
