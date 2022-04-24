@@ -228,7 +228,10 @@ class ViewFundraisingCampaignAdmin extends React.Component {
             </Col>
             <Col sm={6}>
               <PageTitle title={this.state.campaign.title} />
-              <div className="h6 text-center">
+              <div
+                className="h6 text-center"
+                hidden={this.state.campaign.moderationVerified === false}
+              >
                 <FontAwesomeIcon icon={faFlagCheckered} />
                 {this.state.campaign.completed === false
                   ? " Кампанията причключва на:"
@@ -236,17 +239,25 @@ class ViewFundraisingCampaignAdmin extends React.Component {
                 {this.formatDate(new Date(this.state.campaign.expireAt * 1000))}
               </div>
               <div className="h6 longText">
-                Кратко описание: {this.state.campaign.shortDescription}
+                <span className="fw-bold">Кратко описание:</span>{" "}
+                {this.state.campaign.shortDescription}
               </div>
               <div className="h6 longText">
-                Пълно описание: {this.state.campaign.fullDescription}
+                <span className="fw-bold">Пълно описание:</span>{" "}
+                {this.state.campaign.fullDescription}
               </div>
               <div className="h4 text-center text-primary">
                 Нужни средства: {this.state.campaign.value}лв.
               </div>
-              <div className="h5">
+              <div className="h6">
                 Линк за дарение в Paypal:{" "}
-                {this.state.campaign.paypalDonationURL}
+                <a
+                  href={this.state.campaign.paypalDonationURL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {this.state.campaign.paypalDonationURL}
+                </a>
               </div>
               <div className="h5 mt-3">Създател на кампанията</div>
               <Row className="mb-3">

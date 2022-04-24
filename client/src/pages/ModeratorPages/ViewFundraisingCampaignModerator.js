@@ -228,7 +228,10 @@ class ViewFundraisingCampaignModerator extends React.Component {
             </Col>
             <Col sm={6}>
               <PageTitle title={this.state.campaign.title} />
-              <div className="h6 text-center">
+              <div
+                className="h6 text-center"
+                hidden={this.state.campaign.moderationVerified === false}
+              >
                 <FontAwesomeIcon icon={faFlagCheckered} />
                 {this.state.campaign.completed === false
                   ? " Кампанията причключва на:"
@@ -239,14 +242,21 @@ class ViewFundraisingCampaignModerator extends React.Component {
                 Кратко описание: {this.state.campaign.shortDescription}
               </div>
               <div className="h6 longText">
-                Пълно описание: {this.state.campaign.fullDescription}
+                <span className="fw-bold">Пълно описание:</span>{" "}
+                {this.state.campaign.fullDescription}
               </div>
               <div className="h4 text-center text-primary">
                 Нужни средства: {this.state.campaign.value}лв.
               </div>
-              <div className="h5">
+              <div className="h6">
                 Линк за дарение в Paypal:{" "}
-                {this.state.campaign.paypalDonationURL}
+                <a
+                  href={this.state.campaign.paypalDonationURL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {this.state.campaign.paypalDonationURL}
+                </a>
               </div>
               <div className="h5 mt-3">Създател на кампанията</div>
               <Row className="mb-3">

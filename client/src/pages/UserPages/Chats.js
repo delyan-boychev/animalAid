@@ -425,12 +425,18 @@ class Chats extends React.Component {
                     >
                       <div className="d-inline-flex flex-wrap rounded bg-primary message text-secondary p-1 message-80">
                         {message.imgFileName !== undefined ? (
-                          <img
-                            alt="img"
-                            className="message-100 rounded"
-                            src={`${API_URL}/user/imgChats/${message.imgFileName}?token=${this.state.token}`}
-                            crossOrigin={window.location.origin}
-                          />
+                          <a
+                            href={`${API_URL}/user/imgChats/${message.imgFileName}?token=${this.state.token}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <img
+                              alt="img"
+                              className="message-100 rounded"
+                              src={`${API_URL}/user/imgChats/${message.imgFileName}?token=${this.state.token}`}
+                              crossOrigin={window.location.origin}
+                            />
+                          </a>
                         ) : (
                           <span className="message-100">{message.message}</span>
                         )}
@@ -462,12 +468,18 @@ class Chats extends React.Component {
                         />
                         <div className="d-inline-flex flex-wrap rounded bg-primary message text-secondary p-1 message-80 align-self-center">
                           {message.imgFileName !== undefined ? (
-                            <img
-                              alt="img"
-                              className="message-100 rounded"
-                              src={`${API_URL}/user/imgChats/${message.imgFileName}?token=${this.state.token}`}
-                              crossOrigin={window.location.origin}
-                            />
+                            <a
+                              href={`${API_URL}/user/imgChats/${message.imgFileName}?token=${this.state.token}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <img
+                                alt="img"
+                                className="message-100 rounded"
+                                src={`${API_URL}/user/imgChats/${message.imgFileName}?token=${this.state.token}`}
+                                crossOrigin={window.location.origin}
+                              />
+                            </a>
                           ) : (
                             <span className="message-100">
                               {message.message}

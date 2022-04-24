@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const appointmenReview = require("./appointmentReview");
 const typeAnimals = require("./typeAnimals");
 const typeAppointments = require("./typeAppointments");
 const schema = new mongoose.Schema({
@@ -20,5 +21,6 @@ const schema = new mongoose.Schema({
   hour: { type: String, required: true },
   date: { type: Date, required: true },
   confirmed: { type: Boolean, default: false },
+  review: { type: appointmenReview, default: undefined },
 });
 module.exports = mongoose.model("VetAppointment", schema, "vetAppointments");

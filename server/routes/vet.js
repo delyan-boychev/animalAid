@@ -10,6 +10,7 @@ const authenticate = require("../authentication/authenticate");
 const roles = require("../models/roles");
 const removeAppointmentSchema = require("../models/validation/vet/removeAppointment");
 const confirmAppointmentSchema = require("../models/validation/vet/confirmAppointment");
+const reviewAppointmentSchema = require("../models/validation/vet/reviewAppointment");
 router.post("/createSchedule", authenticateVet, async (req, res) => {
   validation(req.body, createScheduleSchema(req.body), res, async () => {
     try {
@@ -116,5 +117,21 @@ router.post("/confirmAppointment", authenticateVet, async (req, res) => {
       await vetService.confirmAppointment(req.user.id, req.body.appointmentId)
     );
   });
+});
+router.post("/reviewAppointment", authenticate, async (req, res) => {
+  if (req.user.role !== roles.Vet) {
+    validation(req.body, reviewAppointmentSchema, res, async () => {
+      res.send(
+        await vetService.reviewAppointment(
+          req.user.id,
+          req.body.appointmentId,
+          req.body.rating,
+          req.body.review
+        )
+      );
+    });
+  } else {
+    res.sendStatus(403);
+  }
 });
 module.exports = router;

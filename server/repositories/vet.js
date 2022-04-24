@@ -345,5 +345,38 @@ class VetRepository {
       return false;
     }
   }
+  /**
+   * Review appointment
+   * @param {String} userId
+   * @param {String} appointmentId
+   * @param {Number} rating
+   * @param {String} review
+   * @returns {Boolean}
+   */
+  async reviewAppointment(userId, appointmentId, rating, review) {
+    try {
+      const appointment = await VetAppointment.findOne({
+        _id: appointmentId,
+        user: userId,
+        date: { $lte: new Date().toISOString() },
+      })
+        .populate("vet", "name scheduleVet")
+        .populate("user", "name email")
+        .exec();
+      if (appointment !== null) {
+        if (appointment.review === undefined) {
+          appointment.review = { rating, review };
+          await appointment.save();
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
 }
 module.exports = VetRepository;

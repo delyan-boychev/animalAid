@@ -261,5 +261,13 @@ class VetService {
       return false;
     }
   }
+  async reviewAppointment(userId, appointmentId, rating, review) {
+    return await this.#vetRepository.reviewAppointment(
+      userId,
+      appointmentId,
+      rating,
+      review
+    );
+  }
 }
 module.exports = VetService;
